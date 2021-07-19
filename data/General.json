@@ -1,0 +1,14 @@
+{
+  "Pendientes": [
+    {
+      "id": "01.json",
+      "descripcion": "Servicio de lavoratorio",
+      "estado": "Confeccionando ET"      
+    },
+    {
+      "id": "02.json",
+      "descripcion": "Consulta de manga Toshiba",
+      "estado": "Confeccionando ET",
+    }
+  ]
+}
