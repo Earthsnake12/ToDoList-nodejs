@@ -1,12 +1,12 @@
 {
-  "Pendientes": [
+  "General": [
     {
-      "id": "01.json",
+      "id": "1.json",
       "descripcion": "Servicio de lavoratorio",
       "estado": "Confeccionando ET"      
     },
     {
-      "id": "02.json",
+      "id": "2.json",
       "descripcion": "Consulta de manga Toshiba",
       "estado": "Confeccionando ET"
     }

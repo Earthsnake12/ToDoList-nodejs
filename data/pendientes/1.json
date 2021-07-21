@@ -1,5 +1,6 @@
 {
-  "descripcion": "Servicio de lavoratorio",
+  "titulo": "Servicio de lavoratorio",
+  "descripcion": "Realizar ET para sacar un servicio de laboratorio para la oficina",
   "estado": "Confeccionando ET",
   "fecha": [
     "28-08-21",
