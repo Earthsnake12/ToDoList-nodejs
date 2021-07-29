@@ -1,13 +1,14 @@
 {
+  "UltimoId": 2,
   "General": [
     {
       "id": "1.json",
-      "descripcion": "Servicio de lavoratorio",
+      "titulo": "Servicio de lavoratorio",
       "estado": "Confeccionando ET"      
     },
     {
       "id": "2.json",
-      "descripcion": "Consulta de manga Toshiba",
+      "titulo": "Consulta de manga Toshiba",
       "estado": "Confeccionando ET"
     }
   ]
