@@ -1,17 +1,21 @@
 const express = require('express');
 const fs = require("fs");
-const HTMLParser = require('node-html-parser');
-const bodyParser = require('body-parser');
-const { nextTick } = require('process');
+//import { parse } from 'node-html-parser';
 
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', function (req, res) { //pagina de inicio
 
-  fs.readFile("./inicio/index.html", (err, data) => {
+  const data =  require("./pruebaPagIndex.js");
+
+  console.log(data);
+
+
+  res.end(data);
+  /*
+  readFile("./inicio/index.html", (err, data) => {
 
     if (err) {
       res.writeHead(404);
@@ -19,7 +23,7 @@ app.get('/', function (req, res) { //pagina de inicio
       res.end();
 
     } else {
-      let root = HTMLParser.parse(data);
+      let root = parse(data);
 
       try {
         let tabla = require("./inicio/geradorTabla.js");
@@ -30,7 +34,7 @@ app.get('/', function (req, res) { //pagina de inicio
       res.writeHead(200);
       res.end(root.toString());
     }
-  });
+  });*/
 })
 
 app.post('/tarea', function (req, res) {
@@ -45,8 +49,7 @@ app.post('/tarea', function (req, res) {
     next();
   }
 
-  let fs = require('fs');
-  fs.writeFile("./data/pendientes/"+id+".json", JSON.stringify(req.body), function (err, result) {
+  fs.writeFile("./data/pendientes/" + id + ".json", JSON.stringify(req.body), function (err, result) {
     if (err) console.log('error', err);
   });
 
