@@ -1,42 +1,12 @@
 const express = require('express');
 const fs = require("fs");
-//import { parse } from 'node-html-parser';
+const middlewares = require('./servicios/middleware'); //carga los middleware
 
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function (req, res) { //pagina de inicio
-
-  const data =  require("./pruebaPagIndex.js");
-
-  console.log(data);
-  //hhhprueba
-
-
-  res.end(data);
-  /*
-  readFile("./inicio/index.html", (err, data) => {
-
-    if (err) {
-      res.writeHead(404);
-      res.write('Whoops! File not found!');
-      res.end();
-
-    } else {
-      let root = parse(data);
-
-      try {
-        let tabla = require("./inicio/geradorTabla.js");
-        root.querySelector('#pp').replaceWith(tabla);
-      } catch (error) { }
-
-      res.setHeader("Content-Type", "text/html");
-      res.writeHead(200);
-      res.end(root.toString());
-    }
-  });*/
-})
+app.get('/', middlewares.paginaInicio);
 
 app.post('/tarea', function (req, res) {
 
