@@ -2,14 +2,83 @@
 
 <head>
     <title>My Website</title>
-    <link rel="stylesheet" type="text/css" href="estilo.css" />    
+    <link rel="stylesheet" type="text/css" href="estilo.css" />
+    <script src="jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('.error').hide();
+                $("#botonCargaNuevaTarea").click(function () {
+                    // validate and process form here
+
+
+                    //revisa los campos, si alguno esta en blanco muestra mensaje de error y enfoca en ese campo
+                    var titulo = $("#nuevaTareaTitulo").val();
+                    if (titulo == "") {
+                        $("#nuevaTareaTituloError").show();
+                        $("#nuevaTareaTitulo").focus();
+                        return false;
+                    }
+                    var descripcion = $("#nuevaTareaDescripcion").val();
+                    if (descripcion == "") {
+                        $("#nuevaTareaDescripcionError").show();
+                        $("#nuevaTareaDescripcion").focus();
+                        return false;
+                    }
+                    var estado = $("#nuevaTareaEstado").val();
+                    if (estado == "") {
+                        $("#nuevaTareaEstadoError").show();
+                        $("#nuevaTareaEstado").focus();
+                        return false;
+                    };
+                    //var dataString = '{"titulo"="' + titulo + '","descripcion"="' + descripcion + '","estado"="' + estado +'"}';
+                    //alert (dataString);return false;/*
+                    $.ajax({
+                        type: "POST",
+                        url: "tarea",
+                        data: { "titulo": titulo, "descripcion": descripcion, "estado": estado },
+                        dataType: 'json',
+                        success: function () {
+                            alert("subido")/*
+                            $('#contact_form').html("<div id='message'></div>");
+                            $('#message').html("<h2>Contact Form Submitted!</h2>")
+                                .append("<p>We will be in touch soon.</p>")
+                                .hide()
+                                .fadeIn(1500, function () {
+                                    $('#message').append("<img id='checkmark' src='images/check.png' />");
+                                });*/
+                        }
+                    });
+                    return false;
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
-    <div id="pp">
+    <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>
     </div>
-    <iframe src="formularioCarga.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+
+    <div id="divFormulario"></div>
+    <form name="nuevaTarea" action="">
+        <h1>Nueva tarea</h1>
+        Titulo: <input id="nuevaTareaTitulo" name="titulo" type="text">
+        <label class="error" for="nuevaTareaTitulo" id="nuevaTareaTituloError">This field is required.</label><br>
+
+        Descripcion: <input id="nuevaTareaDescripcion" name="descripcion" type="text">
+        <label class="error" for="nuevaTareaDescripcion" id="nuevaTareaDescripcionError">This field is
+            required.</label><br>
+
+        Estado: <input id="nuevaTareaEstado" name="estado" type="text">
+        <label class="error" for="nuevaTareaEstado" id="nuevaTareaEstadoError">This field is required.</label><br>
+
+        <input id="botonCargaNuevaTarea" type="submit" value="Subir">
+    </form>
+    </div>
+
+    <!--iframe src="formularioCarga.html" frameborder="0" style="width: 100%; height: 100%;"></iframe-->
 </body>
 
 </html>

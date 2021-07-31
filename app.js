@@ -1,10 +1,12 @@
 const express = require('express');
 const fs = require("fs");
+const bodyParser = require('body-parser');
 const middlewares = require('./servicios/middleware'); //carga los middleware
 
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', middlewares.paginaInicio);
 
@@ -12,7 +14,7 @@ app.post('/tarea', function (req, res) {
 
   let id;
   try {
-    id = require("./data/General.json").UltimoId + 1; //
+    id = require("./data/General.json").UltimoId + 1; 
   } catch (Error) {
     res.setHeader("Content-Type", "text/html");
     res.writeHead(404);
@@ -20,6 +22,8 @@ app.post('/tarea', function (req, res) {
     next();
   }
 
+  console.log(JSON.stringify(req.body));
+  
   fs.writeFile("./data/pendientes/" + id + ".json", JSON.stringify(req.body), function (err, result) {
     if (err) console.log('error', err);
   });

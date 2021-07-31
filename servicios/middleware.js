@@ -5,7 +5,7 @@ const middlewares = {
 
     paginaInicio: function (req, res, next) {
 
-        fs.readFile("./inicio/index.html", (err, data) => {
+        fs.readFile("./paginasHTML/index.html", (err, data) => {
 
             if (err) {
                 res.writeHead(404);
@@ -15,11 +15,11 @@ const middlewares = {
 
                 let root = HTMLparser.parse(data);
                 try {
-                    let tabla = require("./paginasHTML/geradorTabla.js");
-                    root.querySelector('#pp').replaceWith(tabla);
+                    let tabla = require("./geradorTabla.js");
+                    root.querySelector('#lista').replaceWith(tabla);
 
                 } catch (error) {
-                    root.querySelector('#pp').replaceWith("<div>No se pudo cargar la tabla</div>");
+                    root.querySelector('#lista').replaceWith("<div>No se pudo cargar la tabla</div>");
                 }
                 res.setHeader("Content-Type", "text/html");
                 res.writeHead(200);
