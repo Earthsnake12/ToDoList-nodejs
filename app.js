@@ -11,6 +11,7 @@ app.get('/', function (req, res) { //pagina de inicio
   const data =  require("./pruebaPagIndex.js");
 
   console.log(data);
+  //hhh
 
 
   res.end(data);
