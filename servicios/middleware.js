@@ -15,7 +15,7 @@ const middlewares = {
 
                 let root = HTMLparser.parse(data);
                 try {
-                    let tabla = require("./paginasHTML/geradorTabla.j");
+                    let tabla = require("./paginasHTML/geradorTabla.js");
                     root.querySelector('#pp').replaceWith(tabla);
 
                 } catch (error) {
