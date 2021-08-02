@@ -5,58 +5,61 @@
     <link rel="stylesheet" type="text/css" href="estilo.css" />
     <script src="jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $(function () {
-                $('.error').hide();
-                $("#botonCargaNuevaTarea").click(function () {
-                    // validate and process form here
+        $(function () {
+            $('.error').hide();
+            $("#botonCargaNuevaTarea").click(function () {
+                // si en un futuro tengo q validar los campos tiene que ir aca
 
 
-                    //revisa los campos, si alguno esta en blanco muestra mensaje de error y enfoca en ese campo
-                    var titulo = $("#nuevaTareaTitulo").val();
-                    if (titulo == "") {
-                        $("#nuevaTareaTituloError").show();
-                        $("#nuevaTareaTitulo").focus();
-                        return false;
-                    }
-                    var descripcion = $("#nuevaTareaDescripcion").val();
-                    if (descripcion == "") {
-                        $("#nuevaTareaDescripcionError").show();
-                        $("#nuevaTareaDescripcion").focus();
-                        return false;
-                    }
-                    var estado = $("#nuevaTareaEstado").val();
-                    if (estado == "") {
-                        $("#nuevaTareaEstadoError").show();
-                        $("#nuevaTareaEstado").focus();
-                        return false;
-                    };
-                    //var dataString = '{"titulo"="' + titulo + '","descripcion"="' + descripcion + '","estado"="' + estado +'"}';
-                    //alert (dataString);return false;/*
-                    $.ajax({
-                        type: "POST",
-                        url: "tarea",
-                        data: { "titulo": titulo, "descripcion": descripcion, "estado": estado },
-                        dataType: 'json',
-                        success: function () {
-                            alert("subido")/*
-                            $('#contact_form').html("<div id='message'></div>");
-                            $('#message').html("<h2>Contact Form Submitted!</h2>")
-                                .append("<p>We will be in touch soon.</p>")
-                                .hide()
-                                .fadeIn(1500, function () {
-                                    $('#message').append("<img id='checkmark' src='images/check.png' />");
-                                });*/
-                        }
-                    });
+                //revisa los campos, si alguno esta en blanco muestra mensaje de error y enfoca en ese campo
+                var titulo = $("#nuevaTareaTitulo").val();
+                if (titulo == "") {
+                    $("#nuevaTareaTituloError").show();
+                    $("#nuevaTareaTitulo").focus();
                     return false;
+                }
+                var descripcion = $("#nuevaTareaDescripcion").val();
+                if (descripcion == "") {
+                    $("#nuevaTareaDescripcionError").show();
+                    $("#nuevaTareaDescripcion").focus();
+                    return false;
+                }
+                var estado = $("#nuevaTareaEstado").val();
+                if (estado == "") {
+                    $("#nuevaTareaEstadoError").show();
+                    $("#nuevaTareaEstado").focus();
+                    return false;
+                };
+
+                //logica para enviar el formulario a /tarea para procesarlo y cargarlo
+                $.ajax({
+                    type: "POST",
+                    url: "tarea",
+                    data: { "titulo": titulo, "descripcion": descripcion, "estado": estado },
+                    dataType: 'text',
+                    success: function (msj) {
+                        //alert(msj); // alerta para saber que se subio
+                        $("#botonCargaNuevaTareaMsj").html(msj);
+                        $("#botonCargaNuevaTareaMsj").show();
+                        //agregar el recargado de la tabla
+                    },
+                    error: function (xhr, status) {
+                        alert('Disculpe, hubo un problema');
+                    },
                 });
+                return false; //para no actualizar la pag y manteneme aca
             });
         });
     </script>
 </head>
 
 <body>
+    <nav>
+        <a class="active" href="/index">Home</a>
+        <a href="/uno">Uno</a>
+        <a href="/dos">Dos</a>
+        <a href="/tres">Tres</a>
+    </nav>
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>
     </div>
@@ -65,20 +68,19 @@
     <form name="nuevaTarea" action="">
         <h1>Nueva tarea</h1>
         Titulo: <input id="nuevaTareaTitulo" name="titulo" type="text">
-        <label class="error" for="nuevaTareaTitulo" id="nuevaTareaTituloError">This field is required.</label><br>
+        <label class="error" for="nuevaTareaTitulo" id="nuevaTareaTituloError">Campo requerido</label><br>
 
         Descripcion: <input id="nuevaTareaDescripcion" name="descripcion" type="text">
-        <label class="error" for="nuevaTareaDescripcion" id="nuevaTareaDescripcionError">This field is
-            required.</label><br>
+        <label class="error" for="nuevaTareaDescripcion" id="nuevaTareaDescripcionError">Campo requerido</label><br>
 
         Estado: <input id="nuevaTareaEstado" name="estado" type="text">
-        <label class="error" for="nuevaTareaEstado" id="nuevaTareaEstadoError">This field is required.</label><br>
+        <label class="error" for="nuevaTareaEstado" id="nuevaTareaEstadoError">Campo requerido</label><br>
 
         <input id="botonCargaNuevaTarea" type="submit" value="Subir">
+        <label class="error" for="botonCargaNuevaTarea" id="botonCargaNuevaTareaMsj">Tarea enviada</label>
     </form>
     </div>
 
-    <!--iframe src="formularioCarga.html" frameborder="0" style="width: 100%; height: 100%;"></iframe-->
 </body>
 
 </html>
