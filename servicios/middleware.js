@@ -33,23 +33,22 @@ const middlewares = {
     //busca el id en el general, lo actualiza y carga una nueva tarea
     cargarTarea: function (req, res, next) {
 
-        let id;
-        try {
-            id = require("../data/General.jso").UltimoId + 1;
-        } catch (error) {
-            console.log(error);
-            res.end("Archivo general no encontrado");
-        }
+        fs.readFile("./data/General.json", 'utf8',(err, data) => {
+            
+            if (err) {
+                console.log(err);
+                res.end("Archivo general no encontrado");
 
-        if (id !== undefined) {
-            console.log(JSON.stringify(req.body));
-            /*
-            fs.writeFile("./data/pendientes/" + id + ".json", JSON.stringify(req.body), function (err, result) {
-              if (err) console.log('error', err);
-            });*/
-
-            res.end("Nueva tarea cargada");
-        }
+            } else {
+                let id = JSON.parse(data).UltimoId + 1;
+                console.log(JSON.stringify(req.body));
+                
+                fs.writeFile("./data/pendientes/" + id + ".json", JSON.stringify(req.body), function (err, result) {
+                  if (err) console.log('error', err);
+                });
+                res.end("Nueva tarea cargada");
+            }
+        });
     }
 };
 module.exports = middlewares;
