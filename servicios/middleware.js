@@ -4,7 +4,7 @@ const HTMLparser = require('node-html-parser');
 
 const middlewares = {
 
-    //carga la pag de inicio, revisa los pendientes y crea la tabla
+    //carga la pag de inicio, revisa los pendientes y crea la tabla.
     paginaInicio: function (req, res, next) {
 
         fs.readFile("./paginasHTML/index.html", (err, data) => {
