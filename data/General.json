@@ -1,1 +1,15 @@
-{"UltimoId":4,"General":[{"id":"1.json","titulo":"Servicio de lavoratorio","estado":"Confeccionando ET"},{"id":"2.json","titulo":"Consulta de manga Toshiba","estado":"Confeccionando ET"}]}
+{
+    "UltimoId": 4,
+    "General": [
+        {
+            "id": "1.json",
+            "titulo": "Servicio de lavoratorio",
+            "estado": "Confeccionando ET"
+        },
+        {
+            "id": "2.json",
+            "titulo": "Consulta de manga Toshiba",
+            "estado": "Confeccionando ET"
+        }
+    ]
+}
