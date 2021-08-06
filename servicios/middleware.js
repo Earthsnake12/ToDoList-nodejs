@@ -33,21 +33,35 @@ const middlewares = {
     //busca el id en el general, lo actualiza y carga una nueva tarea
     cargarTarea: function (req, res, next) {
 
-        fs.readFile("./data/General.json", 'utf8',(err, data) => {
-            
+        //cargo JSON general
+        fs.readFile("./data/General.json", 'utf8', (err, data) => {
+
             if (err) {
                 console.log(err);
                 res.end("Archivo general no encontrado");
-
-            } else {
-                let id = JSON.parse(data).UltimoId + 1;
-                console.log(JSON.stringify(req.body));
-                
-                fs.writeFile("./data/pendientes/" + id + ".json", JSON.stringify(req.body), function (err, result) {
-                  if (err) console.log('error', err);
-                });
-                res.end("Nueva tarea cargada");
+                return;
             }
+            let generalData = JSON.parse(data);
+
+            //guardo nueva tarea
+            fs.writeFile("./data/pendientes/" + ++generalData.UltimoId + ".json", JSON.stringify(req.body), function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.end("No se pudo agregar la nueva tarea");
+                    return;
+                }
+            });
+
+            //guardo JSON general actualizado
+            fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.end("No se pudo actualizar Archivo General");
+                    return;
+                }
+            });
+
+            res.end("Nueva tarea agregada");
         });
     }
 };
