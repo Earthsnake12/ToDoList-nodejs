@@ -1,14 +1,17 @@
 function generarTablaGeneral() {
 
-  let pendientes = require("../data/General.json");
+  let pendientes = require("../data/General.json").pendientes;
   let tabla = "<table><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr>"
 
-  for (let i = 0; i < pendientes.General.length; i++) {
-    
+
+  for (let i in pendientes) {
+    let tarea = require("../data/pendientes/" + i + ".json");
+
     tabla += "<tr>";
-    tabla += "<td>" + pendientes.General[i].id + "</td>";
-    tabla += "<td>" + pendientes.General[i].titulo + "</td>";
-    tabla += "<td>" + pendientes.General[i].estado + "</td>";
+    tabla += "<td>" + tarea.id + "</td>";
+    console.log(tarea.id);
+    tabla += "<td>" + tarea.titulo + "</td>";
+    tabla += "<td>" + tarea.estado + "</td>";
     tabla += "<td><button type='Button'>Click Me!</button></td>";
     tabla += "</tr>";
   }
