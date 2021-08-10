@@ -35,7 +35,7 @@
                 $.ajax({
                     type: "POST",
                     url: "tarea",
-                    data: { "titulo": titulo, "descripcion": descripcion, "estado": estado },
+                    data: { "id": 0, "titulo": titulo, "descripcion": descripcion, "estado": estado },
                     dataType: 'text',
                     success: function (msj) {
                         //alert(msj); // alerta para saber que se subio

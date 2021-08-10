@@ -42,7 +42,11 @@ const middlewares = {
                 return;
             }
             let generalData = JSON.parse(data);
-
+            req.body.id = ++generalData.UltimoId;
+            console.log(req.body);
+            console.log(JSON.stringify(req.body));
+            
+/*
             //guardo nueva tarea
             fs.writeFile("./data/pendientes/" + ++generalData.UltimoId + ".json", JSON.stringify(req.body), function (err, result) {
                 if (err) {
@@ -60,7 +64,7 @@ const middlewares = {
                     return;
                 }
             });
-
+*/
             res.end("Nueva tarea agregada");
         });
     }
