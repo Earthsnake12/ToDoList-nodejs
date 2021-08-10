@@ -44,17 +44,17 @@
                         "avance": ""
                     },
                     dataType: 'text',
-                    success: function (msj) {
+                    success: function (msj, textStatus, head) {
                         //alert(msj); // alerta para saber que se subio
                         $("#botonCargaNuevaTareaMsj").html(msj);
                         $("#botonCargaNuevaTareaMsj").show();
-                        //agregar el recargado de la tabla
+
                     },
-                    error: function (xhr, status) {
+                    error: function (xhr) {
                         alert('Disculpe, hubo un problema');
                     },
                 });
-                return false; //para no actualizar la pag y manteneme aca
+                return false; //para no actualizar la pag y mantenerme aca
             });
         });
     </script>

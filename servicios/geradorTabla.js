@@ -1,7 +1,7 @@
 function generarTablaGeneral() {
 
   let pendientes = require("../data/General.json").Pendientes;
-  let tabla = "<table><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr>"
+  let tabla = '<table id="lista" ><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr>'
 
   pendientes.forEach(tarea => {
     tabla += "<tr>";

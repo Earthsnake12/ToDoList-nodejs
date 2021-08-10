@@ -38,6 +38,7 @@ const middlewares = {
 
             if (err) {
                 console.log(err);
+                res.writeHead(500);
                 res.end("Archivo general no encontrado");
                 return;
             }
@@ -55,13 +56,18 @@ const middlewares = {
             fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
                 if (err) {
                     console.log(err);
+                    res.writeHead(500);
                     res.end("No se pudo actualizar Archivo General");
                     return;
                 }
             });
 
+            //actualizo la tabla
+
+            res.writeHead(200);
+            res.end("Tarea cargada"); //mando tabla actualizada
+
             console.log("Nueva tarea: " + JSON.stringify(req.body));
-            res.end("Nueva tarea agregada");
         });
     }
 };
