@@ -1,5 +1,5 @@
 {
-    "UltimoId": 2,
+    "UltimoId": 3,
     "Pendientes": [
         {
             "id": 1,
@@ -7,27 +7,39 @@
             "descripcion": "Realizar ET para sacar un servicio de laboratorio para la oficina",
             "estado": "Confeccionando ET",
             "fecha": [
-              "28-08-21",
-              "29-08-21"
+                "28-08-21",
+                "29-08-21"
             ],
             "avance": [
-              "No realizado",
-              "Enviado a legales"
+                "No realizado",
+                "Enviado a legales"
             ]
-          },
-          {
+        },
+        {
             "id": 2,
-            "titulo":"Consulta de manga Toshiba",
+            "titulo": "Consulta de manga Toshiba",
             "descripcion": "Ver en que estado se encuentra",
             "estado": "Confeccionando ET",
             "fecha": [
-              "28-08-21",
-              "29-08-21"
+                "28-08-21",
+                "29-08-21"
             ],
             "avance": [
-              "No realizado",
-              "Enviado a legales"
+                "No realizado",
+                "Enviado a legales"
             ]
-          }
+        },
+        {
+            "id": 3,
+            "titulo": "a",
+            "descripcion": "a",
+            "estado": "a",
+            "fecha": [
+                "10-8-2021"
+            ],
+            "avance": [
+                "Tarea registrada"
+            ]
+        }
     ]
 }
