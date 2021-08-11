@@ -44,18 +44,6 @@ const middlewares = {
                 res.writeHead(200);
                 res.end(root.toString());
             });
-
-
-            /*
-            try {
-                let tabla = require("./geradorTabla.js");
-                root.querySelector('#lista').replaceWith(tabla);
- 
-            } catch (error) {
-                root.querySelector('#lista').replaceWith("<div>No se pudo cargar la tabla</div>");
-            }*/
-
-
         });
     },
 
