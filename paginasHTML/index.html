@@ -49,6 +49,10 @@
                         $("#botonCargaNuevaTareaMsj").html(msj);
                         $("#botonCargaNuevaTareaMsj").show();
 
+                        if(head.status === 200){
+                            location.reload();
+                        }
+
                     },
                     error: function (xhr) {
                         alert('Disculpe, hubo un problema');
