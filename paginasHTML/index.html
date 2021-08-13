@@ -30,6 +30,14 @@
                     $("#nuevaTareaEstado").focus();
                     return false;
                 };
+                var importancia = false;
+                if ($('nuevaTareaImportancia').prop('checked')) {
+                    importancia = true;
+                }
+                var prioridad = false;
+                if ($('nuevaTareaPrioridad').prop('checked')) {
+                    prioridad = true;
+                }
 
                 //logica para enviar el formulario a /tarea para procesarlo y cargarlo
                 $.ajax({
@@ -40,6 +48,8 @@
                         "titulo": titulo,
                         "descripcion": descripcion,
                         "estado": estado,
+                        "importancia": importancia,
+                        "prioridad": prioridad,
                         "fecha": "",
                         "avance": ""
                     },
@@ -49,7 +59,7 @@
                         $("#botonCargaNuevaTareaMsj").html(msj);
                         $("#botonCargaNuevaTareaMsj").show();
 
-                        if(head.status === 200){
+                        if (head.status === 200) {
                             location.reload();
                         }
 
@@ -81,7 +91,7 @@
         Titulo: <input type="text" id="nuevaTareaTitulo" name="titulo">
         <label class="error" for="nuevaTareaTitulo" id="nuevaTareaTituloError">Campo requerido</label><br>
 
-        Descripcion: <input type="text"id="nuevaTareaDescripcion" name="descripcion">
+        Descripcion: <input type="text" id="nuevaTareaDescripcion" name="descripcion">
         <label class="error" for="nuevaTareaDescripcion" id="nuevaTareaDescripcionError">Campo requerido</label><br>
 
         Estado: <input type="text" id="nuevaTareaEstado" name="estado">
@@ -90,7 +100,7 @@
         Importante: <input type="checkbox" id="nuevaTareaImportancia" name="importante"><br>
         Prioritario: <input type="checkbox" id="nuevaTareaPrioridad" name="prioritario"><br>
 
-        <input type="submit" id="botonCargaNuevaTarea"  value="Subir">
+        <input type="submit" id="botonCargaNuevaTarea" value="Subir">
         <label class="error" for="botonCargaNuevaTarea" id="botonCargaNuevaTareaMsj">Tarea enviada</label>
     </form>
     </div>
