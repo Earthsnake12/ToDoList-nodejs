@@ -78,16 +78,19 @@
     <div id="divFormulario"></div>
     <form name="nuevaTarea" action="">
         <h1>Nueva tarea</h1>
-        Titulo: <input id="nuevaTareaTitulo" name="titulo" type="text">
+        Titulo: <input type="text" id="nuevaTareaTitulo" name="titulo">
         <label class="error" for="nuevaTareaTitulo" id="nuevaTareaTituloError">Campo requerido</label><br>
 
-        Descripcion: <input id="nuevaTareaDescripcion" name="descripcion" type="text">
+        Descripcion: <input type="text"id="nuevaTareaDescripcion" name="descripcion">
         <label class="error" for="nuevaTareaDescripcion" id="nuevaTareaDescripcionError">Campo requerido</label><br>
 
-        Estado: <input id="nuevaTareaEstado" name="estado" type="text">
+        Estado: <input type="text" id="nuevaTareaEstado" name="estado">
         <label class="error" for="nuevaTareaEstado" id="nuevaTareaEstadoError">Campo requerido</label><br>
 
-        <input id="botonCargaNuevaTarea" type="submit" value="Subir">
+        Importante: <input type="checkbox" id="nuevaTareaImportancia" name="importante"><br>
+        Prioritario: <input type="checkbox" id="nuevaTareaPrioridad" name="prioritario"><br>
+
+        <input type="submit" id="botonCargaNuevaTarea"  value="Subir">
         <label class="error" for="botonCargaNuevaTarea" id="botonCargaNuevaTareaMsj">Tarea enviada</label>
     </form>
     </div>
