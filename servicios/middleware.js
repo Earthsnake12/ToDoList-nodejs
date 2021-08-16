@@ -62,11 +62,18 @@ const middlewares = {
             let generalData = JSON.parse(data);
             req.body.id = ++generalData.UltimoId; //coloco id actualizado
 
+            //paso la importancia y prioridad como un booleano
+            req.body.importancia = (req.body.importancia === "false") ? false : true;
+            req.body.prioridad = (req.body.prioridad === "false") ? false : true;
+
+            // registro fecha
             let date = new Date();
-            req.body.fecha = [date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear()]; // registro fecha
+            req.body.fecha = [date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear()];
 
-            req.body.avance = ["Tarea registrada"]; // registro avance
+            // registro avance
+            req.body.avance = ["Tarea registrada"];
 
+            //lo guardo dentro del general
             generalData.Pendientes.push(req.body);
 
             //guardo JSON actualizado

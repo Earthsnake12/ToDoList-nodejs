@@ -38,10 +38,10 @@
             "titulo": "a",
             "descripcion": "a",
             "estado": "a",
-            "importancia": "false",
-            "prioridad": "false",
+            "importancia": true,
+            "prioridad": true,
             "fecha": [
-                "13-8-2021"
+                "16-8-2021"
             ],
             "avance": [
                 "Tarea registrada"
