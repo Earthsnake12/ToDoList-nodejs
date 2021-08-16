@@ -13,6 +13,8 @@ app.get('/', middlewares.paginaInicio);
 
 app.post('/tarea', middlewares.cargarTarea);
 
+app.get('/tarea/:id',middlewares.mostrarTarea);
+
 app.listen(8000)
 
 console.log('Servidor en la url http://127.0.0.1:8000/');
