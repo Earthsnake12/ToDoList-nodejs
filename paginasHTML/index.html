@@ -8,6 +8,7 @@
         $(function () {
             $('.error').hide();
             $("#botonCargaNuevaTarea").click(function () {
+                $('.error').hide();
                 // si en un futuro tengo q validar los campos tiene que ir aca
 
 
@@ -88,20 +89,20 @@
     <div id="divFormulario"></div>
     <form name="nuevaTarea" action="">
         <h1>Nueva tarea</h1>
-        Titulo: <input type="text" id="nuevaTareaTitulo" name="titulo">
-        <label class="error" for="nuevaTareaTitulo" id="nuevaTareaTituloError">Campo requerido</label><br>
+        <p>Titulo: <input type="text" id="nuevaTareaTitulo">
+        <span class="error" id="nuevaTareaTituloError">Campo requerido</span></p>
 
-        Descripcion: <input type="text" id="nuevaTareaDescripcion" name="descripcion">
-        <label class="error" for="nuevaTareaDescripcion" id="nuevaTareaDescripcionError">Campo requerido</label><br>
+        <p>Descripcion: <input type="text" id="nuevaTareaDescripcion">
+        <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span></p>
 
-        Estado: <input type="text" id="nuevaTareaEstado" name="estado">
-        <label class="error" for="nuevaTareaEstado" id="nuevaTareaEstadoError">Campo requerido</label><br>
+        <p>Estado: <input type="text" id="nuevaTareaEstado">
+        <span class="error" id="nuevaTareaEstadoError">Campo requerido</span></p>
 
-        Importante: <input type="checkbox" id="nuevaTareaImportancia" name="importante"><br>
-        Prioritario: <input type="checkbox" id="nuevaTareaPrioridad" name="prioritario"><br>
+        <p>Importante: <input type="checkbox" id="nuevaTareaImportancia"></p>
+        <p>Prioritario: <input type="checkbox" id="nuevaTareaPrioridad"></p>
 
         <input type="submit" id="botonCargaNuevaTarea" value="Subir">
-        <label class="error" for="botonCargaNuevaTarea" id="botonCargaNuevaTareaMsj">Tarea enviada</label>
+        <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
     </form>
     </div>
 

@@ -100,7 +100,7 @@ const middlewares = {
 
         var id = parseInt(req.params.id, 10);
 
-        fs.readFile("./paginasHTML/pagina.html", (err, data) => {
+        fs.readFile("./paginasHTML/tarea.html", (err, data) => {
 
             if (err) {
                 res.writeHead(404);
@@ -134,11 +134,11 @@ const middlewares = {
                     tabla += "</table>"; */
                 }
 
-                /* root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
+                //root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
                 res.setHeader("Content-Type", "text/html");
                 res.writeHead(200);
-                res.end(root.toString()); */
+                res.end(root.toString());
             });
         });
     },
