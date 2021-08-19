@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 
 <head>
-    <title>Index</title>
+    <title>Tareas</title>
+
+    <style>
+        p {
+            margin: 0px;
+        }
+    </style>
+
+    <script>
+        function mostrarCampoActualizar(id) {
+            var x = document.getElementById(id);
+            if (x.style.display === "none") x.style.display = "block";
+            else x.style.display = "none";
+        }
+    </script>
 </head>
 
 <body>
@@ -12,38 +26,47 @@
         <a href="/tres">Tres</a>
     </nav>
     <div id="lista">
-        <form>
-            <p id="id">01</p>
-            <h2>Servicio de lavoratorio</h2>
-            <div>Estado: <span id="estado">Confeccionando ET</span><button type='Button'>M</button></div>
+
+        <p id="id">01</p>
+        <h2>Servicio de lavoratorio</h2>
+        <div>Estado: <span id="estado">Confeccionando ET</span><span>&nbsp;</span><button type='Button'>M</button>
+        </div>
+        <div>
+            <span>Importante: <input type="checkbox" id="importante"></span>
+            <span>&nbsp; &nbsp; &nbsp;</span>
+            <span>Prioritario: <input type="checkbox" id="prioritario"></span>
+        </div>
+        </br>
+        <div>Descripcion: </div>
+        <div id="descripcion">Realizar ET para sacar un servicio de laboratorio para la oficina</div>
+        <button type='Button' onclick="mostrarCampoActualizar('actualizarDescripcion')">M</button>
+        <p id="actualizarDescripcion" style="display: none">Nueva Descripcion:
+            </br>
+            <textarea id="inputactualizarDescripcion" style="width: 500px;">AA</textarea>
+            </br>
+            <button type='Button'>Actualizar</button>
+        </p>
+
+        </br>
+        </br>
+        <div id="avances"> Avances:
             <div>
-                <span>Importante: <input type="checkbox" id="importante"></span>
-                <span>&nbsp; &nbsp; &nbsp;</span>
-                <span>Prioritario: <input type="checkbox" id="prioritario"></span>
+                <span>28/08/2021</span>
+                <span>&nbsp; - &nbsp;</span>
+                <span>No realizado</span>
             </div>
-            </br>
-            <div>Descripcion: </div>
-            <div id="descripcion">Realizar ET para sacar un servicio de laboratorio para la oficina</div>
-            <button type='Button'>M</button>
-            </br>
-            </br>
-            <div id="avances"> Avances:
-                <div>
-                    <span>28/08/2021</span>
-                    <span>&nbsp; - &nbsp;</span>
-                    <span>No realizado</span>
-                </div>
-                <div>
-                    <span>29/08/2021</span>
-                    <span>&nbsp; - &nbsp;</span>
-                    <span>Enviado a legales</span>
-                </div>
+            <div>
+                <span>29/08/2021</span>
+                <span>&nbsp; - &nbsp;</span>
+                <span>Enviado a legales</span>
             </div>
-            </br>
+        </div>
+        <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance">
             <button type='Button'>Agregar avance</button>
-
-        </form>
-
+            <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
+        </p>
+        </br>
+        <button type='Button' onClick="mostrarCampoActualizar('nuevoAvance')">Agregar nuevo avance</button>
     </div>
 
 </body>
