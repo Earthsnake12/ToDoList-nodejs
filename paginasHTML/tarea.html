@@ -19,6 +19,10 @@
             let contenido = document.getElementById(idOrigen).innerHTML;
             document.getElementById(idObjetivo).innerHTML = contenido;
         }
+        function asignarValorCheckBox(){
+            document.getElementById("inputactualizarImportante").checked = document.getElementById("importante").checked;
+            document.getElementById("inputactualizarPrioritario").checked = document.getElementById("prioritario").checked;
+        }
     </script>
 </head>
 
@@ -34,7 +38,7 @@
         <p id="id">01</p>
         <h2>Servicio de lavoratorio</h2>
         <div>Estado: <span id="estado">Confeccionando ET</span><span>&nbsp; &nbsp; &nbsp;</span>
-            <button type='Button' onclick="mostrarCampoActualizar('imp-pri'),mostrarCampoActualizar('actualizarEstado')">M</button>
+            <button type='Button' onclick="asignarValorCheckBox(), mostrarCampoActualizar('imp-pri'),mostrarCampoActualizar('actualizarEstado')">M</button>
         </div>
         <div id = "imp-pri">
             <span>Importante:</span> <input type="checkbox" id="importante" checked onclick="return false;">
