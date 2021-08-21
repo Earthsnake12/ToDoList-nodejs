@@ -10,7 +10,7 @@
     </style>
 
     <script>
-        function mostrarCampoActualizar(id) {
+        function mostrarOcultarCampo(id) {
             let x = document.getElementById(id);
             if (x.style.display === "none") x.style.display = "block";
             else x.style.display = "none";
@@ -19,7 +19,7 @@
             let contenido = document.getElementById(idOrigen).innerHTML;
             document.getElementById(idObjetivo).innerHTML = contenido;
         }
-        function asignarValorCheckBox(){
+        function asignarValorCheckBox() {
             document.getElementById("inputactualizarImportante").checked = document.getElementById("importante").checked;
             document.getElementById("inputactualizarPrioritario").checked = document.getElementById("prioritario").checked;
         }
@@ -35,15 +35,16 @@
     </nav>
     <div id="lista">
         </br>
-        <p id="id">01</p>
-        <h2>Servicio de lavoratorio</h2>
+        <p id="id">00</p>
+        <h2 id="titulo">Servicio de lavoratorio</h2>
         <div>Estado: <span id="estado">Confeccionando ET</span><span>&nbsp; &nbsp; &nbsp;</span>
-            <button type='Button' onclick="asignarValorCheckBox(), mostrarCampoActualizar('imp-pri'),mostrarCampoActualizar('actualizarEstado')">M</button>
+            <button type='Button' onclick="asignarValorCheckBox(), mostrarOcultarCampo('imp-pri'),
+            mostrarOcultarCampo('actualizarEstado')">M</button>
         </div>
-        <div id = "imp-pri">
-            <span>Importante:</span> <input type="checkbox" id="importante" checked onclick="return false;">
+        <div id="imp-pri">
+            <span>Importante:</span> <input type="checkbox" id="importante" onclick="return false;">
             <span>&nbsp; &nbsp; &nbsp;</span>
-            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick="return false;"></span>
+            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick="return false;">
         </div>
 
         <p id="actualizarEstado" style="display: none">Nuevo Estado:
@@ -60,7 +61,7 @@
         <div>Descripcion: </div>
         <div id="descripcion">Realizar ET para sacar un servicio de laboratorio para la oficina</div>
         <button type='Button'
-            onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarCampoActualizar('actualizarDescripcion')">M</button>
+            onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion')">M</button>
         <p id="actualizarDescripcion" style="display: none">Nueva Descripcion:
             </br>
             <textarea id="inputactualizarDescripcion" style="width: 500px;">AA</textarea>
@@ -76,11 +77,15 @@
                 <span>28/08/2021</span>
                 <span>&nbsp; - &nbsp;</span>
                 <span>No realizado</span>
+                <span>&nbsp; &nbsp; &nbsp;</span>
+                <button type='Button' class='eliminarAvance'>X</button>
             </div>
             <div>
                 <span>29/08/2021</span>
                 <span>&nbsp; - &nbsp;</span>
                 <span>Enviado a legales</span>
+                <span>&nbsp; &nbsp; &nbsp;</span>
+                <button type='Button' class='eliminarAvance'>X</button>
             </div>
         </div>
         <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance">
@@ -88,7 +93,7 @@
             <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
         </p>
         </br>
-        <button type='Button' onClick="mostrarCampoActualizar('nuevoAvance')">Agregar nuevo avance</button>
+        <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance')">Agregar nuevo avance</button>
     </div>
 
 </body>

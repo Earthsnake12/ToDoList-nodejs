@@ -63,8 +63,8 @@ const middlewares = {
             req.body.id = ++generalData.UltimoId; //coloco id actualizado
 
             //paso la importancia y prioridad como un booleano
-            req.body.importancia = (req.body.importancia === "false") ? false : true;
-            req.body.prioridad = (req.body.prioridad === "false") ? false : true;
+            req.body.importante = (req.body.importante === "false") ? false : true;
+            req.body.prioritario = (req.body.prioritario === "false") ? false : true;
 
             // registro fecha
             let date = new Date();
@@ -109,33 +109,25 @@ const middlewares = {
                 return;
             }
 
-            let root = HTMLparser.parse(data); //Pagina base
-            let tabla = '<table id="lista" ><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr>' //tabla a generar
+            let root = HTMLparser.parse(data); //Parse la pagina
 
             fs.readFile("./data/General.json", 'utf8', (err, general) => {
 
                 if (err) {
-                    tabla = "<h1>No se pudo cargar la tabla</h1>";
+                    root = "<h1>No se pudo cargar registro</h1>";
 
                 } else {
                     let pendientes = JSON.parse(general).Pendientes;
+                    const tarea = pendientes.find(pendiente => pendiente.id === id);
 
-                    const tarea = pendientes.filter(pendiente => pendiente.id === id);
+                    root.querySelector("#id").set_content(tarea.id.toString());
+                    root.querySelector("#titulo").set_content(tarea.titulo.toString());
+                    root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
+                    root.querySelector("#estado").set_content(tarea.estado.toString());
+                    if(tarea.importante) root.querySelector("#importante").setAttribute("checked","");
+                    if(tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked","");
 
-                    /* pendientes.forEach(tarea => {
-                        tabla += "<tr>";
-                        tabla += "<td>" + tarea.id + "</td>";
-                        tabla += "<td>" + tarea.titulo + "</td>";
-                        tabla += "<td>" + tarea.estado + "</td>";
-                        tabla += "<td><button type='Button'>Click Me!</button></td>";
-                        tabla += "</tr>";
-
-                    });
-                    tabla += "</table>"; */
                 }
-
-                //root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
-
                 res.setHeader("Content-Type", "text/html");
                 res.writeHead(200);
                 res.end(root.toString());
