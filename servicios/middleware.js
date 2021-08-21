@@ -124,9 +124,19 @@ const middlewares = {
                     root.querySelector("#titulo").set_content(tarea.titulo.toString());
                     root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
                     root.querySelector("#estado").set_content(tarea.estado.toString());
-                    if(tarea.importante) root.querySelector("#importante").setAttribute("checked","");
-                    if(tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked","");
+                    if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
+                    if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
 
+                    for (let i = 0; i < tarea.avance.length; i++) {
+                        let nuevoAvance = '<div id = "' + i + '">';
+                        nuevoAvance += '<span>' + tarea.fecha[i] +'</span>';
+                        nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
+                        nuevoAvance += '<span>'+ tarea.avance[i] +'</span>';
+                        nuevoAvance += '<span>&nbsp; &nbsp; &nbsp;</span><button type="Button" class="eliminarAvance">X</button></div>'
+                    
+                        nuevoAvance = HTMLparser.parse(nuevoAvance);
+                        root.querySelector("#avances").appendChild(nuevoAvance);
+                    }
                 }
                 res.setHeader("Content-Type", "text/html");
                 res.writeHead(200);
