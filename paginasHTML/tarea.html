@@ -2,6 +2,7 @@
 
 <head>
     <title>Tareas</title>
+    <script src="jquery-3.6.0.min.js"></script>
 
     <style>
         p {
@@ -15,13 +16,46 @@
             if (x.style.display === "none") x.style.display = "block";
             else x.style.display = "none";
         }
+
         function asignarValor(idOrigen, idObjetivo) {
             let contenido = document.getElementById(idOrigen).innerHTML;
             document.getElementById(idObjetivo).innerHTML = contenido;
         }
+
         function asignarValorCheckBox() {
             document.getElementById("inputactualizarImportante").checked = document.getElementById("importante").checked;
             document.getElementById("inputactualizarPrioritario").checked = document.getElementById("prioritario").checked;
+        }
+
+        function agregarAvance() {
+            var titulo = $("#inputNuevoAvance").val();
+            if (titulo == "") {
+                $("#nuevaTareaTituloError").show();
+                $("#nuevaTareaTitulo").focus();
+                return false;
+            }
+            $.ajax({
+                type: "PUT",
+                url: "tarea",
+                data: {
+                    "fecha": "",
+                    "avance": ""
+                },
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+                    //alert(msj); // alerta para saber que se subio
+                    $("#botonCargaNuevaTareaMsj").html(msj);
+                    $("#botonCargaNuevaTareaMsj").show();
+
+                    if (head.status === 200) {
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr) {
+                    alert('Disculpe, hubo un problema');
+                }
+            })
         }
     </script>
 </head>
