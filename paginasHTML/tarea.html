@@ -9,7 +9,7 @@
             margin: 0px;
         }
     </style>
-
+    <!--
     <script>
         function mostrarOcultarCampo(id) {
             let x = document.getElementById(id);
@@ -30,25 +30,22 @@
         function agregarAvance() {
             var titulo = $("#inputNuevoAvance").val();
             if (titulo == "") {
-                $("#nuevaTareaTituloError").show();
-                $("#nuevaTareaTitulo").focus();
+               /*  $("#nuevaTareaTituloError").show();
+                $("#nuevaTareaTitulo").focus(); */
                 return false;
             }
+            let id = $("#id").val();
             $.ajax({
-                type: "PUT",
-                url: "tarea",
-                data: {
-                    "fecha": "",
-                    "avance": ""
-                },
+                type: "PATCH",
+                url: "tarea/" + id,
+                data: { "avance": "" },
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
-                    //alert(msj); // alerta para saber que se subio
-                    $("#botonCargaNuevaTareaMsj").html(msj);
-                    $("#botonCargaNuevaTareaMsj").show();
-
+                    
                     if (head.status === 200) {
-                        location.reload();
+                        //location.reload();
+                    }else{
+                        alert(msj);
                     }
 
                 },
@@ -57,7 +54,8 @@
                 }
             })
         }
-    </script>
+    
+    </script>-->
 </head>
 
 <body>
@@ -67,7 +65,7 @@
         <a href="/dos">Dos</a>
         <a href="/tres">Tres</a>
     </nav>
-    <h3></h3>
+    <!-- <h3></h3>
     <p id="id">00</p>
     <h2 id="titulo">Titulo</h2>
 
@@ -109,11 +107,11 @@
 
     </div>
     <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance">
-        <button type='Button'>Agregar avance</button>
+        <button type='Button' onClick="agregarAvance">Agregar avance</button>
         <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
     </p>
     <h3></h3>
-    <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance')">Agregar nuevo avance</button>
+    <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance')">Agregar nuevo avance</button> -->
 </body>
 
 </html>
