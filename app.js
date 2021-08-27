@@ -101,14 +101,13 @@ app.post('/tarea', function (req, res) {
 });
 
 //busca el id pasado y muestra el detalle de la tarea
-app.get('/tarea/:id',function (req, res) {
+app.get('/tarea/:id', function (req, res) {
     console.log(0);
     var id = parseInt(req.params.id, 10);
 
     res.writeHead(200);
     res.end();
-    console.log(id);
-    /*
+/*
     fs.readFile("./paginasHTML/tarea.html", (err, data) => {
 
         if (err) {
@@ -119,12 +118,12 @@ app.get('/tarea/:id',function (req, res) {
         }
         let root = HTMLparser.parse(data); //Parse la pagina
 
-        fs.readFile("./data/General.json", 'utf8', (err, general) => {
+        /*fs.readFile("./data/General.json", 'utf8', (err, general) => {
 
             if (err) {
                 root = "<h1>No se pudo cargar registro</h1>";
 
-            } else {
+            } else {/*
                 let pendientes = JSON.parse(general).Pendientes;
                 let tarea = pendientes.find(p => p.id == id);
                 console.log(pendientes[0].id);
@@ -143,14 +142,14 @@ app.get('/tarea/:id',function (req, res) {
                     nuevoAvance += '<span>&nbsp; &nbsp; &nbsp;</span><button type="Button" class="eliminarAvance">X</button></div>'
 
                     nuevoAvance = HTMLparser.parse(nuevoAvance);
-                    root.querySelector("#avances").appendChild(nuevoAvance);
-                } */
-    /*}
-    res.setHeader("Content-Type", "text/html");
-    res.writeHead(200);
-    res.end(root.toString());
-}); 
-});*/
+                    root.querySelector("#avances").appendChild(nuevoAvance); 
+                }*/
+            //}
+            //res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
+            res.end(root.toString());
+        //});
+    //});
 });
 
 //Agrega avance con fecha de hoy del id pasado
