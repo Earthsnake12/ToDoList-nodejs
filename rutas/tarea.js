@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
 });
 
 //busca el id pasado y muestra el detalle de la tarea
-router.get('/:id', function (req, res) {
+/* router.get('/id', function (req, res) {
 
     var id = parseInt(req.params.id, 10);
     console.log("Ver tarea " + id);
@@ -67,7 +67,7 @@ router.get('/:id', function (req, res) {
             return;
         }
         let root = HTMLparser.parse(data); //Parse la pagina
-        /* 
+        
                 fs.readFile("./data/General.json", 'utf8', (err, general) => {
         
                     if (err) {
@@ -94,16 +94,49 @@ router.get('/:id', function (req, res) {
                             nuevoAvance = HTMLparser.parse(nuevoAvance);
                             root.querySelector("#avances").appendChild(nuevoAvance); 
                         }
-                    } */
+                    }
         res.setHeader("Content-Type", "text/html");
         res.writeHead(200);
         res.end(root.toString());
-        // });
+        });
     });
+}); */
+
+router.get('/:id', function (req, res) {
+
+    var id = parseInt(req.params.id, 10);
+    console.log("Ver tarea " + id);
+
+    let root = "<p>" + id + "</p>"
+
+    res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
+        res.end(root.toString());
+        /* 
+    fs.readFile("./paginasHTML/tarea.html", (err, data) => {
+
+        if (err) {
+            res.writeHead(404);
+            res.write('No se pudo cargar la pagina');
+            res.end();
+            return;
+        }
+        root = HTMLparser.parse(data); //Parse la pagina
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
+        res.end(root.toString());
+
+        console.log("read");
+    }); */
+
+
+    console.log("fin");
 });
 
+
 //Agrega avance con fecha de hoy del id pasado
-router.patch('/tarea/:id', function (req, res) {
+/* router.patch('/:id', function (req, res) {
 
     var id = parseInt(req.params.id, 10);
 
@@ -140,6 +173,6 @@ router.patch('/tarea/:id', function (req, res) {
         res.writeHead(200);
         res.end("Avance registrado");
     });
-});
+}); */
 
 module.exports = router;
