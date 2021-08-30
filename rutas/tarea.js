@@ -53,9 +53,9 @@ router.post('/', function (req, res) {
 });
 
 //busca el id pasado y muestra el detalle de la tarea
-/* router.get('/id', function (req, res) {
+router.get('/', function (req, res) {
 
-    var id = parseInt(req.params.id, 10);
+    var id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
     console.log("Ver tarea " + id);
 
     fs.readFile("./paginasHTML/tarea.html", (err, data) => {
@@ -77,7 +77,7 @@ router.post('/', function (req, res) {
                         let pendientes = JSON.parse(general).Pendientes;
                         let tarea = pendientes.find(p => p.id === id);
                         
-                        root.querySelector("#id").set_content("tarea.id.toString()");
+                        root.querySelector("#id").set_content(tarea.id.toString());
                         root.querySelector("#titulo").set_content(tarea.titulo.toString());
                         root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
                         root.querySelector("#estado").set_content(tarea.estado.toString());
@@ -100,39 +100,7 @@ router.post('/', function (req, res) {
         res.end(root.toString());
         });
     });
-}); */
-
-router.get('/:id', function (req, res) {
-
-    var id = parseInt(req.params.id, 10);
-    console.log("Ver tarea " + id);
-
-    let root = "<p>" + id + "</p>"
-
-    res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
-        res.end(root.toString());
-        /* 
-    fs.readFile("./paginasHTML/tarea.html", (err, data) => {
-
-        if (err) {
-            res.writeHead(404);
-            res.write('No se pudo cargar la pagina');
-            res.end();
-            return;
-        }
-        root = HTMLparser.parse(data); //Parse la pagina
-
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
-        res.end(root.toString());
-
-        console.log("read");
-    }); */
-
-
-    console.log("fin");
-});
+}); 
 
 
 //Agrega avance con fecha de hoy del id pasado
