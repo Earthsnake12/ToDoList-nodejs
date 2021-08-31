@@ -31,22 +31,25 @@
         }
 
         function agregarAvance() {
-            var titulo = $("#inputNuevoAvance").val();
-            if (titulo == "") {
-                /*  $("#nuevaTareaTituloError").show();
-                 $("#nuevaTareaTitulo").focus(); */
+            var avance = $("#inputNuevoAvance").val();
+            if (avance == "") {
+                $("#nuevaTareaEstadoError").show();
+                $("#inputNuevoAvance").focus();
                 return false;
             }
-            let id = $("#id").val();
+            let id = $("#id").html();
+            console.log("id"+id+"h");
             $.ajax({
                 type: "PATCH",
-                url: "tarea/" + id,
-                data: { "avance": "" },
+                url: "/tarea?id=" + id,
+                data: { 
+                    "ida": 0,
+                    "avance": avance
+                 },
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
-
                     if (head.status === 200) {
-                        //location.reload();
+                        location.reload();
                     } else {
                         alert(msj);
                     }
@@ -109,8 +112,8 @@
 
     </div>
     <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance">
-        <button type='Button' onClick="agregarAvance">Agregar avance</button>
-        <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
+        <button type='Button' onClick="agregarAvance()">Agregar avance</button>
+        <span class="error" id="nuevaTareaEstadoError" style="display: none">Campo requerido</span>
     </p>
     <h3></h3>
     <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance')">Agregar nuevo avance</button>

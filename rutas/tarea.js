@@ -67,46 +67,47 @@ router.get('/', function (req, res) {
             return;
         }
         let root = HTMLparser.parse(data); //Parse la pagina
-        
-                fs.readFile("./data/General.json", 'utf8', (err, general) => {
-        
-                    if (err) {
-                        root = "<h1>No se pudo cargar registro</h1>";
-        
-                    } else {
-                        let pendientes = JSON.parse(general).Pendientes;
-                        let tarea = pendientes.find(p => p.id === id);
-                        
-                        root.querySelector("#id").set_content(tarea.id.toString());
-                        root.querySelector("#titulo").set_content(tarea.titulo.toString());
-                        root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
-                        root.querySelector("#estado").set_content(tarea.estado.toString());
-                        if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
-                        if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
-        
-                        for (let i = 0; i < tarea.avance.length; i++) {
-                            let nuevoAvance = '<div id = "' + i + '">';
-                            nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
-                            nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
-                            nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
-                            nuevoAvance += '<span>&nbsp; &nbsp; &nbsp;</span><button type="Button" class="eliminarAvance">X</button></div>'
-        
-                            nuevoAvance = HTMLparser.parse(nuevoAvance);
-                            root.querySelector("#avances").appendChild(nuevoAvance); 
-                        }
-                    }
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
-        res.end(root.toString());
+
+        fs.readFile("./data/General.json", 'utf8', (err, general) => {
+
+            if (err) {
+                root = "<h1>No se pudo cargar registro</h1>";
+
+            } else {
+                let pendientes = JSON.parse(general).Pendientes;
+                let tarea = pendientes.find(p => p.id === id);
+
+                root.querySelector("#id").set_content(tarea.id.toString());
+                root.querySelector("#titulo").set_content(tarea.titulo.toString());
+                root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
+                root.querySelector("#estado").set_content(tarea.estado.toString());
+                if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
+                if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
+
+                for (let i = 0; i < tarea.avance.length; i++) {
+                    let nuevoAvance = '<div id = "' + i + '">';
+                    nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
+                    nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
+                    nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
+                    nuevoAvance += '<span>&nbsp; &nbsp; &nbsp;</span><button type="Button" class="eliminarAvance">X</button></div>'
+
+                    nuevoAvance = HTMLparser.parse(nuevoAvance);
+                    root.querySelector("#avances").appendChild(nuevoAvance);
+                }
+            }
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
+            res.end(root.toString());
         });
     });
-}); 
+});
 
 
 //Agrega avance con fecha de hoy del id pasado
-/* router.patch('/:id', function (req, res) {
+router.patch('/', function (req, res) {
 
-    var id = parseInt(req.params.id, 10);
+    const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
+    console.log("Actualizar Avance " + id);
 
     fs.readFile("./data/General.json", 'utf8', (err, general) => {
 
@@ -120,13 +121,14 @@ router.get('/', function (req, res) {
             let archivoGeneral = JSON.parse(general);
 
             //obtengo el indice de la tarea en el general
-            const tareaIndice = archivoGeneral.pendientes.findIndex(pendiente => pendiente.id === id);
+            const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
 
             //agrego fecha y avance
-            archivoGeneral.pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
-            archivoGeneral.pendientes[tareaIndice].avance.push(req.body.avance);
+            let date = new Date();
+            archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+            archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.avance);
 
-
+            //actualizo el archivo general
             fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
                 if (err) {
                     console.log(err);
@@ -141,6 +143,6 @@ router.get('/', function (req, res) {
         res.writeHead(200);
         res.end("Avance registrado");
     });
-}); */
+});
 
 module.exports = router;
