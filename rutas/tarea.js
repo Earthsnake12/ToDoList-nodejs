@@ -107,7 +107,7 @@ router.get('/', function (req, res) {
 router.patch('/', function (req, res) {
 
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
-    console.log("Actualizar Avance " + id);
+
 
     fs.readFile("./data/General.json", 'utf8', (err, general) => {
 
@@ -123,14 +123,26 @@ router.patch('/', function (req, res) {
         //obtengo el indice de la tarea en el general
         const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
 
-        //agrego fecha y avance
-        let date = new Date();
-        archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
-        archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.avance);
+        switch (req.body.objetivo) {
+
+            //agrego nuevo avance
+            case 'avance':
+                console.log("Actualizar Avance");
+                let date = new Date();
+                archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+                archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.valor);
+                break;
+
+            //actualizo descripcion
+            case 'descripcion':
+                console.log("Modificar Descripcion");
+                archivoGeneral.Pendientes[tareaIndice].descripcion = req.body.valor;
+                break;
+        }
 
         //actualizo el archivo general
         fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
-            
+
             if (err) {
                 console.log(err);
                 res.writeHead(503);

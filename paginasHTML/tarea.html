@@ -41,12 +41,30 @@
                 $("#inputNuevoAvance").focus();
                 return false;
             }
+
+            tirarAjax("avance", avance);
+        }
+
+        function cambiarDescripcion() {
+            var descripcion = $("#inputactualizarDescripcion").val();
+            if (descripcion == "") {
+                $("#actualizarDescripcionError").show();
+                $("#inputactualizarDescripcion").focus();
+                return false;
+            }
+
+            tirarAjax("descripcion", descripcion);
+        }
+
+        function tirarAjax(objetivo, valor){
             let id = $("#id").html();
-            console.log("id"+id+"h");
             $.ajax({
                 type: "PATCH",
                 url: "/tarea?id=" + id,
-                data: {"avance" : avance},
+                data: {
+                    "objetivo": objetivo,
+                    "valor" : valor
+                },
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
                     if (head.status === 200) {
@@ -104,7 +122,8 @@
 
     <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
         <p><textarea id="inputactualizarDescripcion" style="width: 500px;">AA</textarea></p>
-        <button type='Button'>Actualizar</button>
+        <button type='Button' onClick="cambiarDescripcion()">Actualizar</button> 
+        <span class="error" id="actualizarDescripcionError" style="display: none">Campo requerido</span>
     </div>
 
     <h3></h3>
