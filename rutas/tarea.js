@@ -127,7 +127,7 @@ router.patch('/', function (req, res) {
 
             //agrego nuevo avance
             case 'avance':
-                console.log("Actualizar Avance");
+                console.log("Agregar Avance");
                 let date = new Date();
                 archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
                 archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.valor);
@@ -135,8 +135,16 @@ router.patch('/', function (req, res) {
 
             //actualizo descripcion
             case 'descripcion':
-                console.log("Modificar Descripcion");
+                console.log("Actualizar Descripcion");
                 archivoGeneral.Pendientes[tareaIndice].descripcion = req.body.valor;
+                break;
+
+                //actualizo estado
+            case 'estado':
+                console.log("Actualizar Estado");
+                archivoGeneral.Pendientes[tareaIndice].estado = req.body.valor[0];
+                archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1]=== 'true');
+                archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2]=== 'true');
                 break;
         }
 
