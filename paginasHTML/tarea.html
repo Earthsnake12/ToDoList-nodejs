@@ -20,6 +20,10 @@
             else x.style.display = "none";
         }
 
+        function focusCampo(id) {
+            document.getElementById(id).focus();
+        }
+
         function asignarValor(idOrigen, idObjetivo) {
             let contenido = document.getElementById(idOrigen).innerHTML;
             document.getElementById(idObjetivo).innerHTML = contenido;
@@ -42,10 +46,7 @@
             $.ajax({
                 type: "PATCH",
                 url: "/tarea?id=" + id,
-                data: { 
-                    "ida": 0,
-                    "avance": avance
-                 },
+                data: {"avance" : avance},
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
                     if (head.status === 200) {
@@ -76,7 +77,7 @@
 
     <div>Estado: <span id="estado">Estado</span><span>&nbsp; &nbsp; &nbsp;</span>
         <button type='Button' onclick="asignarValorCheckBox(), mostrarOcultarCampo('imp-pri'),
-            mostrarOcultarCampo('actualizarEstado')">M</button>
+            mostrarOcultarCampo('actualizarEstado'), focusCampo('inputactualizarEstado')">M</button>
     </div>
     <div id="imp-pri">
         <span>Importante:</span> <input type="checkbox" id="importante" onclick="return false;">
@@ -99,7 +100,7 @@
     <div>Descripcion: </div>
     <div id="descripcion">descripcion</div>
     <button type='Button'
-        onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion')">M</button>
+        onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion'), focusCampo('inputactualizarDescripcion')">M</button>
 
     <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
         <p><textarea id="inputactualizarDescripcion" style="width: 500px;">AA</textarea></p>
@@ -116,7 +117,7 @@
         <span class="error" id="nuevaTareaEstadoError" style="display: none">Campo requerido</span>
     </p>
     <h3></h3>
-    <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance')">Agregar nuevo avance</button>
+    <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance'), focusCampo('inputNuevoAvance')">Agregar nuevo avance</button>
 </body>
 
 </html>

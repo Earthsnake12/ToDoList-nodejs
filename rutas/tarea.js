@@ -117,31 +117,31 @@ router.patch('/', function (req, res) {
             res.end("No se pudo cargar la base de datos");
             return;
 
-        } else {
-            let archivoGeneral = JSON.parse(general);
-
-            //obtengo el indice de la tarea en el general
-            const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
-
-            //agrego fecha y avance
-            let date = new Date();
-            archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
-            archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.avance);
-
-            //actualizo el archivo general
-            fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
-                if (err) {
-                    console.log(err);
-                    res.writeHead(503);
-                    res.end("No se pudo actualizar Archivo General");
-                    return;
-                }
-            });
         }
+        let archivoGeneral = JSON.parse(general);
 
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
-        res.end("Avance registrado");
+        //obtengo el indice de la tarea en el general
+        const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
+
+        //agrego fecha y avance
+        let date = new Date();
+        archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+        archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.avance);
+
+        //actualizo el archivo general
+        fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
+            
+            if (err) {
+                console.log(err);
+                res.writeHead(503);
+                res.end("No se pudo actualizar Archivo General");
+                return;
+            }
+
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
+            res.end("Avance registrado");
+        });
     });
 });
 
