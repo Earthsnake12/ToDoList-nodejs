@@ -4,7 +4,7 @@ const fs = require("fs");
 const HTMLparser = require('node-html-parser');
 
 
-//busca el id en el general, lo actualiza y carga una nueva tarea
+//Crea una nueva tarea pendiente en el general 
 router.post('/', function (req, res) {
 
     //cargo JSON general
@@ -89,7 +89,7 @@ router.get('/', function (req, res) {
                     nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
                     nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
                     nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
-                    nuevoAvance += '<span>&nbsp; &nbsp; &nbsp;</span><button type="Button" class="eliminarAvance">X</button></div>'
+                    nuevoAvance += '</div>'
 
                     nuevoAvance = HTMLparser.parse(nuevoAvance);
                     root.querySelector("#avances").appendChild(nuevoAvance);
