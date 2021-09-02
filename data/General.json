@@ -1,5 +1,5 @@
 {
-    "UltimoId": 3,
+    "UltimoId": 2,
     "Pendientes": [
         {
             "id": 1,
@@ -36,21 +36,6 @@
             "avance": [
                 "No realizado",
                 "Enviado a legales"
-            ],
-            "files": []
-        },
-        {
-            "id": 3,
-            "titulo": "a",
-            "descripcion": "w",
-            "estado": "e",
-            "importante": true,
-            "prioritario": false,
-            "fecha": [
-                "2-9-2021"
-            ],
-            "avance": [
-                "Tarea registrada"
             ],
             "files": []
         }

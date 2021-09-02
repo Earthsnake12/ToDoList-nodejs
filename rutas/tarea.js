@@ -29,12 +29,23 @@ router.post('/', function (req, res) {
 
         // registro avance
         req.body.avance = ["Tarea registrada"];
- 
+
         // Agrego campo para registrar los archivos
         req.body.files = []
 
         //lo guardo dentro del general
         generalData.Pendientes.push(req.body);
+
+        //creo la carpeta para guardar los archivos
+        fs.mkdir("./data/files/" + req.body.id, (err) => {
+            if (err) {
+                console.log(err);
+                res.writeHead(500);
+                res.end("No se pudo crear la carpeta para los archivos");
+                return;
+            }
+            console.log("Carpeta creada");
+        });
 
         //guardo JSON actualizado
         fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
@@ -142,12 +153,12 @@ router.patch('/', function (req, res) {
                 archivoGeneral.Pendientes[tareaIndice].descripcion = req.body.valor;
                 break;
 
-                //actualizo estado
+            //actualizo estado
             case 'estado':
                 console.log("Actualizar Estado");
                 archivoGeneral.Pendientes[tareaIndice].estado = req.body.valor[0];
-                archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1]=== 'true');
-                archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2]=== 'true');
+                archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1] === 'true');
+                archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2] === 'true');
                 break;
         }
 
