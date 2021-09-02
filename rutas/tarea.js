@@ -29,6 +29,9 @@ router.post('/', function (req, res) {
 
         // registro avance
         req.body.avance = ["Tarea registrada"];
+ 
+        // Agrego campo para registrar los archivos
+        req.body.files = []
 
         //lo guardo dentro del general
         generalData.Pendientes.push(req.body);

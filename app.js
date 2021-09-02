@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload')
 
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 
 //pagina inicio
 app.get('/', function (req, res) {
@@ -20,6 +22,9 @@ app.use("/listaTarea",require("./rutas/listaTarea.js"))
 
 //manejo de las tareas
 app.use("/tarea",require("./rutas/tarea.js"))
+
+//subida de archivos
+app.use("/upload",require("./rutas/upload.js"))
 
 app.listen(8000)
 
