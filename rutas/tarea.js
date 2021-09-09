@@ -117,7 +117,7 @@ router.get('/', function (req, res) {
 });
 
 
-//Agrega avance con fecha de hoy del id pasado
+//Agrega avance con fecha de hoy o actualiza estado o descripcion del id pasado
 router.patch('/', function (req, res) {
 
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1

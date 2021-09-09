@@ -96,7 +96,15 @@
                 }
             })
         }
-    </script>
+   
+        $(function () {
+            $("#subirArchivo").click(function () {
+                let id = $("#id").html();
+                $("#formNuevoArchivo").attr("action",'/upload?id=' + id);
+            })
+        })
+   
+   </script>
 </head>
 
 <body>
@@ -135,7 +143,7 @@
     <div>Descripcion: </div>
     <div id="descripcion">descripcion</div>
     <button type='Button'
-        onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion'), focusCampo('inputactualizarDescripcion')">M</button>
+        onclick="asignarValor('descripcion', 'inputact1ualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion'), focusCampo('inputactualizarDescripcion')">M</button>
 
     <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
         <p><textarea id="inputactualizarDescripcion" style="width: 500px;">AA</textarea></p>
@@ -145,16 +153,24 @@
 
     <h3></h3>
 
-    <div id="avances"> Avances:
+    <div id="avances">Avances: </div>
 
-    </div>
     <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance">
         <button type='Button' onClick="agregarAvance()">Agregar avance</button>
         <span class="error" id="nuevaTareaEstadoError" style="display: none">Campo requerido</span>
     </p>
-    <h3></h3>
     <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance'), focusCampo('inputNuevoAvance')">Agregar nuevo
         avance</button>
+
+    <h3></h3>
+
+    <div id="files">Files: </div>
+
+    <p>Agregar nuevo archivo</p>
+    <form action='/upload' id="formNuevoArchivo" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Subir" id="subirArchivo">
+    </form>
 </body>
 
 </html>

@@ -1,13 +1,13 @@
 {
-    "UltimoId": 2,
+    "UltimoId": 9,
     "Pendientes": [
         {
             "id": 1,
             "titulo": "Servicio de lavoratorio",
             "descripcion": "Realizar ET para sacar un servicio de laboratorio para la oficina. Modificado",
-            "estado": "Finalizado",
-            "importante": false,
-            "prioritario": false,
+            "estado": "No Finalizado",
+            "importante": true,
+            "prioritario": true,
             "fecha": [
                 "28-08-21",
                 "29-08-21",
