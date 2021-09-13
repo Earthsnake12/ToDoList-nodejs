@@ -96,16 +96,42 @@
                 }
             })
         }
-   
+
         //agrega id a la direccion que manda el form
         $(function () {
-            $("#subirArchivo").click(function () {
+            //$("#subirArchivo").click(function () {
+            $("#formNuevoArchivo").on("submit", function (e) {
+                e.preventDefault();
+                let f = $(this);
                 let id = $("#id").html();
-                $("#formNuevoArchivo").attr("action",'/upload?id=' + id);
+                let formData = new FormData(document.getElementById("formNuevoArchivo"))//.attr("action",'/upload?id=' + id);
+
+                //formData.append('file', $('#archivoParaSubir')[0].files[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/upload?id=" + id,
+                    data: formData,
+                    dataType: 'text',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (msj, textStatus, head) {
+                        if (head.status === 200) {
+                            location.reload();
+                        } else {
+                            alert(msj);
+                        }
+
+                    },
+                    error: function (xhr) {
+                        alert('Disculpe, hubo un problema');
+                    }
+                })
             })
         })
-   
-   </script>
+
+    </script>
 </head>
 
 <body>
@@ -168,8 +194,8 @@
     <div id="files">Files: </div>
 
     <p>Agregar nuevo archivo</p>
-    <form action='/upload' id="formNuevoArchivo" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
+    <form id="formNuevoArchivo" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="archivoParaSubir">
         <input type="submit" value="Subir" id="subirArchivo">
     </form>
 </body>
