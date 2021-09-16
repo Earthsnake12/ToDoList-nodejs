@@ -108,6 +108,16 @@ router.get('/', function (req, res) {
                     nuevoAvance = HTMLparser.parse(nuevoAvance);
                     root.querySelector("#avances").appendChild(nuevoAvance);
                 }
+
+                for (let i = 0; i < tarea.files.length; i++) {
+                    let nuevoFile = ' <p></p><a href="';
+                    nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                    nuevoFile += '" target="_blank">';
+                    nuevoFile += tarea.files[i].slice(15) + '</a>';
+
+                    nuevoFile = HTMLparser.parse(nuevoFile);
+                    root.querySelector("#files").appendChild(nuevoFile);
+                }
             }
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
@@ -159,6 +169,17 @@ router.patch('/', function (req, res) {
                 archivoGeneral.Pendientes[tareaIndice].estado = req.body.valor[0];
                 archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1] === 'true');
                 archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2] === 'true');
+                break;
+
+            //actualizo files
+            case 'files':
+                console.log("Actualizar Files");
+                archivoGeneral.Pendientes[tareaIndice].files.push(req.body.valor);
+                break;
+
+            default:
+                console.log("Por aca no paso");
+                console.log(req.body);
                 break;
         }
 

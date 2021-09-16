@@ -1,0 +1,27 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "Registro de tareas y avances",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "node-fetch": "^2.6.2",
+    "node-html-parser": "^3.3.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Earthsnake12/nodejs.git"
+  },
+  "author": "Milesi Ignacio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Earthsnake12/nodejs/issues"
+  },
+  "homepage": "https://github.com/Earthsnake12/nodejs#readme"
+}
