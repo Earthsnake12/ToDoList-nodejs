@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
     console.log("Pagina de Inicio");
     res.setHeader("Content-Type", "text/html");
     res.writeHead(200);
-    res.end("Index");
+    res.end("<a href='/listatarea'>Listado de tareas</a>");
 });
 
 //revisa los pendientes y crea la tabla.
