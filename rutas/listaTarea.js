@@ -33,7 +33,9 @@ router.get('/', function (req, res) {
                     tabla += "<td>" + tarea.id + "</td>";
                     tabla += "<td>" + tarea.titulo + "</td>";
                     tabla += "<td>" + tarea.estado + "</td>";
-                    tabla += "<td><button type='Button'>Click Me!</button></td>";
+                    tabla += "<td><a href='/tarea?id=";
+                    tabla += tarea.id;
+                    tabla += "'>Ver Tarea</a></td>";
                     tabla += "</tr>";
 
                 });

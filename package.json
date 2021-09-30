@@ -4,9 +4,11 @@
   "description": "Registro de tareas y avances",
   "main": "app.js",
   "dependencies": {
+    "@freiraum/msgreader": "^1.1.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+    "html-pdf": "^3.0.1",
     "node-fetch": "^2.6.2",
     "node-html-parser": "^3.3.6"
   },

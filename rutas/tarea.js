@@ -110,11 +110,25 @@ router.get('/', function (req, res) {
                 }
 
                 for (let i = 0; i < tarea.files.length; i++) {
-                    let nuevoFile = ' <p></p><a href="';
-                    nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                    nuevoFile += '" target="_blank">';
-                    nuevoFile += tarea.files[i].slice(15) + '</a>';
+                    let nuevoFile;
+                    if (tarea.files[i].slice(-3) === "msg") {
+                        
+                        nuevoFile = ' <p></p><a href="';
+                        nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                        nuevoFile += '.pdf" target="_blank">';
+                        nuevoFile += tarea.files[i].slice(15) + '</a>';
 
+                        nuevoFile += ' <spam>.-----------.</spam><a href="';
+                        nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                        nuevoFile += '" target="_blank">';
+                        nuevoFile += 'Descargar Mail</a>';
+                    } else {
+
+                        nuevoFile = ' <p></p><a href="';
+                        nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                        nuevoFile += '" target="_blank">';
+                        nuevoFile += tarea.files[i].slice(15) + '</a>';
+                    }
                     nuevoFile = HTMLparser.parse(nuevoFile);
                     root.querySelector("#files").appendChild(nuevoFile);
                 }
