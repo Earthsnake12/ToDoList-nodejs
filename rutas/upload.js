@@ -82,11 +82,11 @@ function convertToPDF(msgFilePath) {
         .filter(Boolean)
         .map((line) => `<p>${renderWithLinks(line)}</p>`)
         .join("\n");
-    body = body.replace(/<p>De:/g, "<p>.</p><p>.</p><p>De:");
-    body = body.replace(/(<p>Asunto:.*)=?<\/p>/g, "</p><p>.</p>");
+    body = body.replace(/<p>De:/g, "<p>.</p><p>.</p><p>.</p><p>.</p><p>De:");
+    body = body.replace(/(?:<p>Asunto:.*)(<\/p>)/g, "</p><p>.</p>");
     
     const html = renderHTML({ from, to, date, subject, body });
-
+console.log(html)
     return new Promise((resolve, reject) => {
         pdf.create(html).toStream(function (err, stream) {
             if (err) {
