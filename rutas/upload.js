@@ -86,7 +86,7 @@ function convertToPDF(msgFilePath) {
     body = body.replace(/(?:<p>Asunto:.*)(<\/p>)/g, "</p><p>.</p>");
     
     const html = renderHTML({ from, to, date, subject, body });
-console.log(html)
+
     return new Promise((resolve, reject) => {
         pdf.create(html).toStream(function (err, stream) {
             if (err) {
