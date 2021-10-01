@@ -83,6 +83,8 @@ function convertToPDF(msgFilePath) {
         .map((line) => `<p>${renderWithLinks(line)}</p>`)
         .join("\n");
     body = body.replace(/<p>De:/g, "<p>.</p><p>.</p><p>De:");
+    body = body.replace(/(<p>Asunto:.*)=?<\/p>/g, "</p><p>.</p>");
+    
     const html = renderHTML({ from, to, date, subject, body });
 
     return new Promise((resolve, reject) => {
@@ -131,6 +133,9 @@ function renderHTML({ from, to, date, subject, body }) {
         .body {
             padding: 2%;
             font-family: Arial, Helvetica, sans-serif;
+        }
+        p {
+            margin: 2px;
         }
           </style>
           <div class="bg-white body">
