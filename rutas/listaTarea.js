@@ -18,7 +18,16 @@ router.get('/', function (req, res) {
         }
 
         let root = HTMLparser.parse(data); //Pagina base
-        let tabla = '<table id="lista" class="tablesorter"><thead><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr></thead><tbody>' //tabla a generar
+
+        //tabla a generar
+        let tabla = '<table id="lista" class="tablesorter"><thead>';
+        tabla += '<tr><th style="width: 30px;">ID</th>'
+        tabla += '<th>TITULO</th>'
+        tabla += '<th>ESTADO</th>'
+        tabla += '<th style="width: 75px;">IMPORT</th>'
+        tabla += '<th style="width: 75px;">PRIOR</th>'
+        tabla += '<th style="width: 70px;">LINK</th>'
+        tabla += '</tr></thead><tbody>' 
 
         fs.readFile("./data/General.json", 'utf8', (err, general) => {
 
@@ -33,6 +42,8 @@ router.get('/', function (req, res) {
                     tabla += "<td>" + tarea.id + "</td>";
                     tabla += "<td>" + tarea.titulo + "</td>";
                     tabla += "<td>" + tarea.estado + "</td>";
+                    tabla += (tarea.importante)?"<td>si</td>":"<td>.</td>";
+                    tabla += (tarea.prioritario)?"<td>si</td>":"<td>.</td>";
                     tabla += "<td><a href='/tarea?id=";
                     tabla += tarea.id;
                     tabla += "'>Ver Tarea</a></td>";
