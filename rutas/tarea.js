@@ -41,7 +41,6 @@ router.post('/', function (req, res) {
         //lo guardo dentro del general
         generalData.Pendientes.push(req.body);
 
-        console.log(req.body)
         //creo la carpeta para guardar los archivos
         fs.mkdir("./data/files/" + req.body.id, (err) => {
             if (err) {
