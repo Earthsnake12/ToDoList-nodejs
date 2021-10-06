@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
         }
 
         let root = HTMLparser.parse(data); //Pagina base
-        let tabla = '<table id="lista" ><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr>' //tabla a generar
+        let tabla = '<table id="lista" class="tablesorter"><thead><tr><th>ID</th><th>TITULO</th><th>ESTADO</th><th>LINK</th></tr></thead><tbody>' //tabla a generar
 
         fs.readFile("./data/General.json", 'utf8', (err, general) => {
 
@@ -39,7 +39,7 @@ router.get('/', function (req, res) {
                     tabla += "</tr>";
 
                 });
-                tabla += "</table>";
+                tabla += "</tbody></table>";
             }
 
             root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag

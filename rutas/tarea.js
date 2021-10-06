@@ -141,7 +141,7 @@ router.get('/', function (req, res) {
 });
 
 
-//Agrega avance con fecha de hoy o actualiza estado o descripcion del id pasado
+//Agrega avance con fecha de hoy o actualiza estado o descripcion o agrega ruta del archivo pasado del id pasado
 router.patch('/', function (req, res) {
 
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
@@ -215,3 +215,10 @@ router.patch('/', function (req, res) {
 });
 
 module.exports = router;
+/* 
+function eliminarDiacriticosEs(texto) {
+    return texto
+           .normalize('NFD')
+           .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi,"$1")
+           .normalize();
+} */

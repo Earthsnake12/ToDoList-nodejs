@@ -27,12 +27,18 @@ router.post('/', (req, res) => {
             res.end("No se pudo guardar el archivo");
             return;
         }
-        if (path.extname(EDFile.name) === ".msg") {
+
+        //si el acrhivo es un email lo transformo en PDF
+        if (path.extname(EDFile.name) === ".msg") {          
             console.log("Transformado archivo")
-            convertToPDF(ubicacion).catch(error => {
+           
+            try{
+                convertToPDF(ubicacion);
+
+            } catch(error) {
                 console.log("No se pudo transformar el archivo")
                 console.log(error)
-            });
+            };
         }
 
         fetch("http://127.0.0.1:8000/tarea?id=" + id, {
@@ -44,11 +50,13 @@ router.post('/', (req, res) => {
             })
 
         }).then(response => {
+           
             if (response.ok) {
                 console.log("Archivo guardado en: " + ubicacion)
                 res.setHeader("Content-Type", "text/html");
                 res.writeHead(200);
                 res.end("Archivo guardado");
+
             } else {
                 console.log("No se pudo actualizar Archivo General Pero Archivo guardado en: " + ubicacion)
                 res.writeHead(503);
@@ -82,11 +90,20 @@ function convertToPDF(msgFilePath) {
         .filter(Boolean)
         .map((line) => `<p>${renderWithLinks(line)}</p>`)
         .join("\n");
-    body = body.replace(/<p>De:/g, "<p>.</p><p>.</p><p>.</p><p>.</p><p>De:");
-    body = body.replace(/(?:<p>Asunto:.*)(<\/p>)/g, "</p><p>.</p>");
+    //genero espacio entre mails presedente (en la cadena)
+    body = body.replace(/<p>De:/g, function(encontrado) {
+        return  "<p>.</p><p>.</p><p>.</p><p>.</p>" + encontrado
+      });
+
+    //genero espacio entre encabezado y asunto en mails presedente (en la cadena)
+    body = body.replace(/<p>Asunto:.*<\/p>/g, function(encontrado) {
+        return encontrado + "<p>.</p>"
+      });
     
+    //genero el HTML
     const html = renderHTML({ from, to, date, subject, body });
 
+    //transformo el HTML en PDFs
     return new Promise((resolve, reject) => {
         pdf.create(html).toStream(function (err, stream) {
             if (err) {

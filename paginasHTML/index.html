@@ -6,6 +6,7 @@
     <title>Index</title>
     <link rel="stylesheet" type="text/css" href="estilo.css" />
     <script src="jquery-3.6.0.min.js"></script>
+    <script src="tableSorter.js"></script>
     <script>
 
         function mostrarOcultarCampo(id) {
@@ -18,8 +19,10 @@
             document.getElementById(id).focus();
         }
 
-
         $(function () {
+
+            $("#lista").tablesorter(); 
+
             $('.error').hide();
             $("#botonCargaNuevaTarea").click(function () {
                 $('.error').hide();
@@ -93,34 +96,38 @@
     <nav>
         <a href="/listatarea">Listado de tareas</a>
     </nav>
-    <div id="lista">
-        <h1>No se pudo cargar la Tabla</h1>
-    </div>
-
-    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva tarea</button>
+    
+    <h1></h1>
+    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
+        tarea</button>
 
     <div id="divFormulario" style="display: none">
 
-    <form name="nuevaTarea" action="">
-        <h1>Nueva tarea</h1>
-        <p>Titulo: <input type="text" id="nuevaTareaTitulo" style="width: 300px;">
-            <span class="error" id="nuevaTareaTituloError">Campo requerido</span>
-        </p>
+        <form name="nuevaTarea" action="">
+            <h1>Nueva tarea</h1>
+            <p>Titulo: <input type="text" id="nuevaTareaTitulo" style="width: 300px;">
+                <span class="error" id="nuevaTareaTituloError">Campo requerido</span>
+            </p>
 
-        <p>Descripcion: <textarea id="nuevaTareaDescripcion" style="width: 300px; height: 50px;"></textarea>
-            <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
-        </p>
+            <p>Descripcion: <textarea id="nuevaTareaDescripcion" style="width: 300px; height: 50px;"></textarea>
+                <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
+            </p>
 
-        <p>Estado: <input type="text" id="nuevaTareaEstado" style="width: 300px;">
-            <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
-        </p>
+            <p>Estado: <input type="text" id="nuevaTareaEstado" style="width: 300px;">
+                <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
+            </p>
 
-        <p>Importante: <input type="checkbox" id="nuevaTareaImportancia"></p>
-        <p>Prioritario: <input type="checkbox" id="nuevaTareaPrioridad"></p>
+            <p>Importante: <input type="checkbox" id="nuevaTareaImportancia"></p>
+            <p>Prioritario: <input type="checkbox" id="nuevaTareaPrioridad"></p>
 
-        <input type="submit" id="botonCargaNuevaTarea" value="Subir">
-        <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
-    </form>
+            <input type="submit" id="botonCargaNuevaTarea" value="Subir">
+            <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
+        </form>
+    </div>
+
+    
+    <div id="lista">
+        <h1>No se pudo cargar la Tabla</h1>
     </div>
 
 </body>
