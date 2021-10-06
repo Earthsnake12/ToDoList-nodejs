@@ -19,6 +19,11 @@ router.post('/', function (req, res) {
         let generalData = JSON.parse(data);
         req.body.id = ++generalData.UltimoId; //coloco id actualizado
 
+        //elimino acentos en titulo, descripcion y estado
+        req.body.titulo = eliminarDiacriticosEs(req.body.titulo);
+        req.body.descripcion = eliminarDiacriticosEs(req.body.descripcion);
+        req.body.estado = eliminarDiacriticosEs(req.body.estado);
+
         //paso la importancia y prioridad como un booleano
         req.body.importante = (req.body.importante === "false") ? false : true;
         req.body.prioritario = (req.body.prioritario === "false") ? false : true;
@@ -36,6 +41,7 @@ router.post('/', function (req, res) {
         //lo guardo dentro del general
         generalData.Pendientes.push(req.body);
 
+        console.log(req.body)
         //creo la carpeta para guardar los archivos
         fs.mkdir("./data/files/" + req.body.id, (err) => {
             if (err) {
@@ -168,19 +174,19 @@ router.patch('/', function (req, res) {
                 console.log("Agregar Avance");
                 let date = new Date();
                 archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
-                archivoGeneral.Pendientes[tareaIndice].avance.push(req.body.valor);
+                archivoGeneral.Pendientes[tareaIndice].avance.push(eliminarDiacriticosEs(req.body.valor));
                 break;
 
             //actualizo descripcion
             case 'descripcion':
                 console.log("Actualizar Descripcion");
-                archivoGeneral.Pendientes[tareaIndice].descripcion = req.body.valor;
+                archivoGeneral.Pendientes[tareaIndice].descripcion = eliminarDiacriticosEs(req.body.valor);
                 break;
 
             //actualizo estado
             case 'estado':
                 console.log("Actualizar Estado");
-                archivoGeneral.Pendientes[tareaIndice].estado = req.body.valor[0];
+                archivoGeneral.Pendientes[tareaIndice].estado = eliminarDiacriticosEs(req.body.valor[0]);
                 archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1] === 'true');
                 archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2] === 'true');
                 break;
@@ -215,10 +221,10 @@ router.patch('/', function (req, res) {
 });
 
 module.exports = router;
-/* 
+
 function eliminarDiacriticosEs(texto) {
     return texto
            .normalize('NFD')
            .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi,"$1")
            .normalize();
-} */
+}
