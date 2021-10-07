@@ -22,11 +22,11 @@ router.get('/', function (req, res) {
         //tabla a generar
         let tabla = '<table id="lista" class="tablesorter"><thead>';
         tabla += '<tr><th style="width: 30px;">ID</th>'
+        tabla += '<th style="width: 50px;">LINK</th>'
         tabla += '<th>TITULO</th>'
         tabla += '<th>ESTADO</th>'
         tabla += '<th style="width: 75px;">IMPORT</th>'
         tabla += '<th style="width: 75px;">PRIOR</th>'
-        tabla += '<th style="width: 70px;">LINK</th>'
         tabla += '</tr></thead><tbody>' 
 
         fs.readFile("./data/General.json", 'utf8', (err, general) => {
@@ -40,13 +40,11 @@ router.get('/', function (req, res) {
                 pendientes.forEach(tarea => {
                     tabla += "<tr>";
                     tabla += "<td>" + tarea.id + "</td>";
+                    tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
                     tabla += "<td>" + tarea.titulo + "</td>";
                     tabla += "<td>" + tarea.estado + "</td>";
                     tabla += (tarea.importante)?"<td>si</td>":"<td>l</td>";
-                    tabla += (tarea.prioritario)?"<td>si</td>":"<td>l</td>";
-                    tabla += "<td><a href='/tarea?id=";
-                    tabla += tarea.id;
-                    tabla += "'>Ver Tarea</a></td>";
+                    tabla += (tarea.prioritario)?"<td>si</td>":"<td>l</td>";                    
                     tabla += "</tr>";
 
                 });

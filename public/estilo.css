@@ -20,8 +20,13 @@ table.tablesorter thead tr .header {
 table.tablesorter tbody td {
 	color: #3D3D3D;
 	padding: 4px;
-	background-color: #FFF;
 	vertical-align: top;
+}
+table.tablesorter tr {
+	background-color: #FFF;
+}
+table.tablesorter tr:hover{
+	background-color: #e9e9e9;
 }
 table.tablesorter tbody tr.odd td {
 	background-color:#F0F0F6;

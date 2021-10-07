@@ -28,6 +28,9 @@ app.use("/tarea",require("./rutas/tarea.js"))
 //subida de archivos
 app.use("/upload",require("./rutas/upload.js"))
 
+//manejo del listado diario
+app.use("/listadoDiario",require("./rutas/listadoDiario.js"))
+
 app.listen(8000)
 
 console.log('Servidor en la url http://127.0.0.1:8000/');

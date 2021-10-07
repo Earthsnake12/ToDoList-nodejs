@@ -20,11 +20,11 @@ router.get('/', function (req, res) {
         let root = HTMLparser.parse(data); //Pagina base
 
         //tabla a generar
-        let tabla = '<table id="lista"><thead>';
-        tabla += '<tr><th style="width: 30px;">ID</th>';
+        let tabla = '<table id="lista" class="tablesorter"><thead>';
+        tabla += '<th style="width: 90px;">ESTADO</th>';
+        tabla += '<th style="width: 70px;">VER TAREA</th>';
         tabla += '<th>DESCRIPCION</th>';
-        tabla += '<th>VER TAREA</th>';
-        tabla += '</tr></thead><tbody>' 
+        tabla += '</thead><tbody>'
 
         fs.readFile("./data/Diario.json", 'utf8', (err, general) => {
 
@@ -32,26 +32,31 @@ router.get('/', function (req, res) {
                 tabla = "<h1>No se pudo cargar la tabla</h1>";
 
             } else {
-                let fecha = JSON.parse(general).Fecha;
 
                 // const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
-                let descripcion = JSON.parse(general).Descripcion;
-                let ids = JSON.parse(general).ids;
+                let date = new Date();
+                let hoy = date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear();
 
-                tareas.forEach(tarea => {
-                    tabla += "<tr>";
-                    tabla += "<td>" + tarea.id + "</td>";
-                    tabla += "<td>" + tarea.titulo + "</td>";
-                    tabla += "<td>" + tarea.estado + "</td>";
-                    tabla += (tarea.importante)?"<td>si</td>":"<td>.</td>";
-                    tabla += (tarea.prioritario)?"<td>si</td>":"<td>.</td>";
-                    tabla += "<td><a href='/tarea?id=";
-                    tabla += tarea.id;
-                    tabla += "'>Ver Tarea</a></td>";
-                    tabla += "</tr>";
+                if (hoy === JSON.parse(general).Fecha[0]) {
 
-                });
-                tabla += "</tbody></table>";
+                    let descripcion = JSON.parse(general).Descripcion[0];
+                    let ids = JSON.parse(general).ids[0];
+                    let estado = JSON.parse(general).estado[0];
+
+                    for (let i = 0; i < descripcion.length; i++) {
+                        tabla += "<tr>";
+                        tabla += "<td>" + estado[i] + "</td>";
+                        tabla += "<td><a href='/tarea?id=";
+                        tabla += ids[i];
+                        tabla += "'>" + ids[i] + "</a></td>";
+                        tabla += "<td>" + descripcion[i] + "</td>";
+                        tabla += "</tr>";
+
+                    };
+                    tabla += "</tbody></table>";
+                } else {
+                    tabla = "<h3>No se planifico tareas para hoy</h3>";
+                }
             }
 
             root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
