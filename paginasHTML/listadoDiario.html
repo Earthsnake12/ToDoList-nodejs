@@ -3,10 +3,9 @@
 <html>
 
 <head>
-    <title>Listado de Tareas</title>
+    <title>ListadoDiario</title>
     <link rel="stylesheet" type="text/css" href="estilo.css" />
     <script src="jquery-3.6.0.min.js"></script>
-    <script src="tableSorter.js"></script>
     <script>
 
         function mostrarOcultarCampo(id) {
@@ -21,40 +20,17 @@
 
         $(function () {
 
-            $("#lista").tablesorter(); 
-
             $('.error').hide();
             $("#botonCargaNuevaTarea").click(function () {
                 $('.error').hide();
                 // si en un futuro tengo q validar los campos tiene que ir aca
 
-
                 //revisa los campos, si alguno esta en blanco muestra mensaje de error y enfoca en ese campo
-                var titulo = $("#nuevaTareaTitulo").val();
-                if (titulo == "") {
-                    $("#nuevaTareaTituloError").show();
-                    $("#nuevaTareaTitulo").focus();
-                    return false;
-                }
                 var descripcion = $("#nuevaTareaDescripcion").val();
                 if (descripcion == "") {
                     $("#nuevaTareaDescripcionError").show();
                     $("#nuevaTareaDescripcion").focus();
                     return false;
-                }
-                var estado = $("#nuevaTareaEstado").val();
-                if (estado == "") {
-                    $("#nuevaTareaEstadoError").show();
-                    $("#nuevaTareaEstado").focus();
-                    return false;
-                };
-                var importancia = false;
-                if ($('#nuevaTareaImportancia').prop('checked')) {
-                    importancia = true;
-                }
-                var prioridad = false;
-                if ($('#nuevaTareaPrioridad').prop('checked')) {
-                    prioridad = true;
                 }
 
                 //logica para enviar el formulario a /tarea para procesarlo y cargarlo
@@ -62,14 +38,8 @@
                     type: "POST",
                     url: "tarea",
                     data: {
-                        "id": 0,
-                        "titulo": titulo,
-                        "descripcion": descripcion,
-                        "estado": estado,
-                        "importante": importancia,
-                        "prioritario": prioridad,
                         "fecha": "",
-                        "avance": ""
+                        "descripcion": descripcion,
                     },
                     dataType: 'text',
                     success: function (msj, textStatus, head) {
@@ -105,20 +75,10 @@
 
         <form name="nuevaTarea" action="">
             <h1>Nueva tarea</h1>
-            <p>Titulo: <input type="text" id="nuevaTareaTitulo" style="width: 300px;">
-                <span class="error" id="nuevaTareaTituloError">Campo requerido</span>
-            </p>
-
+            
             <p>Descripcion: <textarea id="nuevaTareaDescripcion" style="width: 300px; height: 50px;"></textarea>
                 <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
             </p>
-
-            <p>Estado: <input type="text" id="nuevaTareaEstado" style="width: 300px;">
-                <span class="error" id="nuevaTareaEstadoError">Campo requerido</span>
-            </p>
-
-            <p>Importante: <input type="checkbox" id="nuevaTareaImportancia"></p>
-            <p>Prioritario: <input type="checkbox" id="nuevaTareaPrioridad"></p>
 
             <input type="submit" id="botonCargaNuevaTarea" value="Subir">
             <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>

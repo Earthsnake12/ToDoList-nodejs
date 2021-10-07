@@ -145,7 +145,6 @@ router.get('/', function (req, res) {
     });
 });
 
-
 //Agrega avance con fecha de hoy o actualiza estado o descripcion o agrega ruta del archivo pasado del id pasado
 router.patch('/', function (req, res) {
 
