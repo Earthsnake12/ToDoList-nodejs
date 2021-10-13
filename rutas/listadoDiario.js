@@ -3,8 +3,8 @@ const router = express.Router();
 const fs = require("fs");
 const HTMLparser = require('node-html-parser');
 
-//revisa los pendientes y crea la tabla.
-router.get('/', function (req, res) {
+//revisa los pendientes para hoy y crea la tabla.
+router.get('/hoy', function (req, res) {
 
     console.log("cargar listado diario");
 
@@ -20,11 +20,7 @@ router.get('/', function (req, res) {
         let root = HTMLparser.parse(data); //Pagina base
 
         //tabla a generar
-        let tabla = '<table id="lista" class="tablesorter"><thead>';
-        tabla += '<th style="width: 90px;">ESTADO</th>';
-        tabla += '<th style="width: 70px;">VER TAREA</th>';
-        tabla += '<th>DESCRIPCION</th>';
-        tabla += '</thead><tbody>'
+        let tabla;
 
         fs.readFile("./data/Diario.json", 'utf8', (err, general) => {
 
@@ -38,6 +34,12 @@ router.get('/', function (req, res) {
                 let hoy = date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear();
 
                 if (hoy === JSON.parse(general).Fecha[0]) {
+
+                    tabla = '<table id="lista" class="tablesorter"><thead>';
+                    tabla += '<th style="width: 90px;">ESTADO</th>';
+                    tabla += '<th style="width: 70px;">VER TAREA</th>';
+                    tabla += '<th>DESCRIPCION</th>';
+                    tabla += '</thead><tbody>'
 
                     let descripcion = JSON.parse(general).Descripcion[0];
                     let ids = JSON.parse(general).ids[0];
