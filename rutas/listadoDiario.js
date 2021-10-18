@@ -4,13 +4,14 @@ const fs = require("fs");
 const HTMLparser = require('node-html-parser');
 
 //revisa los pendientes para hoy y crea la tabla.
-router.get('/hoy', function (req, res) {
-    console.log("cargar listado diario");
+router.get('/', function (req, res) {
 
-    let root
+    let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
+    console.log("Cargar listado del dia de" + fecha);
+
     try {
         let pagina = fs.readFileSync("./paginasHTML/listadoDiario.html");
-        root = HTMLparser.parse(pagina); //Pagina base
+        var root = HTMLparser.parse(pagina); //Pagina base
 
     } catch (err) {
         res.writeHead(404);
@@ -19,16 +20,31 @@ router.get('/hoy', function (req, res) {
         return;
     }
 
-    let tabla;
     try {
-        let data = fs.readFileSync("./data/Diario.json", 'utf8');
-        tabla = generarTabla(data);
+        const data = fs.readFileSync("./data/Diario.json", 'utf8');
+        const tareas = JSON.parse(data)
+
+        if (fecha === "hoy") {
+            const date = new Date();
+            fecha = date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear();
+        }
+        var tabla = generarTabla(tareas, fecha);
+
+        var fechas = "";
+        for (let i = 0; i < tareas.Fecha.length && i < 10; i++) {
+
+            fechas += '<a href="/listadoDiario?fecha=';
+            fechas += tareas.Fecha[i] + '"style="margin: 0 5px;">'
+            fechas += tareas.Fecha[i] + '</a>';
+        }
 
     } catch (err) {
-        tabla = "<h1>No se pudo cargar la tabla</h1>";
+        var tabla = "<h1>No se pudo cargar la tabla</h1>";
+        var fechas = "<div></div>"
     }
 
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
+    root.querySelector('#linksFechas').replaceWith(fechas); //cargo la tabla en la pag
 
     res.setHeader("Content-Type", "text/html");
     res.writeHead(200);
@@ -36,28 +52,21 @@ router.get('/hoy', function (req, res) {
 
 });
 
+function generarTabla(tareas, fecha) {
 
-/* var id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
-    console.log("Ver tarea " + id); */
+    const fechaIndice = tareas.Fecha.indexOf(fecha);
 
-function generarTabla(general) {
+    if (fechaIndice > -1) {
 
-    // const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
-    let date = new Date();
-    let hoy = date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear();
-    let tabla;
-
-    if (true/* hoy === JSON.parse(general).Fecha[0] */) {
-
-        tabla = '<table id="lista" class="tablesorter"><thead>';
+        var tabla = '<table id="lista" class="tablesorter"><thead>';
         tabla += '<th style="width: 90px;">ESTADO</th>';
         tabla += '<th style="width: 70px;">VER TAREA</th>';
         tabla += '<th>DESCRIPCION</th>';
         tabla += '</thead><tbody>'
 
-        let descripcion = JSON.parse(general).Descripcion[0];
-        let ids = JSON.parse(general).ids[0];
-        let estado = JSON.parse(general).estado[0];
+        let descripcion = tareas.Descripcion[fechaIndice];
+        let ids = tareas.ids[fechaIndice];
+        let estado = tareas.estado[fechaIndice];
 
         for (let i = 0; i < descripcion.length; i++) {
             tabla += "<tr>";
@@ -72,7 +81,7 @@ function generarTabla(general) {
         tabla += "</tbody></table>";
 
     } else {
-        tabla = "<h3>No se planifico tareas para hoy</h3>";
+        var tabla = "<h3>No se planifico tareas</h3>";
     }
     return tabla;
 }

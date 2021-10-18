@@ -66,8 +66,11 @@
 <body>
     <nav>
         <a href="/listatarea">Listado de tareas</a>
-        <a href="/listadoDiario/hoy">Listado diario</a>
+        <a href="/listadoDiario?fecha=hoy">Listado diario</a>
     </nav>
+    <div>
+        <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
+        <div id="linksFechas"></div>
 
     <h1></h1>
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
