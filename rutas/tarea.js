@@ -1,3 +1,4 @@
+const { Console } = require('console');
 const express = require('express');
 const router = express.Router();
 const fs = require("fs");
@@ -96,46 +97,52 @@ router.get('/', function (req, res) {
                 let pendientes = JSON.parse(general).Pendientes;
                 let tarea = pendientes.find(p => p.id === id);
 
-                root.querySelector("#id").set_content(tarea.id.toString());
-                root.querySelector("#titulo").set_content(tarea.titulo.toString());
-                root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
-                root.querySelector("#estado").set_content(tarea.estado.toString());
-                if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
-                if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
+                if (tarea === undefined) {
+                    root = "<h3>No existe tarea</h3>";
+                    console.log("No existe tarea")
+                } else {
 
-                for (let i = 0; i < tarea.avance.length; i++) {
-                    let nuevoAvance = '<div id = "' + i + '">';
-                    nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
-                    nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
-                    nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
-                    nuevoAvance += '</div>'
+                    root.querySelector("#id").set_content(tarea.id.toString());
+                    root.querySelector("#titulo").set_content(tarea.titulo.toString());
+                    root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
+                    root.querySelector("#estado").set_content(tarea.estado.toString());
+                    if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
+                    if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
 
-                    nuevoAvance = HTMLparser.parse(nuevoAvance);
-                    root.querySelector("#avances").appendChild(nuevoAvance);
-                }
+                    for (let i = 0; i < tarea.avance.length; i++) {
+                        let nuevoAvance = '<div id = "' + i + '">';
+                        nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
+                        nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
+                        nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
+                        nuevoAvance += '</div>'
 
-                for (let i = 0; i < tarea.files.length; i++) {
-                    let nuevoFile;
-                    if (tarea.files[i].slice(-3) === "msg") {
-                        
-                        nuevoFile = ' <p></p><a href="';
-                        nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                        nuevoFile += '.pdf" target="_blank">';
-                        nuevoFile += tarea.files[i].slice(15) + '</a>';
-
-                        nuevoFile += ' <spam>.-----------.</spam><a href="';
-                        nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                        nuevoFile += '" target="_blank">';
-                        nuevoFile += 'Descargar Mail</a>';
-                    } else {
-
-                        nuevoFile = ' <p></p><a href="';
-                        nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                        nuevoFile += '" target="_blank">';
-                        nuevoFile += tarea.files[i].slice(15) + '</a>';
+                        nuevoAvance = HTMLparser.parse(nuevoAvance);
+                        root.querySelector("#avances").appendChild(nuevoAvance);
                     }
-                    nuevoFile = HTMLparser.parse(nuevoFile);
-                    root.querySelector("#files").appendChild(nuevoFile);
+
+                    for (let i = 0; i < tarea.files.length; i++) {
+                        let nuevoFile;
+                        if (tarea.files[i].slice(-3) === "msg") {
+
+                            nuevoFile = ' <p></p><a href="';
+                            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                            nuevoFile += '.pdf" target="_blank">';
+                            nuevoFile += tarea.files[i].slice(15) + '</a>';
+
+                            nuevoFile += ' <spam>.-----------.</spam><a href="';
+                            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                            nuevoFile += '" target="_blank">';
+                            nuevoFile += 'Descargar Mail</a>';
+                        } else {
+
+                            nuevoFile = ' <p></p><a href="';
+                            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                            nuevoFile += '" target="_blank">';
+                            nuevoFile += tarea.files[i].slice(15) + '</a>';
+                        }
+                        nuevoFile = HTMLparser.parse(nuevoFile);
+                        root.querySelector("#files").appendChild(nuevoFile);
+                    }
                 }
             }
             res.setHeader("Content-Type", "text/html");
@@ -222,7 +229,7 @@ module.exports = router;
 
 function eliminarDiacriticosEs(texto) {
     return texto
-           .normalize('NFD')
-           .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi,"$1")
-           .normalize();
+        .normalize('NFD')
+        .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+        .normalize();
 }

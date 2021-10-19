@@ -1,5 +1,5 @@
 {
-    "UltimoId": 12,
+    "UltimoId": 13,
     "Pendientes": [
         {
             "id": 1,
@@ -146,9 +146,9 @@
             "id": 9,
             "titulo": "Servicio de alquiler de Autoelevadores",
             "descripcion": " 2 autoelevadores de 2.5T, para 2022, por 12 meses. Revisar y enviar ET a legales.\nET MRR/S-005/2016",
-            "estado": "Espera respuesta de legales",
+            "estado": "Terminado",
             "importante": false,
-            "prioritario": true,
+            "prioritario": false,
             "fecha": [
                 "5-10-2021",
                 "5-10-2021",
@@ -169,7 +169,8 @@
                 "./data/files/9/2021-10-5---16-9-11.msg",
                 "./data/files/9/2021-10-6---16-50-14.msg",
                 "./data/files/9/2021-10-7---14-32-24.msg",
-                "./data/files/9/2021-10-15---11-50-25.msg"
+                "./data/files/9/2021-10-15---11-50-25.msg",
+                "./data/files/9/2021-10-15---13-42-57.msg"
             ]
         },
         {
@@ -194,38 +195,60 @@
         {
             "id": 11,
             "titulo": "Plano Ejes Nohab",
-            "descripcion": "Corregir planos segun lo indicado por Figini",
-            "estado": " Modificando planos",
+            "descripcion": "Corregir planos segun lo indicado por Figini. ID:\n\n<br><a href=\"https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid=403553&sid=403553\" target=\"_blank\">Eje Libre</a>\n\n<br><a href=\"https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid=403570&sid=403570\" target=\"_blank\">Eje Motriz</a>",
+            "estado": "Espera de modificacion Catalog",
             "importante": true,
-            "prioritario": false,
+            "prioritario": true,
             "fecha": [
-                "7-10-2021"
+                "7-10-2021",
+                "18-10-2021",
+                "18-10-2021"
             ],
             "avance": [
-                "Tarea registrada"
+                "Tarea registrada",
+                "se contesto a central con los planos modificados",
+                "Se solicito modificaron del catalog "
             ],
             "files": [
-                "./data/files/11/2021-10-7---16-37-21.msg"
+                "./data/files/11/2021-10-7---16-37-21.msg",
+                "./data/files/11/2021-10-18---8-29-59.msg"
             ]
         },
         {
             "id": 12,
             "titulo": "Silent Block horizontal y antiserpenteo. CCRR CNR",
             "descripcion": "ET para los Silent Block horizontal y antiserpenteo del CCRR CNR. Se adapta el del vertical\n<br> Se esta elavorando dos DTC para la presentacion de ensayos y planos 278102DTMR0145 (Horizontal) y 278102DTMR0151 (Anti-serpenteo)",
-            "estado": "Espera de Silent bloc anti-serpenteo desclavado",
+            "estado": "Relevar silent block y alojamiento ",
             "importante": true,
             "prioritario": false,
             "fecha": [
                 "15-10-2021",
-                "15-10-2021"
+                "15-10-2021",
+                "18-10-2021"
             ],
             "avance": [
                 "Tarea registrada",
-                "Reclamado a NAve 0 si pueden sacar un silent bloc del antiserpenteo"
+                "Reclamado a NAve 0 si pueden sacar un silent bloc del antiserpenteo",
+                "Entregaron Silent Block"
             ],
             "files": [
                 "./data/files/12/2021-10-15---8-17-40.msg"
             ]
+        },
+        {
+            "id": 13,
+            "titulo": "Perno de cono de traccion. M20X115 ",
+            "descripcion": "Perno de fijacion de topes verticales de Bogie CSR. M20X115 \n\n<br><a href=\"https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid=341997&sid=341997\" target=\"_blank\">Pedido de modificacion</a>\n",
+            "estado": "Se solicto alta Catalog",
+            "importante": false,
+            "prioritario": false,
+            "fecha": [
+                "18-10-2021"
+            ],
+            "avance": [
+                "Tarea registrada"
+            ],
+            "files": []
         }
     ]
 }
