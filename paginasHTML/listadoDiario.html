@@ -34,19 +34,17 @@
                     return false;
                 }
 
-                //logica para enviar el formulario a /tarea para procesarlo y cargarlo
+                //logica para enviar el formulario a /listadoDiario para procesarlo y cargarlo
+                let fecha = $("#fecha").html();
+                
                 $.ajax({
                     type: "POST",
-                    url: "tarea",
+                    url: "listadoDiario?fecha=" + fecha,
                     data: {
-                        "fecha": "",
                         "descripcion": descripcion,
                     },
                     dataType: 'text',
                     success: function (msj, textStatus, head) {
-                        //alert(msj); // alerta para saber que se subio
-                        //$("#botonCargaNuevaTareaMsj").html(msj);
-                        //$("#botonCargaNuevaTareaMsj").show();
 
                         if (head.status === 200) {
                             location.reload();
@@ -71,8 +69,13 @@
     <div>
         <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
         <div id="linksFechas"></div>
-
+    </div>
     <h1></h1>
+    <p id="fecha">00</p>
+    <div id="lista">
+        <h1>No se pudo cargar la Tabla</h1>
+    </div>
+
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
         tarea</button>
 
@@ -88,11 +91,6 @@
             <input type="submit" id="botonCargaNuevaTarea" value="Subir">
             <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
         </form>
-    </div>
-
-
-    <div id="lista">
-        <h1>No se pudo cargar la Tabla</h1>
     </div>
 
 </body>
