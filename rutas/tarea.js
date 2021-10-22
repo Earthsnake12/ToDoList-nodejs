@@ -227,6 +227,7 @@ router.patch('/', function (req, res) {
 
 module.exports = router;
 
+//elimina puntuacion
 function eliminarDiacriticosEs(texto) {
     return texto
         .normalize('NFD')

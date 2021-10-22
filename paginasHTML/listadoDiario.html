@@ -38,7 +38,7 @@
                 let fecha = $("#fecha").html();
                 
                 $.ajax({
-                    type: "POST",
+                    type: "PATCH",
                     url: "listadoDiario?fecha=" + fecha,
                     data: {
                         "descripcion": descripcion,
@@ -68,6 +68,7 @@
     </nav>
     <div>
         <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
+        
         <div id="linksFechas"></div>
     </div>
     <h1></h1>

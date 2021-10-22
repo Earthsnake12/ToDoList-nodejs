@@ -54,10 +54,11 @@ router.get('/', function (req, res) {
 
 });
 
-router.post('/', function (req, res) {
+//agrega nueva tarea a la fecha pasada
+router.patch('/', function (req, res) {
 
     let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
-    console.log("Agrego tarea para el dia de " + fecha);
+    console.log("Nueva tarea para el dia de " + fecha);
 
     try {
         let data = fs.readFileSync("./data/Diario.json", 'utf8');
@@ -81,7 +82,7 @@ router.post('/', function (req, res) {
         return;
     }
 
-    tareas.descripcion[indice].push(req.body.descripcion);
+    tareas.descripcion[indice].push(eliminarDiacriticosEs(req.body.descripcion));
     tareas.ids[indice].push("-");
     tareas.estado[indice].push("Pendiente");
 
@@ -103,6 +104,50 @@ router.post('/', function (req, res) {
     res.end();
 });
 
+//Crea nuevo registro de fecha
+router.post('/', function (req, res) {
+
+    let fecha = req.body.fecha
+    console.log("Nuevo registro para el dia " + fecha);
+
+    try {
+        let data = fs.readFileSync("./data/Diario.json", 'utf8');
+        var tareas = JSON.parse(data)
+
+    } catch (err) {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("No se pudo cargar la base de datos");
+        return;
+    }
+
+    tareas.fecha.unshift(fecha);    
+    tareas.descripcion.unshift([]);
+    tareas.ids.unshift([]);
+    tareas.estado.unshift([]);
+
+    try {
+        fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
+
+    } catch (err) {
+
+        console.log("Error al guardar el registro");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Error al guardar el registro");
+        return;
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end();
+});
+
+
+module.exports = router;
+
+//maneja la generacion de tabla
 function generarTabla(tareas, fecha) {
 
     const fechaIndice = tareas.fecha.indexOf(fecha);
@@ -137,4 +182,10 @@ function generarTabla(tareas, fecha) {
     return tabla;
 }
 
-module.exports = router;
+//elimina puntuacion
+function eliminarDiacriticosEs(texto) {
+    return texto
+        .normalize('NFD')
+        .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+        .normalize();
+}
