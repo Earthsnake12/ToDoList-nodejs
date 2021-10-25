@@ -107,7 +107,7 @@ router.patch('/', function (req, res) {
 //Crea nuevo registro de fecha
 router.post('/', function (req, res) {
 
-    let fecha = req.body.fecha
+    let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
     console.log("Nuevo registro para el dia " + fecha);
 
     try {

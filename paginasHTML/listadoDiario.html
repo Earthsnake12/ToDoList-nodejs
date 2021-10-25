@@ -36,13 +36,39 @@
 
                 //logica para enviar el formulario a /listadoDiario para procesarlo y cargarlo
                 let fecha = $("#fecha").html();
-                
+
                 $.ajax({
                     type: "PATCH",
                     url: "listadoDiario?fecha=" + fecha,
                     data: {
                         "descripcion": descripcion,
                     },
+                    dataType: 'text',
+                    success: function (msj, textStatus, head) {
+
+                        if (head.status === 200) {
+                            location.reload();
+                        }
+
+                    },
+                    error: function (xhr) {
+                        alert('Disculpe, hubo un problema');
+                    },
+                });
+                return false; //para no actualizar la pag y mantenerme aca
+            });
+
+
+            $("#pedirFecha").click(function () {
+
+                //tomar la fecha y pasarla a d/m/yyyy
+                var fecha = new Date($("#nuevaFecha").val());
+                fecha.setDate(fecha.getDate() + 1)
+                fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
+
+                $.ajax({
+                    type: "POST",
+                    url: "listadoDiario?fecha=" + fecha,
                     dataType: 'text',
                     success: function (msj, textStatus, head) {
 
@@ -68,7 +94,7 @@
     </nav>
     <div>
         <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
-        
+
         <div id="linksFechas"></div>
     </div>
     <h1></h1>
@@ -93,6 +119,14 @@
             <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
         </form>
     </div>
+
+    <form action="">
+
+        <p>Fecha esperada: <input type="date" id="nuevaFecha">
+            <input id="pedirFecha" type="submit" value="Enviar datos" required>
+        </p>
+
+    </form>
 
 </body>
 
