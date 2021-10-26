@@ -44,7 +44,7 @@ router.get('/', function (req, res) {
     }
 
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
-    root.querySelector('#fecha').replaceWith("<p id='fecha'>" +fecha+ "</p>"); //cargo la fecha de la tabla en la pag
+    root.querySelector('#fecha').replaceWith("<p id='fecha'>" + fecha + "</p>"); //cargo la fecha de la tabla en la pag
 
     root.querySelector('#linksFechas').replaceWith(fechas); //cargo los link con las fechas en la pag
 
@@ -121,10 +121,21 @@ router.post('/', function (req, res) {
         return;
     }
 
-    tareas.fecha.unshift(fecha);    
-    tareas.descripcion.unshift([]);
-    tareas.ids.unshift([]);
-    tareas.estado.unshift([]);
+    const indice = tareas.fecha.indexOf(fecha);
+
+    if (indice === -1) {
+        tareas.fecha.unshift(fecha);
+        tareas.descripcion.unshift([]);
+        tareas.ids.unshift([]);
+        tareas.estado.unshift([]);
+    }else{
+        console.log("El registro para esa fecha ya existe");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Ya existe esa fecha");
+        return;
+    }
 
     try {
         fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));

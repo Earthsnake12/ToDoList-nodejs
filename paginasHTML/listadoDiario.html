@@ -75,10 +75,9 @@
                         if (head.status === 200) {
                             location.reload();
                         }
-
                     },
                     error: function (xhr) {
-                        alert('Disculpe, hubo un problema');
+                        alert(xhr.responseText);
                     },
                 });
                 return false; //para no actualizar la pag y mantenerme aca
