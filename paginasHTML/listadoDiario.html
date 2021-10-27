@@ -9,6 +9,11 @@
     <script src="tableSorter.js"></script>
     <script>
 
+        $(function () {
+            $("#lista").tablesorter();
+            $('.error').hide();
+        });
+
         function mostrarOcultarCampo(id) {
             let x = document.getElementById(id);
             if (x.style.display === "none") x.style.display = "block";
@@ -19,70 +24,71 @@
             document.getElementById(id).focus();
         }
 
-        $(function () {
-            $("#lista").tablesorter();
+        //Pide nuevo registro para la fecha pasada
+        function pedirFecha() {
+
+            let fecha = $("#nuevaFecha").val();
+            if (fecha == "") {
+                $("#nuevaFechaError").show();
+                $("#nuevaFecha").focus();
+                return false;
+            } 
+
+            //tomar la fecha y pasarla a d/m/yyyy
+            fecha = new Date(fecha);
+            fecha.setDate(fecha.getDate() + 1)
+            fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
+
+            $.ajax({
+                type: "POST",
+                url: "listadoDiario?fecha=" + fecha,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        location.reload();
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        };
+
+        //carga una nueva tarea en la fecha actual
+        function cargaNuevaTarea() {
             $('.error').hide();
-            $("#botonCargaNuevaTarea").click(function () {
-                $('.error').hide();
-                // si en un futuro tengo q validar los campos tiene que ir aca
+            
+            var descripcion = $("#nuevaTareaDescripcion").val();
+            if (descripcion == "") {
+                $("#nuevaTareaDescripcionError").show();
+                $("#nuevaTareaDescripcion").focus();
+                return false;
+            }
 
-                //revisa los campos, si alguno esta en blanco muestra mensaje de error y enfoca en ese campo
-                var descripcion = $("#nuevaTareaDescripcion").val();
-                if (descripcion == "") {
-                    $("#nuevaTareaDescripcionError").show();
-                    $("#nuevaTareaDescripcion").focus();
-                    return false;
-                }
+            //logica para enviar el formulario a /listadoDiario para procesarlo y cargarlo
+            let fecha = $("#fecha").html();
 
-                //logica para enviar el formulario a /listadoDiario para procesarlo y cargarlo
-                let fecha = $("#fecha").html();
+            $.ajax({
+                type: "POST",
+                url: "listadoDiario/tarea?fecha=" + fecha,
+                data: {
+                    "descripcion": descripcion,
+                    "ids": "-"
+                },
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
 
-                $.ajax({
-                    type: "PATCH",
-                    url: "listadoDiario?fecha=" + fecha,
-                    data: {
-                        "descripcion": descripcion,
-                    },
-                    dataType: 'text',
-                    success: function (msj, textStatus, head) {
+                    if (head.status === 200) {
+                        location.reload();
+                    }
 
-                        if (head.status === 200) {
-                            location.reload();
-                        }
-
-                    },
-                    error: function (xhr) {
-                        alert('Disculpe, hubo un problema');
-                    },
-                });
-                return false; //para no actualizar la pag y mantenerme aca
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
             });
-
-
-            $("#pedirFecha").click(function () {
-
-                //tomar la fecha y pasarla a d/m/yyyy
-                var fecha = new Date($("#nuevaFecha").val());
-                fecha.setDate(fecha.getDate() + 1)
-                fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
-
-                $.ajax({
-                    type: "POST",
-                    url: "listadoDiario?fecha=" + fecha,
-                    dataType: 'text',
-                    success: function (msj, textStatus, head) {
-
-                        if (head.status === 200) {
-                            location.reload();
-                        }
-                    },
-                    error: function (xhr) {
-                        alert(xhr.responseText);
-                    },
-                });
-                return false; //para no actualizar la pag y mantenerme aca
-            });
-        });
+        };
     </script>
 </head>
 
@@ -95,9 +101,14 @@
         <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
 
         <div id="linksFechas"></div>
+        <input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError"
+    style="display: none">Campo requerido</span>
+    <button type='Button' onClick="pedirFecha()">Pedir nuevo registro</button>
     </div>
     <h1></h1>
     <p id="fecha">00</p>
+    
+
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>
     </div>
@@ -106,26 +117,15 @@
         tarea</button>
 
     <div id="divFormulario" style="display: none">
+        <h2>Nueva tarea</h2>
 
-        <form name="nuevaTarea" action="">
-            <h1>Nueva tarea</h1>
-
-            <p>Descripcion: <textarea id="nuevaTareaDescripcion" style="width: 300px; height: 50px;"></textarea>
-                <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
-            </p>
-
-            <input type="submit" id="botonCargaNuevaTarea" value="Subir">
-            <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
-        </form>
-    </div>
-
-    <form action="">
-
-        <p>Fecha esperada: <input type="date" id="nuevaFecha">
-            <input id="pedirFecha" type="submit" value="Enviar datos" required>
+        <p>Descripcion: <textarea id="nuevaTareaDescripcion" style="width: 300px; height: 50px;"></textarea>
+            <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
         </p>
 
-    </form>
+        <button type='Button' onClick="cargaNuevaTarea()">Subir</button>
+        <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
+    </div>
 
 </body>
 

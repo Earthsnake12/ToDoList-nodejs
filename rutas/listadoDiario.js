@@ -54,56 +54,6 @@ router.get('/', function (req, res) {
 
 });
 
-//agrega nueva tarea a la fecha pasada
-router.patch('/', function (req, res) {
-
-    let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
-    console.log("Nueva tarea para el dia de " + fecha);
-
-    try {
-        let data = fs.readFileSync("./data/Diario.json", 'utf8');
-        var tareas = JSON.parse(data)
-
-    } catch (err) {
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(503);
-        res.end("No se pudo cargar la base de datos");
-        return;
-    }
-
-    const indice = tareas.fecha.indexOf(fecha);
-
-    if (indice === -1) {
-        console.log("Error en la fecha pasada");
-
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(503);
-        res.end("Error en la fecha pasada");
-        return;
-    }
-
-    tareas.descripcion[indice].push(eliminarDiacriticosEs(req.body.descripcion));
-    tareas.ids[indice].push("-");
-    tareas.estado[indice].push("Pendiente");
-
-    try {
-        fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
-
-    } catch (err) {
-
-        console.log("Error al guardar el registro");
-
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(503);
-        res.end("Error al guardar el registro");
-        return;
-    }
-
-    res.setHeader("Content-Type", "text/html");
-    res.writeHead(200);
-    res.end();
-});
-
 //Crea nuevo registro de fecha
 router.post('/', function (req, res) {
 
@@ -136,6 +86,56 @@ router.post('/', function (req, res) {
         res.end("Ya existe esa fecha");
         return;
     }
+
+    try {
+        fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
+
+    } catch (err) {
+
+        console.log("Error al guardar el registro");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Error al guardar el registro");
+        return;
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end();
+});
+
+//agrega nueva tarea a la fecha pasada
+router.post('/tarea', function (req, res) {
+
+    let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
+    console.log("Nueva tarea para el dia de " + fecha);
+
+    try {
+        let data = fs.readFileSync("./data/Diario.json", 'utf8');
+        var tareas = JSON.parse(data)
+
+    } catch (err) {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("No se pudo cargar la base de datos");
+        return;
+    }
+
+    const indice = tareas.fecha.indexOf(fecha);
+
+    if (indice === -1) {
+        console.log("Error en la fecha pasada");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Error en la fecha pasada");
+        return;
+    }
+
+    tareas.descripcion[indice].push(eliminarDiacriticosEs(req.body.descripcion));
+    tareas.ids[indice].push(req.body.ids);
+    tareas.estado[indice].push("Pendiente");
 
     try {
         fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));

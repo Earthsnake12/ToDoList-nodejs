@@ -97,6 +97,69 @@
             })
         }
 
+        function subirRecordatorio() {
+            $('.error').hide();
+
+            let descripcion = $("#textoRecordatorio").val();
+            if (descripcion == "") {
+                $("#textoRecordatorioError").show();
+                $("#textoRecordatorio").focus();
+                return false;
+            }
+
+            let fecha = $("#nuevaFecha").val();
+            if (fecha == "") {
+                $("#nuevaFechaError").show();
+                $("#nuevaFecha").focus();
+                return false;
+            }
+
+            //tomar la fecha y pasarla a d/m/yyyy
+            fecha = new Date(fecha);
+            fecha.setDate(fecha.getDate() + 1)
+            fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
+
+            //realizo el pedido de fecha nueva
+            $.ajax({
+                type: "POST",
+                url: "listadoDiario?fecha=" + fecha,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        alert("fecha generada");
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+
+            //Agrego la nueva tarea a la fecha
+            $.ajax({
+                type: "POST",
+                url: "listadoDiario/tarea?fecha=" + fecha,
+                data: {
+                    "descripcion": descripcion,
+                    "ids": $("#id").html()
+                },
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        alert("Tarea generada");
+                    }
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+            mostrarOcultarCampo('recordatorio');
+            $("#textoRecordatorio").val("");
+            $("#nuevaFecha").val("");
+        };
+
         //maneja el envio del form para la subida de archivos
         $(function () {
 
@@ -120,10 +183,9 @@
                         } else {
                             alert(msj);
                         }
-
                     },
                     error: function (xhr) {
-                        alert('Disculpe, hubo un problema');
+                        alert(xhr.responseText);
                     }
                 })
             })
@@ -135,7 +197,7 @@
 <body>
     <nav>
         <a href="/listatarea">Listado de tareas</a>
-        <a href="/listadoDiario">Listado diario</a>
+        <a href="/listadoDiario?fecha=hoy">Listado diario</a>
     </nav>
     <h3></h3>
     <p id="id">00</p>
@@ -186,17 +248,29 @@
         avance</button>
 
     <h3></h3>
+    <!-- Recordatorio -->
+    <button type='Button' onClick="mostrarOcultarCampo('recordatorio'), focusCampo('textoRecordatorio')">Agregar
+        Recordatorio</button>
+    <div id="recordatorio" style="display: none">
+        <p><input type="text" id="textoRecordatorio"><span class="error" id="textoRecordatorioError"
+                style="display: none">Campo requerido</span></p>
+        <p><input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
+                requerido</span></p>
+        <button type='Button' onClick="subirRecordatorio()">Enviar datos</button>
+    </div>
+
+    <h3></h3>
 
     <div id="files">Files: </div>
-    
+
     <h3></h3>
 
     <p>Agregar nuevo archivo</p>
     <form id="formNuevoArchivo" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" id="archivoParaSubir" 
-		style="width: 400px;
+        <input type="file" name="file" id="archivoParaSubir" style="width: 400px;
 				height: 100px;
-				border: double;"><p></p>
+				border: double;">
+        <p></p>
         <input type="submit" value="Subir" id="subirArchivo">
     </form>
 </body>
