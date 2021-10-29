@@ -32,7 +32,7 @@
                 $("#nuevaFechaError").show();
                 $("#nuevaFecha").focus();
                 return false;
-            } 
+            }
 
             //tomar la fecha y pasarla a d/m/yyyy
             fecha = new Date(fecha);
@@ -58,7 +58,7 @@
         //carga una nueva tarea en la fecha actual
         function cargaNuevaTarea() {
             $('.error').hide();
-            
+
             var descripcion = $("#nuevaTareaDescripcion").val();
             if (descripcion == "") {
                 $("#nuevaTareaDescripcionError").show();
@@ -89,6 +89,28 @@
                 },
             });
         };
+
+        function marcarTareaTerminada(tareaId) {
+            let fecha = $("#fecha").html();
+            $.ajax({
+                type: "PATCH",
+                url: "listadoDiario/tarea?fecha=" + fecha,
+                data: {
+                    "tareaId": tareaId
+                },
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        }
     </script>
 </head>
 
@@ -101,13 +123,13 @@
         <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
 
         <div id="linksFechas"></div>
-        <input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError"
-    style="display: none">Campo requerido</span>
-    <button type='Button' onClick="pedirFecha()">Pedir nuevo registro</button>
+        <input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
+            requerido</span>
+        <button type='Button' onClick="pedirFecha()">Pedir nuevo registro</button>
     </div>
     <h1></h1>
     <p id="fecha">00</p>
-    
+
 
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>

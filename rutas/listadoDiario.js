@@ -155,6 +155,56 @@ router.post('/tarea', function (req, res) {
     res.end();
 });
 
+router.patch('/tarea', function (req, res) {
+
+    let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
+    console.log("Actualizando tareas de " + fecha);
+
+    try {
+        let data = fs.readFileSync("./data/Diario.json", 'utf8');
+        var tareas = JSON.parse(data)
+
+    } catch (err) {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("No se pudo cargar la base de datos");
+        return;
+    }
+
+    const indice = tareas.fecha.indexOf(fecha);
+
+    if (indice === -1) {
+        console.log("Error en la fecha pasada");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Error en la fecha pasada");
+        return;
+    }
+
+    let tareaId = req.body.tareaId //id de la tareas
+    tareas.estado[indice][tareaId] = "Terminada";
+
+    try {
+        fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
+
+    } catch (err) {
+
+        console.log("Error al guardar el registro");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Error al guardar el registro");
+        return;
+    }
+
+    console.log("Se actualizo la tarea "+ tareaId)
+
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end();
+});
+
 
 module.exports = router;
 
@@ -167,6 +217,7 @@ function generarTabla(tareas, fecha) {
 
         var tabla = '<table id="lista" class="tablesorter"><thead>';
         tabla += '<th style="width: 90px;">ESTADO</th>';
+        tabla += '<th style="width: 0px;">*</th>';
         tabla += '<th style="width: 70px;">VER TAREA</th>';
         tabla += '<th>DESCRIPCION</th>';
         tabla += '</thead><tbody>'
@@ -178,9 +229,13 @@ function generarTabla(tareas, fecha) {
         for (let i = 0; i < descripcion.length; i++) {
             tabla += "<tr>";
             tabla += "<td>" + estado[i] + "</td>";
-            tabla += "<td><a href='/tarea?id=";
-            tabla += ids[i];
-            tabla += "'>" + ids[i] + "</a></td>";
+
+            if(estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada("+ i +")'>Ok!</button></td>";
+            else tabla += "<td>.</td>";
+
+            if(ids[i]==="-") tabla += "<td>-</td>";
+            else tabla += "<td><a href='/tarea?id="+ ids[i] + "'>" + ids[i] + "</a></td>";
+
             tabla += "<td>" + descripcion[i] + "</td>";
             tabla += "</tr>";
 
