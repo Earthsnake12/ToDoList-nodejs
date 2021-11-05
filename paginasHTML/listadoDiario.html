@@ -73,8 +73,9 @@
                 type: "POST",
                 url: "listadoDiario/tarea?fecha=" + fecha,
                 data: {
-                    "descripcion": descripcion,
-                    "ids": "-"
+                    "descripcion": [descripcion],
+                    "ids": ["-"],
+                    "estado": ['Pendiente']
                 },
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
@@ -90,6 +91,7 @@
             });
         };
 
+        //solicta el marcado de una tarea como terminada
         function marcarTareaTerminada(tareaId) {
             let fecha = $("#fecha").html();
             $.ajax({
@@ -111,6 +113,83 @@
                 },
             });
         }
+
+        //solicta la migracion de tareas pendientes a una nueva fecha
+        function migrarTareasNoCompletadas() {
+            $('.error').hide();
+
+            let fechaDestino = $("#fechaMigrar").val(); //a donde voy a migrar las tareas
+            if (fechaDestino == "") {
+                $("#fechaMigrarError").show();
+                $("#fechaMigrar").focus();
+                return false;
+            }
+
+            //tomar la fecha y pasarla a d/m/yyyy
+            fechaDestino = new Date(fechaDestino);
+            fechaDestino.setDate(fechaDestino.getDate() + 1)
+            fechaDestino = fechaDestino.getDate() + "-" + (1 + fechaDestino.getMonth()) + "-" + fechaDestino.getFullYear();
+
+            //realizo el pedido de las tareas
+            let listaTarea;
+            let fechaOrigen = $("#fecha").html(); //desde donde voy a migrar las tareas
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "listadoDiario/tarea?fecha=" + fechaOrigen + "&terminados=false",
+                dataType: 'json',
+                success: function (respuesta, textStatus, head) {
+
+                    if (head.status === 200) {
+                        listaTarea = respuesta;
+                    }
+                },
+                error: function (xhr) {
+                    listaTarea = false;
+
+                },
+            });
+
+            if (!listaTarea){
+                alert("No se pudo obtener listado de tareas")
+                return false;
+            }
+            //realizo el pedido de fecha nueva
+            let msjFecha;
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "listadoDiario?fecha=" + fechaDestino,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+                    if (head.status === 200) msjFecha = "fecha generada";
+                },
+                error: function (xhr) {
+                    msjFecha = xhr.responseText;
+                },
+            });
+
+            //Agrego la nueva tarea a la fecha
+            let msjTarea;
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "listadoDiario/tarea?fecha=" + fechaDestino,
+                data: listaTarea,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) msjTarea = "Tarea Migradas";
+
+                },
+                error: function (xhr) {
+                    msjTarea = xhr.responseText;
+                },
+            });
+            
+            alert(msjTarea +". " + msjFecha)
+            $("#fechaMigrar").val("");
+        };
     </script>
 </head>
 
@@ -148,6 +227,20 @@
         <button type='Button' onClick="cargaNuevaTarea()">Subir</button>
         <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
     </div>
+
+    <script>
+        function cosa(ttt) {
+            $.ajax({
+                type: 'GET',
+                url: '/listadoDiario/tarea?fecha=1-11-2021&terminados=' + ttt
+            });
+        }
+    </script>
+
+
+    <input type="date" id="fechaMigrar"><span class="error" id="fechaMigrarError" style="display: none">Campo
+        requerido</span>
+    <button type='Button' onClick="migrarTareasNoCompletadas()">Migrar</button>
 
 </body>
 

@@ -78,7 +78,7 @@ router.post('/', function (req, res) {
         tareas.descripcion.unshift([]);
         tareas.ids.unshift([]);
         tareas.estado.unshift([]);
-    }else{
+    } else {
         console.log("El registro para esa fecha ya existe");
 
         res.setHeader("Content-Type", "text/html");
@@ -105,7 +105,7 @@ router.post('/', function (req, res) {
     res.end();
 });
 
-//agrega nueva tarea a la fecha pasada
+//agrega nuevas tareas (en array) a la fecha pasada
 router.post('/tarea', function (req, res) {
 
     let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
@@ -133,9 +133,11 @@ router.post('/tarea', function (req, res) {
         return;
     }
 
-    tareas.descripcion[indice].push(eliminarDiacriticosEs(req.body.descripcion));
-    tareas.ids[indice].push(req.body.ids);
-    tareas.estado[indice].push("Pendiente");
+    for (let i = 0; i < req.body.descripcion.length; i++) {
+        tareas.descripcion[indice].push(eliminarDiacriticosEs(req.body.descripcion[i]));
+        tareas.ids[indice].push(req.body.ids[i]);
+        tareas.estado[indice].push(req.body.estado[i]);
+    }
 
     try {
         fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
@@ -155,6 +157,7 @@ router.post('/tarea', function (req, res) {
     res.end();
 });
 
+//cambia a terminada una tarea de la fecha pasada
 router.patch('/tarea', function (req, res) {
 
     let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
@@ -198,11 +201,56 @@ router.patch('/tarea', function (req, res) {
         return;
     }
 
-    console.log("Se actualizo la tarea "+ tareaId)
+    console.log("Se actualizo la tarea " + tareaId)
 
     res.setHeader("Content-Type", "text/html");
     res.writeHead(200);
     res.end();
+});
+
+//devuelvo json con las tareas segun la fecha pasada
+router.get('/tarea', function (req, res) {
+
+    let fecha = req.query.fecha  //pasar el parametro como ?fecha=1
+    let terminados = req.query.terminados === "true"  //pasar el parametro como ?terminados=false si no quiero los terminados
+
+    console.log("obtengo registro de tareas de " + fecha + (terminados ? " con " : " sin ") + "termiandos");
+
+    try {
+        let data = fs.readFileSync("./data/Diario.json", 'utf8');
+        var tareas = JSON.parse(data)
+
+    } catch (err) {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("No se pudo cargar la base de datos");
+        return;
+    }
+
+    const indice = tareas.fecha.indexOf(fecha);
+
+    if (indice === -1) {
+        console.log("Error en la fecha pasada");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Error en la fecha pasada");
+        return;
+    }
+
+    let lista = { "descripcion": [], "ids": [], "estado": [] }
+
+    for (let i = 0; i < tareas.descripcion[indice].length; i++) {
+
+        if (!terminados && tareas.estado[indice][i] === "Terminada") continue;
+
+        lista.descripcion.push(tareas.descripcion[indice][i]);
+        lista.ids.push(tareas.ids[indice][i]);
+        lista.estado.push(tareas.estado[indice][i]);
+    }
+
+    res.writeHead(200);
+    res.end(JSON.stringify(lista));
 });
 
 
@@ -230,11 +278,11 @@ function generarTabla(tareas, fecha) {
             tabla += "<tr>";
             tabla += "<td>" + estado[i] + "</td>";
 
-            if(estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada("+ i +")'>Ok!</button></td>";
+            if (estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + i + ")'>Ok!</button></td>";
             else tabla += "<td>.</td>";
 
-            if(ids[i]==="-") tabla += "<td>-</td>";
-            else tabla += "<td><a href='/tarea?id="+ ids[i] + "'>" + ids[i] + "</a></td>";
+            if (ids[i] === "-") tabla += "<td>-</td>";
+            else tabla += "<td><a href='/tarea?id=" + ids[i] + "'>" + ids[i] + "</a></td>";
 
             tabla += "<td>" + descripcion[i] + "</td>";
             tabla += "</tr>";
