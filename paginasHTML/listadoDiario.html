@@ -150,7 +150,7 @@
                 },
             });
 
-            if (!listaTarea){
+            if (!listaTarea) {
                 alert("No se pudo obtener listado de tareas")
                 return false;
             }
@@ -186,8 +186,8 @@
                     msjTarea = xhr.responseText;
                 },
             });
-            
-            alert(msjTarea +". " + msjFecha)
+
+            alert(msjTarea + ". " + msjFecha)
             $("#fechaMigrar").val("");
         };
     </script>
@@ -214,6 +214,12 @@
         <h1>No se pudo cargar la Tabla</h1>
     </div>
 
+    <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <input type="date" id="fechaMigrar"><span class="error" id="fechaMigrarError" style="display: none">Campo
+            requerido</span>
+        <button type='Button' onClick="migrarTareasNoCompletadas()">Migrar</button>
+    </div>
+
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
         tarea</button>
 
@@ -227,20 +233,6 @@
         <button type='Button' onClick="cargaNuevaTarea()">Subir</button>
         <p class="error" id="botonCargaNuevaTareaMsj">Tarea enviada</p>
     </div>
-
-    <script>
-        function cosa(ttt) {
-            $.ajax({
-                type: 'GET',
-                url: '/listadoDiario/tarea?fecha=1-11-2021&terminados=' + ttt
-            });
-        }
-    </script>
-
-
-    <input type="date" id="fechaMigrar"><span class="error" id="fechaMigrarError" style="display: none">Campo
-        requerido</span>
-    <button type='Button' onClick="migrarTareasNoCompletadas()">Migrar</button>
 
 </body>
 
