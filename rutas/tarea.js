@@ -225,6 +225,58 @@ router.patch('/', function (req, res) {
     });
 });
 
+router.put('/', function (req, res) {
+
+    const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
+
+    try {
+        let general = fs.readFileSync("./data/General.json", 'utf8')
+        var ArchivoPendientes = JSON.parse(general);
+
+        let finalizados = fs.readFileSync("./data/Finalizados.json", 'utf8')
+        var ArchivoFinalizados = JSON.parse(finalizados);
+
+    } catch (err) {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("No se pudo cargar la base de datos");
+        return;
+    }
+
+    //obtengo el indice de la tarea en el general
+    const tareaIndice = ArchivoPendientes.Pendientes.map(pendiente => pendiente.id).indexOf(id);
+
+    ArchivoPendientes.Pendientes[tareaIndice].estado = "Finalizado";
+    ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
+    ArchivoPendientes.Pendientes.splice(tareaIndice);
+
+    //actualizo finalizados
+    try {
+        fs.writeFileSync("./data/Finalizados.json", JSON.stringify(ArchivoFinalizados));
+
+    } catch (err) {
+        console.log(err);
+        res.writeHead(503);
+        res.end("No se pudo actualizar Finalizados");
+        return;
+    }
+
+    //actualizo el archivo general
+    try {
+        fs.writeFileSync("./data/General.json", JSON.stringify(ArchivoPendientes));
+
+    } catch (err) {
+        console.log(err);
+        res.writeHead(503);
+        res.end("No se pudo actualizar Archivo General, pero se actualizo finalizados");
+        return;
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end("Finalizado registrado");
+});
+
 module.exports = router;
 
 //elimina puntuacion
