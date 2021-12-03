@@ -225,16 +225,19 @@ router.patch('/', function (req, res) {
     });
 });
 
-router.put('/', function (req, res) {
+//Mueve a finalizados
+router.put('/finalizada', function (req, res) {
 
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
 
     try {
         let general = fs.readFileSync("./data/General.json", 'utf8')
         var ArchivoPendientes = JSON.parse(general);
+        console.log("Se cargo pendientes")
 
         let finalizados = fs.readFileSync("./data/Finalizados.json", 'utf8')
         var ArchivoFinalizados = JSON.parse(finalizados);
+        console.log("Se cargo finalizados")
 
     } catch (err) {
         res.setHeader("Content-Type", "text/html");
@@ -246,9 +249,10 @@ router.put('/', function (req, res) {
     //obtengo el indice de la tarea en el general
     const tareaIndice = ArchivoPendientes.Pendientes.map(pendiente => pendiente.id).indexOf(id);
 
+    //Coloco como estado finalizado y muevo la tarea
     ArchivoPendientes.Pendientes[tareaIndice].estado = "Finalizado";
     ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
-    ArchivoPendientes.Pendientes.splice(tareaIndice);
+    ArchivoPendientes.Pendientes.splice(tareaIndice,1);
 
     //actualizo finalizados
     try {
