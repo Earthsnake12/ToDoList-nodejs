@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload')
+const fileUpload = require('express-fileupload');
+const path = require('path');
+
 
 const app = express();
 
-app.use(express.static(__dirname + '/public')); //archivos css y script para las paginas
+app.use(express.static(path.join(__dirname + '/public')));
+//app.use(express.static(__dirname + '/public')); //archivos css y script para las paginas
 app.use(express.static(__dirname + '/data/files')); //acceder a los archivos de las tareas
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -19,7 +22,7 @@ app.get('/', function (req, res) {
     res.end("<a href='/listatarea'>Listado de tareas</a>");
 });
 
-//revisa los pendientes y crea la tabla.
+//revisa los pendientes y finalizados y crea la tabla.
 app.use("/listaTarea",require("./rutas/listaTarea.js"))
 
 //manejo de las tareas
