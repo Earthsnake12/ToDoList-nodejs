@@ -78,78 +78,87 @@ router.get('/', function (req, res) {
     var id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
     console.log("Ver tarea " + id);
 
-    fs.readFile("./paginasHTML/tarea.html", (err, data) => {
+    try {
 
-        if (err) {
-            res.writeHead(404);
-            res.write('No se pudo cargar la pagina');
-            res.end();
-            return;
+        let data = fs.readFileSync("./paginasHTML/tarea.html");
+        var root = HTMLparser.parse(data); //Parse la pagina
+    } catch (err) {
+
+        res.writeHead(404);
+        res.write('No se pudo cargar la pagina');
+        res.end();
+        return;
+    }
+
+    let tarea;
+    try {
+
+        let general = fs.readFileSync("./data/General.json", 'utf8');
+        let pendientes = JSON.parse(general).Pendientes;
+        tarea = pendientes.find(p => p.id === id);
+
+        if (tarea === undefined) {
+            general = fs.readFileSync("./data/Finalizados.json", 'utf8');
+            pendientes = JSON.parse(general).Tareas;
+            tarea = pendientes.find(p => p.id === id);
         }
-        let root = HTMLparser.parse(data); //Parse la pagina
 
-        fs.readFile("./data/General.json", 'utf8', (err, general) => {
+    } catch (err) {
+        root = "<h1>No se pudo cargar registro</h1>";
+    }
 
-            if (err) {
-                root = "<h1>No se pudo cargar registro</h1>";
+    if (tarea === undefined) {
 
+        root = "<h3>No existe tarea</h3>";
+        console.log("No existe tarea")
+    } else {
+
+        root.querySelector("#id").set_content(tarea.id.toString());
+        root.querySelector("#titulo").set_content(tarea.titulo.toString());
+        root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
+        root.querySelector("#estado").set_content(tarea.estado.toString());
+        if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
+        if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
+
+        for (let i = 0; i < tarea.avance.length; i++) {
+            let nuevoAvance = '<div id = "' + i + '">';
+            nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
+            nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
+            nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
+            nuevoAvance += '</div>'
+
+            nuevoAvance = HTMLparser.parse(nuevoAvance);
+            root.querySelector("#avances").appendChild(nuevoAvance);
+        }
+
+        for (let i = 0; i < tarea.files.length; i++) {
+            let nuevoFile;
+            if (tarea.files[i].slice(-3) === "msg") {
+
+                nuevoFile = ' <p></p><a href="';
+                nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                nuevoFile += '.pdf" target="_blank">';
+                nuevoFile += tarea.files[i].slice(15) + '</a>';
+
+                nuevoFile += ' <spam>.-----------.</spam><a href="';
+                nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                nuevoFile += '" target="_blank">';
+                nuevoFile += 'Descargar Mail</a>';
             } else {
-                let pendientes = JSON.parse(general).Pendientes;
-                let tarea = pendientes.find(p => p.id === id);
 
-                if (tarea === undefined) {
-                    root = "<h3>No existe tarea</h3>";
-                    console.log("No existe tarea")
-                } else {
-
-                    root.querySelector("#id").set_content(tarea.id.toString());
-                    root.querySelector("#titulo").set_content(tarea.titulo.toString());
-                    root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
-                    root.querySelector("#estado").set_content(tarea.estado.toString());
-                    if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
-                    if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
-
-                    for (let i = 0; i < tarea.avance.length; i++) {
-                        let nuevoAvance = '<div id = "' + i + '">';
-                        nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
-                        nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
-                        nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
-                        nuevoAvance += '</div>'
-
-                        nuevoAvance = HTMLparser.parse(nuevoAvance);
-                        root.querySelector("#avances").appendChild(nuevoAvance);
-                    }
-
-                    for (let i = 0; i < tarea.files.length; i++) {
-                        let nuevoFile;
-                        if (tarea.files[i].slice(-3) === "msg") {
-
-                            nuevoFile = ' <p></p><a href="';
-                            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                            nuevoFile += '.pdf" target="_blank">';
-                            nuevoFile += tarea.files[i].slice(15) + '</a>';
-
-                            nuevoFile += ' <spam>.-----------.</spam><a href="';
-                            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                            nuevoFile += '" target="_blank">';
-                            nuevoFile += 'Descargar Mail</a>';
-                        } else {
-
-                            nuevoFile = ' <p></p><a href="';
-                            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                            nuevoFile += '" target="_blank">';
-                            nuevoFile += tarea.files[i].slice(15) + '</a>';
-                        }
-                        nuevoFile = HTMLparser.parse(nuevoFile);
-                        root.querySelector("#files").appendChild(nuevoFile);
-                    }
-                }
+                nuevoFile = ' <p></p><a href="';
+                nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+                nuevoFile += '" target="_blank">';
+                nuevoFile += tarea.files[i].slice(15) + '</a>';
             }
-            res.setHeader("Content-Type", "text/html");
-            res.writeHead(200);
-            res.end(root.toString());
-        });
-    });
+            nuevoFile = HTMLparser.parse(nuevoFile);
+            root.querySelector("#files").appendChild(nuevoFile);
+        }
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end(root.toString());
 });
 
 //Agrega avance con fecha de hoy o actualiza estado o descripcion o agrega ruta del archivo pasado del id pasado
@@ -252,7 +261,7 @@ router.put('/finalizada', function (req, res) {
     //Coloco como estado finalizado y muevo la tarea
     ArchivoPendientes.Pendientes[tareaIndice].estado = "Finalizado";
     ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
-    ArchivoPendientes.Pendientes.splice(tareaIndice,1);
+    ArchivoPendientes.Pendientes.splice(tareaIndice, 1);
 
     //actualizo finalizados
     try {
