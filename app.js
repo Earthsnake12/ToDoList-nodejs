@@ -4,7 +4,7 @@ const fileUpload = require('express-fileupload');
 
 const app = express();
 
-app.use(express.static(__dirname + '/public')); //archivos css y script para las paginas
+app.use("/static",express.static(__dirname + '/public')); //archivos css y script para las paginas
 app.use(express.static(__dirname + '/data/files')); //acceder a los archivos de las tareas
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
