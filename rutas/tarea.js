@@ -8,53 +8,69 @@ const HTMLparser = require('node-html-parser');
 //Crea una nueva tarea pendiente en el general 
 router.post('/', function (req, res) {
 
-    //cargo JSON general
-    fs.readFile("./data/General.json", 'utf8', (err, data) => {
+    try {
+        //cargo JSON general
+        let data = fs.readFileSync("./data/General.json", 'utf8');
+        var generalData = JSON.parse(data);
 
+    } catch (err) {
+
+        console.log(err);
+        res.writeHead(500);
+        res.end("Archivo general no encontrado");
+        return;
+    }
+
+    let dataParcial = {};
+
+    dataParcial.id = ++generalData.UltimoId; //coloco id actualizado
+
+    //elimino acentos en titulo y estado
+    dataParcial.titulo = eliminarDiacriticosEs(req.body.titulo);
+    dataParcial.estado = eliminarDiacriticosEs(req.body.estado);
+
+    //paso la importancia y prioridad como un booleano
+    dataParcial.importante = (req.body.importante === "false") ? false : true;
+    dataParcial.prioritario = (req.body.prioritario === "false") ? false : true;
+
+    //lo guardo esta parte dentro del general
+    generalData.Pendientes.push(dataParcial);
+
+    //guardo JSON actualizado
+    fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
         if (err) {
             console.log(err);
             res.writeHead(500);
-            res.end("Archivo general no encontrado");
+            res.end("No se pudo actualizar Archivo General");
             return;
         }
-        let generalData = JSON.parse(data);
-        req.body.id = ++generalData.UltimoId; //coloco id actualizado
+    });
 
-        //elimino acentos en titulo, descripcion y estado
-        req.body.titulo = eliminarDiacriticosEs(req.body.titulo);
-        req.body.descripcion = eliminarDiacriticosEs(req.body.descripcion);
-        req.body.estado = eliminarDiacriticosEs(req.body.estado);
+    let dataCompleta = JSON.parse(JSON.stringify(dataParcial))
 
-        //paso la importancia y prioridad como un booleano
-        req.body.importante = (req.body.importante === "false") ? false : true;
-        req.body.prioritario = (req.body.prioritario === "false") ? false : true;
+    //elimino acentos en descripcion
+    dataCompleta.descripcion = eliminarDiacriticosEs(req.body.descripcion);
 
-        // registro fecha
-        let date = new Date();
-        req.body.fecha = [date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear()];
+    // registro fecha
+    let date = new Date();
+    dataCompleta.fecha = [date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear()];
 
-        // registro avance
-        req.body.avance = ["Tarea registrada"];
+    // registro avance
+    dataCompleta.avance = ["Tarea registrada"];
 
-        // Agrego campo para registrar los archivos
-        req.body.files = []
+    // Agrego campo para registrar los archivos
+    dataCompleta.files = []
 
-        //lo guardo dentro del general
-        generalData.Pendientes.push(req.body);
-
-        //creo la carpeta para guardar los archivos
-        fs.mkdir("./data/files/" + req.body.id, (err) => {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end("No se pudo crear la carpeta para los archivos");
-                return;
-            }
-            console.log("Carpeta creada");
-        });
-
-        //guardo JSON actualizado
-        fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
+    //creo la carpeta para guardar los archivos
+    fs.mkdir("./data/files/" + dataParcial.id, (err) => {
+        if (err) {
+            console.log(err);
+            res.writeHead(500);
+            res.end("No se pudo crear la carpeta para los archivos");
+            return;
+        }
+        console.log("Carpeta creada");
+        fs.writeFile("./data/files/" + dataParcial.id + "/data.json", JSON.stringify(dataCompleta), function (err, result) {
             if (err) {
                 console.log(err);
                 res.writeHead(500);
@@ -63,13 +79,16 @@ router.post('/', function (req, res) {
             }
         });
 
-        //actualizo la tabla
-
-        res.writeHead(200);
-        res.end("Tarea cargada");
-
-        console.log("Nueva tarea: " + JSON.stringify(req.body));
     });
+
+
+    //actualizo la tabla
+
+    res.writeHead(200);
+    res.end("Tarea cargada");
+
+    console.log("Nueva tarea: " + JSON.stringify(req.body));
+
 });
 
 //busca el id pasado y muestra el detalle de la tarea
@@ -90,70 +109,56 @@ router.get('/', function (req, res) {
         return;
     }
 
-    let tarea;
     try {
 
-        let general = fs.readFileSync("./data/General.json", 'utf8');
-        let pendientes = JSON.parse(general).Pendientes;
-        tarea = pendientes.find(p => p.id === id);
-
-        if (tarea === undefined) {
-            general = fs.readFileSync("./data/Finalizados.json", 'utf8');
-            pendientes = JSON.parse(general).Tareas;
-            tarea = pendientes.find(p => p.id === id);
-        }
+        let general = fs.readFileSync("./data/files/" + id + "/data.json", 'utf8');
+        var tarea = JSON.parse(general);
 
     } catch (err) {
         root = "<h1>No se pudo cargar registro</h1>";
     }
 
-    if (tarea === undefined) {
 
-        root = "<h3>No existe tarea</h3>";
-        console.log("No existe tarea")
-    } else {
+    root.querySelector("#id").set_content(tarea.id.toString());
+    root.querySelector("#titulo").set_content(tarea.titulo.toString());
+    root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
+    root.querySelector("#estado").set_content(tarea.estado.toString());
+    if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
+    if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
 
-        root.querySelector("#id").set_content(tarea.id.toString());
-        root.querySelector("#titulo").set_content(tarea.titulo.toString());
-        root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
-        root.querySelector("#estado").set_content(tarea.estado.toString());
-        if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
-        if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
+    for (let i = 0; i < tarea.avance.length; i++) {
+        let nuevoAvance = '<div id = "' + i + '">';
+        nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
+        nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
+        nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
+        nuevoAvance += '</div>'
 
-        for (let i = 0; i < tarea.avance.length; i++) {
-            let nuevoAvance = '<div id = "' + i + '">';
-            nuevoAvance += '<span>' + tarea.fecha[i] + '</span>';
-            nuevoAvance += '<span>&nbsp; - &nbsp;</span>';
-            nuevoAvance += '<span>' + tarea.avance[i] + '</span>';
-            nuevoAvance += '</div>'
+        nuevoAvance = HTMLparser.parse(nuevoAvance);
+        root.querySelector("#avances").appendChild(nuevoAvance);
+    }
 
-            nuevoAvance = HTMLparser.parse(nuevoAvance);
-            root.querySelector("#avances").appendChild(nuevoAvance);
+    for (let i = 0; i < tarea.files.length; i++) {
+        let nuevoFile;
+        if (tarea.files[i].slice(-3) === "msg") {
+
+            nuevoFile = ' <p></p><a href="';
+            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+            nuevoFile += '.pdf" target="_blank">';
+            nuevoFile += tarea.files[i].slice(15) + '</a>';
+
+            nuevoFile += ' <spam>.-----------.</spam><a href="';
+            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+            nuevoFile += '" target="_blank">';
+            nuevoFile += 'Descargar Mail</a>';
+        } else {
+
+            nuevoFile = ' <p></p><a href="';
+            nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
+            nuevoFile += '" target="_blank">';
+            nuevoFile += tarea.files[i].slice(15) + '</a>';
         }
-
-        for (let i = 0; i < tarea.files.length; i++) {
-            let nuevoFile;
-            if (tarea.files[i].slice(-3) === "msg") {
-
-                nuevoFile = ' <p></p><a href="';
-                nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                nuevoFile += '.pdf" target="_blank">';
-                nuevoFile += tarea.files[i].slice(15) + '</a>';
-
-                nuevoFile += ' <spam>.-----------.</spam><a href="';
-                nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                nuevoFile += '" target="_blank">';
-                nuevoFile += 'Descargar Mail</a>';
-            } else {
-
-                nuevoFile = ' <p></p><a href="';
-                nuevoFile += tarea.files[i].slice(13);//para eliminar el ./data/files/;
-                nuevoFile += '" target="_blank">';
-                nuevoFile += tarea.files[i].slice(15) + '</a>';
-            }
-            nuevoFile = HTMLparser.parse(nuevoFile);
-            root.querySelector("#files").appendChild(nuevoFile);
-        }
+        nuevoFile = HTMLparser.parse(nuevoFile);
+        root.querySelector("#files").appendChild(nuevoFile);
     }
 
     res.setHeader("Content-Type", "text/html");
