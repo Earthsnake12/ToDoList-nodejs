@@ -172,70 +172,94 @@ router.patch('/', function (req, res) {
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
 
 
-    fs.readFile("./data/General.json", 'utf8', (err, general) => {
+    try {
+        let general = fs.readFileSync("./data/files/" + id + "/data.json", 'utf8');
+        var tarea = JSON.parse(general);
+    } catch (err) {
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("No se pudo cargar la base de datos");
+        return;
+
+    }
+
+    switch (req.body.objetivo) {
+
+        //agrego nuevo avance
+        case 'avance':
+            console.log("Agregar Avance");
+            let date = new Date();
+            tarea.fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+            tarea.avance.push(eliminarDiacriticosEs(req.body.valor));
+            break;
+
+        //actualizo descripcion
+        case 'descripcion':
+            console.log("Actualizar Descripcion");
+            tarea.descripcion = eliminarDiacriticosEs(req.body.valor);
+            break;
+
+        //actualizo estado
+        case 'estado':
+
+            console.log("Actualizar Estado");
+            //actualizo la data
+            tarea.estado = eliminarDiacriticosEs(req.body.valor[0]);
+            tarea.importante = (req.body.valor[1] === 'true');
+            tarea.prioritario = (req.body.valor[2] === 'true');
+
+
+            try {
+
+                let general = fs.readFileSync("./data/General.json", 'utf8');
+                var archivoGeneral = JSON.parse(general);
+
+            } catch (err) {
+                console.log("No se pudo cargar archivo general");
+                break;
+            }
+            //actualizo el general
+            const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
+            archivoGeneral.Pendientes[tareaIndice].estado = eliminarDiacriticosEs(req.body.valor[0]);
+            archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1] === 'true');
+            archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2] === 'true');
+
+            //guardo el archivo general
+            fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
+
+                if (err) {
+                    console.log("No se pudo guardar el archivo general");
+                }
+            });
+
+            break;
+
+        //actualizo files
+        case 'files':
+            console.log("Actualizar Files");
+            tarea.files.push(req.body.valor);
+            break;
+
+        default:
+            console.log("Por aca no paso");
+            console.log(req.body);
+            break;
+    }
+
+    //actualizo el archivo general
+    fs.writeFile("./data/files/" + id + "/data.json", JSON.stringify(tarea), function (err, result) {
 
         if (err) {
-            res.setHeader("Content-Type", "text/html");
+            console.log(err);
             res.writeHead(503);
-            res.end("No se pudo cargar la base de datos");
+            res.end("No se pudo actualizar data de id" + id);
             return;
-
-        }
-        let archivoGeneral = JSON.parse(general);
-
-        //obtengo el indice de la tarea en el general
-        const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
-
-        switch (req.body.objetivo) {
-
-            //agrego nuevo avance
-            case 'avance':
-                console.log("Agregar Avance");
-                let date = new Date();
-                archivoGeneral.Pendientes[tareaIndice].fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
-                archivoGeneral.Pendientes[tareaIndice].avance.push(eliminarDiacriticosEs(req.body.valor));
-                break;
-
-            //actualizo descripcion
-            case 'descripcion':
-                console.log("Actualizar Descripcion");
-                archivoGeneral.Pendientes[tareaIndice].descripcion = eliminarDiacriticosEs(req.body.valor);
-                break;
-
-            //actualizo estado
-            case 'estado':
-                console.log("Actualizar Estado");
-                archivoGeneral.Pendientes[tareaIndice].estado = eliminarDiacriticosEs(req.body.valor[0]);
-                archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1] === 'true');
-                archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2] === 'true');
-                break;
-
-            //actualizo files
-            case 'files':
-                console.log("Actualizar Files");
-                archivoGeneral.Pendientes[tareaIndice].files.push(req.body.valor);
-                break;
-
-            default:
-                console.log("Por aca no paso");
-                console.log(req.body);
-                break;
         }
 
-        //actualizo el archivo general
-        fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
-
-            if (err) {
-                console.log(err);
-                res.writeHead(503);
-                res.end("No se pudo actualizar Archivo General");
-                return;
-            }
-
-            res.setHeader("Content-Type", "text/html");
-            res.writeHead(200);
-            res.end("Avance registrado");
-        });
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
+        res.end("Avance registrado");
     });
 });
 
@@ -243,8 +267,13 @@ router.patch('/', function (req, res) {
 router.put('/finalizada', function (req, res) {
 
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
+    console.log("Pidiendo tarea " + id + "marcar finalizada")
 
     try {
+        let data = fs.readFileSync("./data/files/" + id + "/data.json", 'utf8')
+        var tarea = JSON.parse(data);
+        console.log("Se cargo data-tarea")
+
         let general = fs.readFileSync("./data/General.json", 'utf8')
         var ArchivoPendientes = JSON.parse(general);
         console.log("Se cargo pendientes")
@@ -268,6 +297,20 @@ router.put('/finalizada', function (req, res) {
     ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
     ArchivoPendientes.Pendientes.splice(tareaIndice, 1);
 
+    //modifico data-tarea
+    tarea.estado = "Finalizado";
+
+    //actualizo finalizados
+    try {
+        fs.writeFileSync("./data/files/" + id + "/data.json", JSON.stringify(tarea));
+
+    } catch (err) {
+        console.log(err);
+        res.writeHead(503);
+        res.end("No se pudo actualizar Data-Tarea");
+        return;
+    }
+
     //actualizo finalizados
     try {
         fs.writeFileSync("./data/Finalizados.json", JSON.stringify(ArchivoFinalizados));
@@ -290,6 +333,7 @@ router.put('/finalizada', function (req, res) {
         return;
     }
 
+    console.log("Registrada tareas " + id + "finalizada")
     res.setHeader("Content-Type", "text/html");
     res.writeHead(200);
     res.end("Finalizado registrado");
