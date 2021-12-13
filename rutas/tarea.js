@@ -292,11 +292,14 @@ router.put('/finalizada', function (req, res) {
     //obtengo el indice de la tarea en el general
     const tareaIndice = ArchivoPendientes.Pendientes.map(pendiente => pendiente.id).indexOf(id);
 
-    //Coloco como estado finalizado y muevo la tarea
-    ArchivoPendientes.Pendientes[tareaIndice].estado = "Finalizado";
-    ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
-    ArchivoPendientes.Pendientes.splice(tareaIndice, 1);
-
+    if (tareaIndice === -1) {
+        console.log("No se encuentra en Pendientes");
+    } else {
+        //Coloco como estado finalizado y muevo la tarea
+        ArchivoPendientes.Pendientes[tareaIndice].estado = "Finalizado";
+        ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
+        ArchivoPendientes.Pendientes.splice(tareaIndice, 1);
+    }
     //modifico data-tarea
     tarea.estado = "Finalizado";
 
@@ -333,7 +336,7 @@ router.put('/finalizada', function (req, res) {
         return;
     }
 
-    console.log("Registrada tareas " + id + "finalizada")
+    console.log("Registrada tareas " + id + " finalizada")
     res.setHeader("Content-Type", "text/html");
     res.writeHead(200);
     res.end("Finalizado registrado");
