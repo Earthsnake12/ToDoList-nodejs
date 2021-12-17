@@ -137,6 +137,8 @@
 
             //Agrego la nueva tarea a la fecha
             let msjTarea;
+            //agrego el titulo al recordatorio
+            descripcion += ". " + $("#titulo").html()
             $.ajax({
                 async: false,
                 type: "POST",
@@ -219,10 +221,11 @@
         <a href="/listatarea/finalizadas">Finalizadas</a>
     </nav>
     <h3></h3>
-    <p id="id">00</p>
+    <span id="id">00</span><span>&nbsp; &nbsp; &nbsp;</span><button type='Button'
+    onClick='marcarTareaTerminada()'>Terminada!</button></div>
     <h2 id="titulo">Titulo</h2>
 
-    <div>Estado: <span id="estado">Estado</span><span>&nbsp; &nbsp; &nbsp;</span><button type='Button' onClick='marcarTareaTerminada()'>Terminada!</button></div>
+    <div>Estado: <span id="estado">Estado</span>
     <div id="imp-pri">
         <span>Importante:</span> <input type="checkbox" id="importante" onclick="return false;">
         <span>&nbsp; &nbsp; &nbsp;</span>
@@ -259,7 +262,7 @@
 
     <div id="avances">Avances: </div>
 
-    <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance">
+    <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance" style="width: 50%;">
         <button type='Button' onClick="agregarAvance()">Agregar avance</button>
         <span class="error" id="nuevaTareaEstadoError" style="display: none">Campo requerido</span>
     </p>
@@ -271,7 +274,7 @@
     <button type='Button' onClick="mostrarOcultarCampo('recordatorio'), focusCampo('textoRecordatorio')">Agregar
         Recordatorio</button>
     <div id="recordatorio" style="display: none">
-        <p><input type="text" id="textoRecordatorio"><span class="error" id="textoRecordatorioError"
+        <p><input type="text" id="textoRecordatorio" style="width: 30%;"><span class="error" id="textoRecordatorioError"
                 style="display: none">Campo requerido</span></p>
         <p><input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
                 requerido</span></p>

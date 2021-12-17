@@ -13,11 +13,14 @@ router.post('/', function (req, res) {
         let data = fs.readFileSync("./data/General.json", 'utf8');
         var generalData = JSON.parse(data);
 
+        data = fs.readFileSync("./data/Pendientes.json", 'utf8');
+        var pendientes = JSON.parse(data);
+
     } catch (err) {
 
         console.log(err);
         res.writeHead(500);
-        res.end("Archivo general no encontrado");
+        res.end("Archivo general o de pendientes no encontrado");
         return;
     }
 
@@ -34,14 +37,14 @@ router.post('/', function (req, res) {
     dataParcial.prioritario = (req.body.prioritario === "false") ? false : true;
 
     //lo guardo esta parte dentro del general
-    generalData.Pendientes.push(dataParcial);
+    pendientes.Tareas.push(dataParcial);
 
-    //guardo JSON actualizado
-    fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
+    //guardo JSON Pendientes actualizado
+    fs.writeFile("./data/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
         if (err) {
             console.log(err);
             res.writeHead(500);
-            res.end("No se pudo actualizar Archivo General");
+            res.end("No se pudo actualizar Pendientes");
             return;
         }
     });
@@ -70,25 +73,32 @@ router.post('/', function (req, res) {
             return;
         }
         console.log("Carpeta creada");
-        fs.writeFile("./data/files/" + dataParcial.id + "/data.json", JSON.stringify(dataCompleta), function (err, result) {
+        fs.writeFile("./data/files/" + dataCompleta.id + "/data.json", JSON.stringify(dataCompleta), function (err, result) {
             if (err) {
                 console.log(err);
                 res.writeHead(500);
-                res.end("No se pudo actualizar Archivo General");
+                res.end("No se pudo Crear el data del item");
                 return;
             }
         });
 
     });
 
+    //guardo el id actualizado
+    fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
+        if (err) {
+            console.log(err);
+            res.writeHead(500);
+            res.end("No se pudo actualizar Archivo General");
+            return;
+        }
+        //actualizo la tabla
 
-    //actualizo la tabla
+        res.writeHead(200);
+        res.end("Tarea cargada");
 
-    res.writeHead(200);
-    res.end("Tarea cargada");
-
-    console.log("Nueva tarea: " + JSON.stringify(req.body));
-
+        console.log("Nueva tarea: " + JSON.stringify(req.body));
+    });
 });
 
 //busca el id pasado y muestra el detalle de la tarea
@@ -212,21 +222,21 @@ router.patch('/', function (req, res) {
 
             try {
 
-                let general = fs.readFileSync("./data/General.json", 'utf8');
-                var archivoGeneral = JSON.parse(general);
+                let general = fs.readFileSync("./data/Pendientes.json", 'utf8');
+                var pendientes = JSON.parse(general);
 
             } catch (err) {
                 console.log("No se pudo cargar archivo general");
                 break;
             }
             //actualizo el general
-            const tareaIndice = archivoGeneral.Pendientes.map(pendiente => pendiente.id).indexOf(id);
-            archivoGeneral.Pendientes[tareaIndice].estado = eliminarDiacriticosEs(req.body.valor[0]);
-            archivoGeneral.Pendientes[tareaIndice].importante = (req.body.valor[1] === 'true');
-            archivoGeneral.Pendientes[tareaIndice].prioritario = (req.body.valor[2] === 'true');
+            const tareaIndice = pendientes.Tareas.map(pendiente => pendiente.id).indexOf(id);
+            pendientes.Tareas[tareaIndice].estado = eliminarDiacriticosEs(req.body.valor[0]);
+            pendientes.Tareas[tareaIndice].importante = (req.body.valor[1] === 'true');
+            pendientes.Tareas[tareaIndice].prioritario = (req.body.valor[2] === 'true');
 
             //guardo el archivo general
-            fs.writeFile("./data/General.json", JSON.stringify(archivoGeneral), function (err, result) {
+            fs.writeFile("./data/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
 
                 if (err) {
                     console.log("No se pudo guardar el archivo general");
@@ -274,7 +284,7 @@ router.put('/finalizada', function (req, res) {
         var tarea = JSON.parse(data);
         console.log("Se cargo data-tarea")
 
-        let general = fs.readFileSync("./data/General.json", 'utf8')
+        let general = fs.readFileSync("./data/Pendientes.json", 'utf8')
         var ArchivoPendientes = JSON.parse(general);
         console.log("Se cargo pendientes")
 
@@ -290,15 +300,15 @@ router.put('/finalizada', function (req, res) {
     }
 
     //obtengo el indice de la tarea en el general
-    const tareaIndice = ArchivoPendientes.Pendientes.map(pendiente => pendiente.id).indexOf(id);
+    const tareaIndice = ArchivoPendientes.Tareas.map(pendiente => pendiente.id).indexOf(id);
 
     if (tareaIndice === -1) {
         console.log("No se encuentra en Pendientes");
     } else {
         //Coloco como estado finalizado y muevo la tarea
-        ArchivoPendientes.Pendientes[tareaIndice].estado = "Finalizado";
-        ArchivoFinalizados.Tareas.push(ArchivoPendientes.Pendientes[tareaIndice]);
-        ArchivoPendientes.Pendientes.splice(tareaIndice, 1);
+        ArchivoPendientes.Tareas[tareaIndice].estado = "Finalizado";
+        ArchivoFinalizados.Tareas.push(ArchivoPendientes.Tareas[tareaIndice]);
+        ArchivoPendientes.Tareas.splice(tareaIndice, 1);
     }
     //modifico data-tarea
     tarea.estado = "Finalizado";
@@ -327,7 +337,7 @@ router.put('/finalizada', function (req, res) {
 
     //actualizo el archivo general
     try {
-        fs.writeFileSync("./data/General.json", JSON.stringify(ArchivoPendientes));
+        fs.writeFileSync("./data/Pendientes.json", JSON.stringify(ArchivoPendientes));
 
     } catch (err) {
         console.log(err);

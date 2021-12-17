@@ -7,73 +7,73 @@ const HTMLparser = require('node-html-parser');
 router.get('/', function (req, res) {
 
     console.log("cargar listado de tareas");
+    //Cargo Pagina base
+    try {
+        let data = fs.readFileSync("./paginasHTML/listadoTarea.html")
+        var root = HTMLparser.parse(data);
 
-    fs.readFile("./paginasHTML/listadoTarea.html", (err, data) => {
+    } catch (err) {
 
-        if (err) {
-            res.writeHead(404);
-            res.write('No se pudo cargar la pagina');
-            res.end();
-            return;
-        }
+        res.writeHead(404);
+        res.write('No se pudo cargar la pagina');
+        res.end();
+        return;
+    }
 
-        let root = HTMLparser.parse(data); //Pagina base
+    //tabla a generar
+    let tabla = '<table id="lista" class="tablesorter"><thead>';
+    tabla += '<tr><th style="width: 30px;">ID</th>'
+    tabla += '<th style="width: 50px;">LINK</th>'
+    tabla += '<th>TITULO</th>'
+    tabla += '<th>ESTADO</th>'
+    tabla += '<th style="width: 0px;">*</th>';
+    tabla += '<th style="width: 75px;">IMPORT</th>'
+    tabla += '<th style="width: 75px;">PRIOR</th>'
+    tabla += '<th style="width: 75px;">RANK</th>'
+    tabla += '</tr></thead><tbody>'
 
-        //tabla a generar
-        let tabla = '<table id="lista" class="tablesorter"><thead>';
-        tabla += '<tr><th style="width: 30px;">ID</th>'
-        tabla += '<th style="width: 50px;">LINK</th>'
-        tabla += '<th>TITULO</th>'
-        tabla += '<th>ESTADO</th>'
-        tabla += '<th style="width: 0px;">*</th>';
-        tabla += '<th style="width: 75px;">IMPORT</th>'
-        tabla += '<th style="width: 75px;">PRIOR</th>'
-        tabla += '<th style="width: 75px;">RANK</th>'
-        tabla += '</tr></thead><tbody>' 
+    try {
+        let pendientes = fs.readFileSync("./data/Pendientes.json", 'utf8')
+        let tareas = JSON.parse(pendientes).Tareas;
 
-        fs.readFile("./data/General.json", 'utf8', (err, general) => {
+        tareas.forEach(tarea => {
 
-            if (err) {
-                tabla = "<h1>No se pudo cargar la tabla</h1>";
+            let ranking = 0;
+            tabla += "<tr>";
+            tabla += "<td>" + tarea.id + "</td>";
+            tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
+            tabla += "<td>" + tarea.titulo + "</td>";
+            tabla += "<td>" + tarea.estado + "</td>";
 
-            } else {
-                let pendientes = JSON.parse(general).Pendientes;
+            tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + tarea.id + ")'>Ok!</button></td>";
 
-                pendientes.forEach(tarea => {
+            if (tarea.importante) {
+                tabla += "<td>si</td>";
+                ranking += 2
+            } else tabla += "<td>l</td>";
 
-                    let ranking = 0;
-                    tabla += "<tr>";
-                    tabla += "<td>" + tarea.id + "</td>";
-                    tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
-                    tabla += "<td>" + tarea.titulo + "</td>";
-                    tabla += "<td>" + tarea.estado + "</td>";
+            if (tarea.prioritario) {
+                tabla += "<td>si</td>";
+                ranking += 1
+            } else tabla += "<td>l</td>";
 
-                    tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + tarea.id + ")'>Ok!</button></td>";
-                    
-                    if(tarea.importante){
-                        tabla += "<td>si</td>";
-                        ranking += 2
-                    } else tabla +="<td>l</td>";
-                    
-                    if(tarea.prioritario){
-                        tabla += "<td>si</td>";
-                        ranking += 1
-                    } else tabla +="<td>l</td>";
-                    
-                    tabla += "<td>" + ranking + "</td>";
-                    tabla += "</tr>";
+            tabla += "<td>" + ranking + "</td>";
+            tabla += "</tr>";
 
-                });
-                tabla += "</tbody></table>";
-            }
-
-            root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
-
-            res.setHeader("Content-Type", "text/html");
-            res.writeHead(200);
-            res.end(root.toString());
         });
-    });
+        tabla += "</tbody></table>";
+
+    } catch (err) {
+        tabla = "<h1>No se pudo cargar la tabla</h1>";
+
+    }
+
+    root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
+
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end(root.toString());
+
 });
 
 //revisa los finalizados y crea la tabla.
@@ -98,7 +98,7 @@ router.get('/finalizadas', function (req, res) {
         tabla += '<th style="width: 50px;">LINK</th>'
         tabla += '<th>TITULO</th>'
         tabla += '<th>ESTADO</th>'
-        tabla += '</tr></thead><tbody>' 
+        tabla += '</tr></thead><tbody>'
 
         fs.readFile("./data/Finalizados.json", 'utf8', (err, general) => {
 
@@ -128,6 +128,14 @@ router.get('/finalizadas', function (req, res) {
             res.end(root.toString());
         });
     });
+});
+
+
+router.get('/prueba', function (req, res) {
+    let id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
+    let tipo = req.query.tipo; //pasar el parametro como ?tipo=oficina
+
+    console.log(id + "//" + tipo);
 });
 
 module.exports = router;
