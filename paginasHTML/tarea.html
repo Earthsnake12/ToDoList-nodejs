@@ -75,9 +75,10 @@
 
         function tirarAjax(objetivo, valor) {
             let id = $("#id").html();
+            let tablero = $("#tablero").html();
             $.ajax({
                 type: "PATCH",
-                url: "/tarea?id=" + id,
+                url: "/tarea?id=" + id + "&tablero="+tablero,
                 data: {
                     "objetivo": objetivo,
                     "valor": valor
@@ -138,7 +139,7 @@
             //Agrego la nueva tarea a la fecha
             let msjTarea;
             //agrego el titulo al recordatorio
-            descripcion += ". " + $("#titulo").html()
+            descripcion += ". " + $("#titulo").html()+". " + $("#tablero").html()
             $.ajax({
                 async: false,
                 type: "POST",
@@ -166,9 +167,10 @@
 
         function marcarTareaTerminada() {
             let id = $("#id").html();
+            let tablero = $("#tablero").html();
             $.ajax({
                 type: "PUT",
-                url: "tarea/finalizada?id=" + id,
+                url: "tarea/finalizada?id=" + id + "&tablero="+tablero,
                 data: {},
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
@@ -187,11 +189,12 @@
                 e.preventDefault();
                 let f = $(this);
                 let id = $("#id").html();
+                let tablero = $("#tablero").html();
                 let formData = new FormData(document.getElementById("formNuevoArchivo"));
 
                 $.ajax({
                     type: "POST",
-                    url: "/upload?id=" + id,
+                    url: "/upload?id=" + id + "&tablero="+tablero,
                     data: formData,
                     dataType: 'text',
                     cache: false,
@@ -216,11 +219,12 @@
 
 <body>
     <nav>
-        <a href="/listatarea">Listado de tareas</a>
+        <a href="/listatarea?tablero=personal">Listado de tareas</a>
         <a href="/listadoDiario?fecha=hoy">Listado diario</a>
-        <a href="/listatarea/finalizadas">Finalizadas</a>
+        <a href="/listatarea/finalizadas?tablero=personal">Finalizadas</a>
     </nav>
     <h3></h3>
+    <span id="tablero">Sin tablero</span><span>&nbsp;-------</span>
     <span id="id">00</span><span>&nbsp; &nbsp; &nbsp;</span><button type='Button'
     onClick='marcarTareaTerminada()'>Terminada!</button></div>
     <h2 id="titulo">Titulo</h2>

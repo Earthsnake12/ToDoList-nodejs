@@ -6,7 +6,9 @@ const HTMLparser = require('node-html-parser');
 //revisa los pendientes y crea la tabla.
 router.get('/', function (req, res) {
 
-    console.log("cargar listado de tareas");
+    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
+
+    console.log("cargar listado de tareas del tablero " + tablero);
     //Cargo Pagina base
     try {
         let data = fs.readFileSync("./paginasHTML/listadoTarea.html")
@@ -33,7 +35,7 @@ router.get('/', function (req, res) {
     tabla += '</tr></thead><tbody>'
 
     try {
-        let pendientes = fs.readFileSync("./data/Pendientes.json", 'utf8')
+        let pendientes = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8')
         let tareas = JSON.parse(pendientes).Tareas;
 
         tareas.forEach(tarea => {
@@ -41,7 +43,7 @@ router.get('/', function (req, res) {
             let ranking = 0;
             tabla += "<tr>";
             tabla += "<td>" + tarea.id + "</td>";
-            tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
+            tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero + "'>Ver</a></td>";
             tabla += "<td>" + tarea.titulo + "</td>";
             tabla += "<td>" + tarea.estado + "</td>";
 
@@ -68,6 +70,7 @@ router.get('/', function (req, res) {
 
     }
 
+    root.querySelector("#tablero").set_content(tablero);//cargo que tablero estoy
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
     res.setHeader("Content-Type", "text/html");
@@ -79,7 +82,9 @@ router.get('/', function (req, res) {
 //revisa los finalizados y crea la tabla.
 router.get('/finalizadas', function (req, res) {
 
-    console.log("cargar listado de tareas termiandas");
+    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
+
+    console.log("cargar listado de tareas termiandas del tablero " + tablero);
 
     fs.readFile("./paginasHTML/listadoTarea.html", (err, data) => {
 
@@ -100,7 +105,7 @@ router.get('/finalizadas', function (req, res) {
         tabla += '<th>ESTADO</th>'
         tabla += '</tr></thead><tbody>'
 
-        fs.readFile("./data/Finalizados.json", 'utf8', (err, general) => {
+        fs.readFile("./data/" + tablero + "/Finalizados.json", 'utf8', (err, general) => {
 
             if (err) {
                 tabla = "<h1>No se pudo cargar la tabla</h1>";
@@ -121,6 +126,8 @@ router.get('/finalizadas', function (req, res) {
                 tabla += "</tbody></table>";
             }
 
+
+            root.querySelector("#tablero").set_content(tablero);//cargo que tablero estoy
             root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
             res.setHeader("Content-Type", "text/html");
@@ -128,14 +135,6 @@ router.get('/finalizadas', function (req, res) {
             res.end(root.toString());
         });
     });
-});
-
-
-router.get('/prueba', function (req, res) {
-    let id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
-    let tipo = req.query.tipo; //pasar el parametro como ?tipo=oficina
-
-    console.log(id + "//" + tipo);
 });
 
 module.exports = router;

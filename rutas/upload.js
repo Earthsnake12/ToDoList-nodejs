@@ -11,6 +11,7 @@ const pdf = require("html-pdf");
 //maneja la subida de archivos
 router.post('/', (req, res) => {
 
+    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
     const id = parseInt(req.query.id, 10); //pasa el parametro como /upload?id=1 
     const EDFile = req.files.file
 
@@ -18,7 +19,7 @@ router.post('/', (req, res) => {
     let fechaHora = date.getFullYear() + "-" + (1 + date.getMonth()) + "-" + date.getDate()
         + "---" + date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
 
-    let ubicacion = "./data/files/" + id + "/" + fechaHora + path.extname(EDFile.name); //donde se guardara el archivo
+    let ubicacion = "./data/"+tablero+"/files/" + id + "/" + fechaHora + path.extname(EDFile.name); //donde se guardara el archivo
 
     EDFile.mv(ubicacion, err => {
         if (err) {
@@ -41,7 +42,7 @@ router.post('/', (req, res) => {
             };
         }
 
-        fetch("http://127.0.0.1:8000/tarea?id=" + id, {
+        fetch("http://127.0.0.1:8000/tarea?id=" + id + "&tablero="+tablero, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

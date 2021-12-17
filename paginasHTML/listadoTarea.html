@@ -20,10 +20,10 @@
         }
         //mover tarea a finalizados
         function marcarTareaTerminada(tareaId) {
-            
+            let tablero = $("#tablero").html();
             $.ajax({
                 type: "PUT",
-                url: "tarea/finalizada?id=" + tareaId,
+                url: "tarea/finalizada?id=" + tareaId + "&tablero="+tablero,
                 data: {},
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
@@ -77,9 +77,10 @@
                 }
 
                 //logica para enviar el formulario a /tarea para procesarlo y cargarlo
+                var tablero = $("#tablero").html();
                 $.ajax({
                     type: "POST",
-                    url: "tarea",
+                    url: "tarea?tablero="+tablero,
                     data: {
                         "id": 0,
                         "titulo": titulo,
@@ -113,12 +114,13 @@
 
 <body>
     <nav>
-        <a href="/listatarea">Listado de tareas</a>
+        <a href="/listatarea?tablero=personal">Listado de tareas</a>
         <a href="/listadoDiario?fecha=hoy">Listado diario</a>
-        <a href="/listatarea/finalizadas">Finalizadas</a>
+        <a href="/listatarea/finalizadas?tablero=personal">Finalizadas</a>
     </nav>
     
     <h1></h1>
+    <p id="tablero">Sin tablero</p>
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
         tarea</button>
 
