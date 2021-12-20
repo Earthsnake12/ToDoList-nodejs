@@ -239,7 +239,7 @@ router.get('/tarea', function (req, res) {
         return;
     }
 
-    let lista = { "descripcion": [], "ids": [], "estado": [] }
+    let lista = { "descripcion": [], "ids": [], "tablero": [], "estado": [] }
 
     for (let i = 0; i < tareas.descripcion[indice].length; i++) {
 
@@ -247,6 +247,7 @@ router.get('/tarea', function (req, res) {
 
         lista.descripcion.push(tareas.descripcion[indice][i]);
         lista.ids.push(tareas.ids[indice][i]);
+        lista.tablero.push(tareas.tablero[indice][i]);
         lista.estado.push(tareas.estado[indice][i]);
     }
 
