@@ -136,6 +136,7 @@ router.post('/tarea', function (req, res) {
     for (let i = 0; i < req.body.descripcion.length; i++) {
         tareas.descripcion[indice].push(eliminarDiacriticosEs(req.body.descripcion[i]));
         tareas.ids[indice].push(req.body.ids[i]);
+        tareas.tablero[indice].push(req.body.tablero[i]);
         tareas.estado[indice].push(req.body.estado[i]);
     }
 
@@ -272,6 +273,7 @@ function generarTabla(tareas, fecha) {
 
         let descripcion = tareas.descripcion[fechaIndice];
         let ids = tareas.ids[fechaIndice];
+        let tablero = tareas.tablero[fechaIndice];
         let estado = tareas.estado[fechaIndice];
 
         for (let i = 0; i < descripcion.length; i++) {
@@ -282,7 +284,7 @@ function generarTabla(tareas, fecha) {
             else tabla += "<td>.</td>";
 
             if (ids[i] === "-") tabla += "<td>-</td>";
-            else tabla += "<td><a href='/tarea?id=" + ids[i] + "'>" + ids[i] + "</a></td>";
+            else tabla += "<td><a href='/tarea?id=" + ids[i] +"&tablero="+ tablero[i] +"'>" + ids[i] + "</a></td>";
 
             tabla += "<td>" + descripcion[i] + "</td>";
             tabla += "</tr>";
