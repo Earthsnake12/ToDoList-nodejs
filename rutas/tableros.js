@@ -6,7 +6,7 @@ const HTMLparser = require('node-html-parser');
 //revisa los tableros y crea la tabla.
 router.get('/', function (req, res) {
 
-    console.log("cargar listado de tareas del tableros");
+    console.log("cargar listado de tableros");
     //Cargo Pagina base
     try {
         let data = fs.readFileSync("./paginasHTML/tableros.html")
@@ -55,7 +55,10 @@ router.get('/', function (req, res) {
 //Crea una nuevo tablero 
 router.post('/', function (req, res) {
 
-    let NuevoTableroNombre = req.body.NuevoTableroNombre
+    let NuevoTableroNombre = eliminarDiacriticosEs(req.body.NuevoTableroNombre);
+
+    NuevoTableroNombre = NuevoTableroNombre.toLowerCase();
+
     try {
         //cargo JSON general
         let data = fs.readFileSync("./data/General.json", 'utf8');
@@ -68,6 +71,17 @@ router.post('/', function (req, res) {
         res.end("Archivo general o de pendientes no encontrado");
         return;
     }
+
+    if(generalData[NuevoTableroNombre + "Id"] !== undefined){
+        console.log("Tablero ya existente");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Tablero ya existente");
+        return;
+    }
+
+
     generalData[NuevoTableroNombre + "Id"] = 0;
 
 
@@ -79,7 +93,7 @@ router.post('/', function (req, res) {
             res.end("No se pudo crear la carpeta para los archivos");
             return;
         }
-        fs.mkdir("./data/" + NuevoTableroNombre +"/files", (err) => {
+        fs.mkdir("./data/" + NuevoTableroNombre + "/files", (err) => {
             if (err) {
                 console.log(err);
                 res.writeHead(500);
@@ -88,7 +102,7 @@ router.post('/', function (req, res) {
             }
         });
 
-        let plantilla = {"Tareas": []};
+        let plantilla = { "Tareas": [] };
 
         fs.writeFile("./data/" + NuevoTableroNombre + "/Finalizados.json", JSON.stringify(plantilla), function (err, result) {
             if (err) {
@@ -126,3 +140,11 @@ router.post('/', function (req, res) {
 });
 
 module.exports = router;
+
+//elimina puntuacion
+function eliminarDiacriticosEs(texto) {
+    return texto
+        .normalize('NFD')
+        .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+        .normalize();
+}

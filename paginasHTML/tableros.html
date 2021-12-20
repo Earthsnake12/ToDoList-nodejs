@@ -46,37 +46,9 @@
                     if (head.status === 200) location.reload();
                 },
                 error: function (xhr) {
-                    msjFecha = xhr.responseText;
+                    alert(xhr.responseText);
                 },
             });
-
-            //Agrego la nueva tarea a la fecha
-            let msjTarea;
-            //agrego el titulo al recordatorio
-            descripcion += ". " + $("#titulo").html() + ". " + $("#tablero").html()
-            $.ajax({
-                async: false,
-                type: "POST",
-                url: "listadoDiario/tarea?fecha=" + fecha,
-                data: {
-                    "descripcion": [descripcion],
-                    "ids": [$("#id").html()],
-                    "estado": ['Pendiente']
-                },
-                dataType: 'text',
-                success: function (msj, textStatus, head) {
-
-                    if (head.status === 200) msjTarea = "Tarea generada";
-
-                },
-                error: function (xhr) {
-                    msjTarea = xhr.responseText;
-                },
-            });
-            alert(msjFecha + ". " + msjTarea);
-            mostrarOcultarCampo('recordatorio');
-            $("#textoRecordatorio").val("");
-            $("#nuevaFecha").val("");
         };
 
     </script>
