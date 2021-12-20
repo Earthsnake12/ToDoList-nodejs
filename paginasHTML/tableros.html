@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <title>Tableros</title>
+    <link rel="stylesheet" type="text/css" href="/static/estilo.css" />
+    <script src="/static/jquery-3.6.0.min.js"></script>
+    <script src="/static/tableSorter.js"></script>
+    <script>
+
+        $(function () {
+            $("#lista").tablesorter();
+            $('.error').hide();
+        });
+
+        function mostrarOcultarCampo(id) {
+            let x = document.getElementById(id);
+            if (x.style.display === "none") x.style.display = "block";
+            else x.style.display = "none";
+        }
+
+        function focusCampo(id) {
+            document.getElementById(id).focus();
+        }
+    </script>
+</head>
+
+<body>
+    <nav>
+        <a href="/listatarea?tablero=personal">Listado de tareas</a>
+        <a href="/listadoDiario?fecha=hoy">Listado diario</a>
+        <a href="/listatarea/finalizadas?tablero=personal">Finalizadas</a>
+    </nav>
+    <div>
+        <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
+
+    <div id="lista">
+        <h1>No se pudo cargar la Tabla</h1>
+    </div>
+
+    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
+        tarea</button>
+
+    <div id="divFormulario" style="display: none">
+        <h2>Nuevo tablero</h2>
+        <p>Nombre: <input type="text" id="NuevoTableroNombre" style="width: 300px;">
+            <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
+        </p>
+
+        <button type='Button' onClick="nuevoTablero()">Subir</button>
+        <p class="error" id="botonnuevoTablero">Tarea enviada</p>
+    </div>
+
+</body>
+
+</html>
