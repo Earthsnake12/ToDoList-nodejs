@@ -70,7 +70,7 @@ router.get('/', function (req, res) {
 
     }
 
-    root.querySelector("#tablero").set_content(tablero);//cargo que tablero estoy
+    root.querySelector('#TableroSeleccionado').replaceWith(TABLEROSELECCIONADO);
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
     res.setHeader("Content-Type", "text/html");
@@ -117,7 +117,7 @@ router.get('/finalizadas', function (req, res) {
 
                     tabla += "<tr>";
                     tabla += "<td>" + tarea.id + "</td>";
-                    tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
+                    tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero +  "'>Ver</a></td>";
                     tabla += "<td>" + tarea.titulo + "</td>";
                     tabla += "<td>" + tarea.estado + "</td>";
                     tabla += "</tr>";
@@ -126,8 +126,7 @@ router.get('/finalizadas', function (req, res) {
                 tabla += "</tbody></table>";
             }
 
-
-            root.querySelector("#tablero").set_content(tablero);//cargo que tablero estoy
+            root.querySelector('#TableroSeleccionado').replaceWith(TABLEROSELECCIONADO);
             root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
             res.setHeader("Content-Type", "text/html");

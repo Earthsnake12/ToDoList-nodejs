@@ -132,6 +132,7 @@ router.get('/', function (req, res) {
         root = "<h1>No se pudo cargar registro</h1>";
     }
 
+    root.querySelector('#TableroSeleccionado').replaceWith(TABLEROSELECCIONADO);
     root.querySelector("#tablero").set_content(tablero);
     root.querySelector("#id").set_content(tarea.id.toString());
     root.querySelector("#titulo").set_content(tarea.titulo.toString());

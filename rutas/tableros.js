@@ -44,6 +44,7 @@ router.get('/', function (req, res) {
 
     }
 
+    root.querySelector('#TableroSeleccionado').replaceWith(TABLEROSELECCIONADO);
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
     res.setHeader("Content-Type", "text/html");

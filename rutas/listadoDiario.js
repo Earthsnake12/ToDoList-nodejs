@@ -43,6 +43,7 @@ router.get('/', function (req, res) {
         var fechas = "<div></div>"
     }
 
+    root.querySelector('#TableroSeleccionado').replaceWith(TABLEROSELECCIONADO);
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
     root.querySelector('#fecha').replaceWith("<p id='fecha'>" + fecha + "</p>"); //cargo la fecha de la tabla en la pag
 
