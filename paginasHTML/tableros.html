@@ -23,6 +23,62 @@
         function focusCampo(id) {
             document.getElementById(id).focus();
         }
+
+        //pido nuevo tablero
+        function nuevoTablero() {
+            $('.error').hide();
+
+            let nombre = $("#NuevoTableroNombre").val();
+            if (nombre == "") {
+                $("#NuevoTableroNombreError").show();
+                $("#NuevoTableroNombre").focus();
+                return false;
+            }
+
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "tableros",
+                dataType: 'text',
+                data: { "NuevoTableroNombre": nombre },
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) location.reload();
+                },
+                error: function (xhr) {
+                    msjFecha = xhr.responseText;
+                },
+            });
+
+            //Agrego la nueva tarea a la fecha
+            let msjTarea;
+            //agrego el titulo al recordatorio
+            descripcion += ". " + $("#titulo").html() + ". " + $("#tablero").html()
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "listadoDiario/tarea?fecha=" + fecha,
+                data: {
+                    "descripcion": [descripcion],
+                    "ids": [$("#id").html()],
+                    "estado": ['Pendiente']
+                },
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) msjTarea = "Tarea generada";
+
+                },
+                error: function (xhr) {
+                    msjTarea = xhr.responseText;
+                },
+            });
+            alert(msjFecha + ". " + msjTarea);
+            mostrarOcultarCampo('recordatorio');
+            $("#textoRecordatorio").val("");
+            $("#nuevaFecha").val("");
+        };
+
     </script>
 </head>
 
@@ -35,22 +91,21 @@
     <div>
         <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
 
-    <div id="lista">
-        <h1>No se pudo cargar la Tabla</h1>
-    </div>
+        <div id="lista">
+            <h1>No se pudo cargar la Tabla</h1>
+        </div>
 
-    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
-        tarea</button>
+        <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('NuevoTableroNombre')">Pedir nuevo tablero</button>
 
-    <div id="divFormulario" style="display: none">
-        <h2>Nuevo tablero</h2>
-        <p>Nombre: <input type="text" id="NuevoTableroNombre" style="width: 300px;">
-            <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
-        </p>
+        <div id="divFormulario" style="display: none">
+            <h2>Nuevo tablero</h2>
+            <p>Nombre: <input type="text" id="NuevoTableroNombre" style="width: 300px;">
+                <span class="error" id="NuevoTableroNombreError" style="display: none">Campo requerido</span>
+            </p>
 
-        <button type='Button' onClick="nuevoTablero()">Subir</button>
-        <p class="error" id="botonnuevoTablero">Tarea enviada</p>
-    </div>
+            <button type='Button' onClick="nuevoTablero()">Subir</button>
+            <p class="error" id="botonnuevoTablero">Tarea enviada</p>
+        </div>
 
 </body>
 

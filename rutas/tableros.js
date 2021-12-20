@@ -32,8 +32,8 @@ router.get('/', function (req, res) {
 
         for (let tablero in tableros) {
             tabla += "<tr>";
-            tabla += "<td>" + tablero.toString().slice(0,-2) + "</td>";
-            tabla += "<td><a href='/listatarea?tablero=" + tablero.toString().slice(0,-2) + "'>Ver</a></td>";
+            tabla += "<td>" + tablero.toString().slice(0, -2) + "</td>";
+            tabla += "<td><a href='/listatarea?tablero=" + tablero.toString().slice(0, -2) + "'>Ver</a></td>";
             tabla += "</tr>";
 
         }
@@ -50,6 +50,79 @@ router.get('/', function (req, res) {
     res.writeHead(200);
     res.end(root.toString());
 
+});
+
+//Crea una nuevo tablero 
+router.post('/', function (req, res) {
+
+    let NuevoTableroNombre = req.body.NuevoTableroNombre
+    try {
+        //cargo JSON general
+        let data = fs.readFileSync("./data/General.json", 'utf8');
+        var generalData = JSON.parse(data);
+
+    } catch (err) {
+
+        console.log(err);
+        res.writeHead(500);
+        res.end("Archivo general o de pendientes no encontrado");
+        return;
+    }
+    generalData[NuevoTableroNombre + "Id"] = 0;
+
+
+    //creo la carpeta para guardar los archivos
+    fs.mkdir("./data/" + NuevoTableroNombre, (err) => {
+        if (err) {
+            console.log(err);
+            res.writeHead(500);
+            res.end("No se pudo crear la carpeta para los archivos");
+            return;
+        }
+        fs.mkdir("./data/" + NuevoTableroNombre +"/files", (err) => {
+            if (err) {
+                console.log(err);
+                res.writeHead(500);
+                res.end("No se pudo crear la carpeta para los archivos");
+                return;
+            }
+        });
+
+        let plantilla = {"Tareas": []};
+
+        fs.writeFile("./data/" + NuevoTableroNombre + "/Finalizados.json", JSON.stringify(plantilla), function (err, result) {
+            if (err) {
+                console.log(err);
+                res.writeHead(500);
+                res.end("No se pudo Crear finalizados.json");
+                return;
+            }
+        });
+
+        fs.writeFile("./data/" + NuevoTableroNombre + "/Pendientes.json", JSON.stringify(plantilla), function (err, result) {
+            if (err) {
+                console.log(err);
+                res.writeHead(500);
+                res.end("No se pudo Crear pendientes.json");
+                return;
+            }
+        });
+        console.log("Carpetas creada y archivos creados");
+    });
+
+    //guardo el general actualizado
+    fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
+        if (err) {
+            console.log(err);
+            res.writeHead(500);
+            res.end("No se pudo actualizar Archivo General");
+            return;
+        }
+
+        res.writeHead(200);
+        res.end("Tarea cargada");
+        console.log("Nueva tablero: " + NuevoTableroNombre);
+    });
 });
 
 module.exports = router;
