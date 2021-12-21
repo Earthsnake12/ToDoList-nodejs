@@ -26,7 +26,7 @@ router.post('/', function (req, res) {
 
     let dataParcial = {};
 
-    dataParcial.id = ++generalData[tablero+"Id"]; //coloco id actualizado
+    dataParcial.id = ++generalData[tablero+"ID"]; //coloco id actualizado
 
     //elimino acentos en titulo y estado
     dataParcial.titulo = eliminarDiacriticosEs(req.body.titulo);

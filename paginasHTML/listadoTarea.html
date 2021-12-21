@@ -78,7 +78,7 @@
                 }
 
                 //logica para enviar el formulario a /tarea para procesarlo y cargarlo
-                var tablero = $("#tablero").html();
+                var tablero = "PERSONAL"//$("#tablero").html();
                 $.ajax({
                     type: "POST",
                     url: "tarea?tablero="+tablero,
