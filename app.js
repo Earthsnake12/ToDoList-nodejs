@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const fs = require("fs");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 global.TABLEROSELECCIONADO = "personal";
+global.DESPLEGABLETABLERO = crearDesplegable();
 
 //pagina inicio
 app.get('/', function (req, res) {
@@ -39,3 +41,27 @@ app.use("/tableros",require("./rutas/tableros.js"))
 app.listen(8000)
 
 console.log('Servidor en la url http://127.0.0.1:8000/');
+
+
+function crearDesplegable() {
+
+    try {
+        let data = fs.readFileSync("./data/General.json", 'utf8')
+        var tableros = JSON.parse(data);
+
+    } catch (err) {
+        return "<p>No se pudo cargar desplegable</p>";
+    }
+
+    let desplegable = "<select id='TableroSeleccionado'>"
+
+    for (let tablero in tableros) {
+        
+        desplegable += "<option value='"+ tablero.toString().slice(0, -2)
+        desplegable += "'>" +tablero.toString().slice(0, -2)+"</option>"
+        
+    }
+    desplegable += "</select>"
+    
+    return desplegable;
+}

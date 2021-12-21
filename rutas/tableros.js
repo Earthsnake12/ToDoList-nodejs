@@ -22,8 +22,8 @@ router.get('/', function (req, res) {
 
     //tabla a generar
     let tabla = '<table id="lista" class="tablesorter"><thead>';
-    tabla += '<tr><th style="width: 30px;">ID</th>'
-    tabla += '<th style="width: 50px;">LINK</th>'
+    tabla += '<tr><th style="width: 150px;">TABLERO</th>'
+    tabla += '<th>LINK</th>'
     tabla += '</tr></thead><tbody>'
 
     try {
@@ -44,7 +44,7 @@ router.get('/', function (req, res) {
 
     }
 
-    root.querySelector('#TableroSeleccionado').replaceWith(TABLEROSELECCIONADO);
+    root.querySelector('#TableroSeleccionado').replaceWith(DESPLEGABLETABLERO);
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
 
     res.setHeader("Content-Type", "text/html");
@@ -58,7 +58,7 @@ router.post('/', function (req, res) {
 
     let NuevoTableroNombre = eliminarDiacriticosEs(req.body.NuevoTableroNombre);
 
-    NuevoTableroNombre = NuevoTableroNombre.toLowerCase();
+    NuevoTableroNombre = NuevoTableroNombre.toUpperCase();
 
     try {
         //cargo JSON general
@@ -73,7 +73,7 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if(generalData[NuevoTableroNombre + "Id"] !== undefined){
+    if(generalData[NuevoTableroNombre + "ID"] !== undefined){
         console.log("Tablero ya existente");
 
         res.setHeader("Content-Type", "text/html");
@@ -83,7 +83,7 @@ router.post('/', function (req, res) {
     }
 
 
-    generalData[NuevoTableroNombre + "Id"] = 0;
+    generalData[NuevoTableroNombre + "ID"] = 0;
 
 
     //creo la carpeta para guardar los archivos
