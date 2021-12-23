@@ -12,6 +12,28 @@
         $(function () {
             $("#lista").tablesorter();
             $('.error').hide();
+
+            //para el cambio de tablero
+            $("#TableroSeleccionado").on('change', function () {
+                $("#TableroSeleccionado option:selected").each(function () {
+                    elegido = $(this).val();
+                    $.ajax({
+                        type: "post",
+                        url: "./tableros/seleccion?tablero=" + elegido,
+                        dataType: 'text',
+                        success: function (msj, textStatus, head) {
+
+                            if (head.status === 200) {
+                                location.reload();
+                            }
+
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        },
+                    });
+                });
+            });
         });
 
         function mostrarOcultarCampo(id) {
@@ -56,30 +78,31 @@
 
 <body>
     <nav>
-        <div>Tablero Seleccionado: <span id="TableroSeleccionado">No se selecciono tablero</span></div>
-        <p></p>
-        <a href="/listatarea?tablero=personal">Listado de tareas</a>
-        <a href="/listadoDiario?fecha=hoy">Listado diario</a>
-        <a href="/listatarea/finalizadas?tablero=personal">Finalizadas</a>
+        <a href="/listadoDiario?fecha=hoy">Hoy</a>
+        <a href="/listatarea">Listado de tareas</a>
+        <a href="/listatarea/finalizadas">Finalizadas</a>
+        <a href="/tableros">Tableros</a>
     </nav>
-    <div>
-        <a href="/listatarea" style="visibility: hidden;">Listado de tareas</a>
+    <h1></h1>
+    <div>Tablero Seleccionado: <span id="TableroSeleccionado">No se selecciono tablero</span></div>
+    <p></p>
+    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('NuevoTableroNombre')">Pedir nuevo
+        tablero</button>
+    <div id="divFormulario" style="display: none">
+        <h2>Nuevo tablero</h2>
+        <p>Nombre: <input type="text" id="NuevoTableroNombre" style="width: 300px;">
+            <span class="error" id="NuevoTableroNombreError" style="display: none">Campo requerido</span>
+        </p>
 
-        <div id="lista">
-            <h1>No se pudo cargar la Tabla</h1>
-        </div>
+        <button type='Button' onClick="nuevoTablero()">Subir</button>
+        <p class="error" id="botonnuevoTablero">Tarea enviada</p>
+    </div>
 
-        <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('NuevoTableroNombre')">Pedir nuevo tablero</button>
+    <div id="lista">
+        <h1>No se pudo cargar la Tabla</h1>
+    </div>
 
-        <div id="divFormulario" style="display: none">
-            <h2>Nuevo tablero</h2>
-            <p>Nombre: <input type="text" id="NuevoTableroNombre" style="width: 300px;">
-                <span class="error" id="NuevoTableroNombreError" style="display: none">Campo requerido</span>
-            </p>
 
-            <button type='Button' onClick="nuevoTablero()">Subir</button>
-            <p class="error" id="botonnuevoTablero">Tarea enviada</p>
-        </div>
 
 </body>
 

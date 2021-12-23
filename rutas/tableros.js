@@ -73,7 +73,7 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if(generalData[NuevoTableroNombre + "ID"] !== undefined){
+    if (generalData[NuevoTableroNombre + "ID"] !== undefined) {
         console.log("Tablero ya existente");
 
         res.setHeader("Content-Type", "text/html");
@@ -134,10 +134,49 @@ router.post('/', function (req, res) {
             return;
         }
 
+        DESPLEGABLETABLERO = crearDesplegable();
         res.writeHead(200);
         res.end("Tarea cargada");
         console.log("Nueva tablero: " + NuevoTableroNombre);
     });
+});
+
+//Crea una nuevo tablero 
+router.post('/seleccion', function (req, res) {
+
+    let tablero = req.query.tablero; //pasar el parametro como ?tablero=   
+    tablero = tablero.toUpperCase();
+    console.log("Cambiando al tablero: " + tablero)
+
+    try {
+        //cargo JSON general
+        let data = fs.readFileSync("./data/General.json", 'utf8');
+        var generalData = JSON.parse(data);
+
+    } catch (err) {
+
+        console.log(err);
+        res.writeHead(500);
+        res.end("Archivo general o de pendientes no encontrado");
+        return;
+    }
+
+    if (generalData[tablero + "ID"] === undefined) {
+        console.log("Tablero no existente");
+
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(503);
+        res.end("Tablero ya existente");
+        return;
+    }
+
+    TABLEROSELECCIONADO = tablero;
+    DESPLEGABLETABLERO = crearDesplegable();
+
+    res.writeHead(200);
+    res.end("Tablero cambiado");
+    console.log("Cambio Listo");
+
 });
 
 module.exports = router;
@@ -148,4 +187,28 @@ function eliminarDiacriticosEs(texto) {
         .normalize('NFD')
         .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
         .normalize();
+}
+
+function crearDesplegable() {
+
+    try {
+        let data = fs.readFileSync("./data/General.json", 'utf8')
+        var tableros = JSON.parse(data);
+
+    } catch (err) {
+        return "<p>No se pudo cargar desplegable</p>";
+    }
+
+    let desplegable = "<select id='TableroSeleccionado'>"
+
+    for (let tablero in tableros) {
+        
+        desplegable += "<option value='"+ tablero.toString().slice(0, -2)+ "'"
+        if(tablero.toString().slice(0, -2) === TABLEROSELECCIONADO )desplegable += " selected";
+        desplegable += ">" +tablero.toString().slice(0, -2)+"</option>"
+        
+    }
+    desplegable += "</select>"
+    
+    return desplegable;
 }

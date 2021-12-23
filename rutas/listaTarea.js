@@ -6,7 +6,7 @@ const HTMLparser = require('node-html-parser');
 //revisa los pendientes y crea la tabla.
 router.get('/', function (req, res) {
 
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
+    const tablero = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
 
     console.log("cargar listado de tareas del tablero " + tablero);
     //Cargo Pagina base
@@ -82,7 +82,7 @@ router.get('/', function (req, res) {
 //revisa los finalizados y crea la tabla.
 router.get('/finalizadas', function (req, res) {
 
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
+    const tablero = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
 
     console.log("cargar listado de tareas termiandas del tablero " + tablero);
 

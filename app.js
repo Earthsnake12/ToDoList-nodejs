@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(fileUpload());
 
-global.TABLEROSELECCIONADO = "personal";
+global.TABLEROSELECCIONADO = "PERSONAL";
 global.DESPLEGABLETABLERO = crearDesplegable();
 
 //pagina inicio
@@ -57,8 +57,9 @@ function crearDesplegable() {
 
     for (let tablero in tableros) {
         
-        desplegable += "<option value='"+ tablero.toString().slice(0, -2)
-        desplegable += "'>" +tablero.toString().slice(0, -2)+"</option>"
+        desplegable += "<option value='"+ tablero.toString().slice(0, -2)+ "'"
+        if(tablero.toString().slice(0, -2) === TABLEROSELECCIONADO )desplegable += " selected";
+        desplegable += ">" +tablero.toString().slice(0, -2)+"</option>"
         
     }
     desplegable += "</select>"

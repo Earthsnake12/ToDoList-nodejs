@@ -7,7 +7,7 @@ const HTMLparser = require('node-html-parser');
 
 //Crea una nueva tarea pendiente en el general 
 router.post('/', function (req, res) {
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
+    const tablero = TABLEROSELECCIONADO
     try {
         //cargo JSON general
         let data = fs.readFileSync("./data/General.json", 'utf8');
@@ -132,7 +132,6 @@ router.get('/', function (req, res) {
         root = "<h1>No se pudo cargar registro</h1>";
     }
 
-    root.querySelector('#TableroSeleccionado').replaceWith(DESPLEGABLETABLERO);
     root.querySelector("#tablero").set_content(tablero);
     root.querySelector("#id").set_content(tarea.id.toString());
     root.querySelector("#titulo").set_content(tarea.titulo.toString());
@@ -282,7 +281,7 @@ router.patch('/', function (req, res) {
 //Mueve a finalizados
 router.put('/finalizada', function (req, res) {
 
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
+    const tablero = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
     console.log("Pidiendo tarea " + id + " del tablero " + tablero + " marcar finalizada")
 

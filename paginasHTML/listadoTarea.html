@@ -20,10 +20,9 @@
         }
         //mover tarea a finalizados
         function marcarTareaTerminada(tareaId) {
-            let tablero = $("#tablero").html();
             $.ajax({
                 type: "PUT",
-                url: "tarea/finalizada?id=" + tareaId + "&tablero="+tablero,
+                url: "tarea/finalizada?id=" + tareaId,
                 data: {},
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
@@ -38,12 +37,13 @@
                 },
             });
         }
-        
+
         $(function () {
 
-            $("#lista").tablesorter(); 
+            $("#lista").tablesorter();
 
             $('.error').hide();
+
             $("#botonCargaNuevaTarea").click(function () {
                 $('.error').hide();
                 // si en un futuro tengo q validar los campos tiene que ir aca
@@ -78,10 +78,9 @@
                 }
 
                 //logica para enviar el formulario a /tarea para procesarlo y cargarlo
-                var tablero = "PERSONAL"//$("#tablero").html();
                 $.ajax({
                     type: "POST",
-                    url: "tarea?tablero="+tablero,
+                    url: "tarea",
                     data: {
                         "id": 0,
                         "titulo": titulo,
@@ -109,20 +108,43 @@
                 });
                 return false; //para no actualizar la pag y mantenerme aca
             });
+
+            //para el cambio de tablero
+            $("#TableroSeleccionado").on('change', function () {
+                $("#TableroSeleccionado option:selected").each(function () {
+                    elegido = $(this).val();
+                    $.ajax({
+                        type: "post",
+                        url: "http://127.0.0.1:8000/tableros/seleccion?tablero=" + elegido,
+                        dataType: 'text',
+                        success: function (msj, textStatus, head) {
+
+                            if (head.status === 200) {
+                                location.reload();
+                            }
+
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        },
+                    });
+                });
+            });
         });
     </script>
 </head>
 
 <body>
     <nav>
-        <div>Tablero Seleccionado: <span id="TableroSeleccionado">No se selecciono tablero</span></div>
-        <p></p>
-        <a href="/listatarea?tablero=personal">Listado de tareas</a>
-        <a href="/listadoDiario?fecha=hoy">Listado diario</a>
-        <a href="/listatarea/finalizadas?tablero=personal">Finalizadas</a>
+        <a href="/listadoDiario?fecha=hoy">Hoy</a>
+        <a href="/listatarea">Listado de tareas</a>
+        <a href="/listatarea/finalizadas">Finalizadas</a>
+        <a href="/tableros">Tableros</a>
     </nav>
-    
+
     <h1></h1>
+    <div>Tablero Seleccionado: <span id="TableroSeleccionado">No se selecciono tablero</span></div>
+    <p></p>
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
         tarea</button>
 
@@ -150,7 +172,7 @@
         </form>
     </div>
 
-    
+
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>
     </div>
