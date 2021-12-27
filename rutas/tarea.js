@@ -132,7 +132,7 @@ router.get('/', function (req, res) {
         root = "<h1>No se pudo cargar registro</h1>";
     }
 
-    root.querySelector("#tablero").set_content(tablero);
+    root.querySelector("#tablero").set_content(tarea.tablero.toString());
     root.querySelector("#id").set_content(tarea.id.toString());
     root.querySelector("#titulo").set_content(tarea.titulo.toString());
     root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
