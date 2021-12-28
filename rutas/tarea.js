@@ -13,7 +13,7 @@ router.post('/', function (req, res) {
         let data = fs.readFileSync("./data/General.json", 'utf8');
         var generalData = JSON.parse(data);
 
-        data = fs.readFileSync("./data/"+tablero+"/Pendientes.json", 'utf8');
+        data = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8');
         var pendientes = JSON.parse(data);
 
     } catch (err) {
@@ -26,7 +26,7 @@ router.post('/', function (req, res) {
 
     let dataParcial = {};
 
-    dataParcial.id = ++generalData[tablero+"ID"]; //coloco id actualizado
+    dataParcial.id = ++generalData[tablero + "ID"]; //coloco id actualizado
 
     //elimino acentos en titulo y estado
     dataParcial.titulo = eliminarDiacriticosEs(req.body.titulo);
@@ -40,7 +40,7 @@ router.post('/', function (req, res) {
     pendientes.Tareas.push(dataParcial);
 
     //guardo JSON Pendientes actualizado
-    fs.writeFile("./data/"+tablero+"/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
+    fs.writeFile("./data/" + tablero + "/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
         if (err) {
             console.log(err);
             res.writeHead(500);
@@ -53,6 +53,9 @@ router.post('/', function (req, res) {
 
     //registro tablero
     dataCompleta.tablero = tablero;
+
+    //registro recordatorio
+    dataCompleta.recordatorio = "No se cargo ningun recordatorio aun";
 
     //elimino acentos en descripcion
     dataCompleta.descripcion = eliminarDiacriticosEs(req.body.descripcion);
@@ -68,7 +71,7 @@ router.post('/', function (req, res) {
     dataCompleta.files = []
 
     //creo la carpeta para guardar los archivos
-    fs.mkdir("./data/"+tablero+"/files/" + dataParcial.id, (err) => {
+    fs.mkdir("./data/" + tablero + "/files/" + dataParcial.id, (err) => {
         if (err) {
             console.log(err);
             res.writeHead(500);
@@ -76,7 +79,7 @@ router.post('/', function (req, res) {
             return;
         }
         console.log("Carpeta creada");
-        fs.writeFile("./data/"+tablero+"/files/" + dataCompleta.id + "/data.json", JSON.stringify(dataCompleta), function (err, result) {
+        fs.writeFile("./data/" + tablero + "/files/" + dataCompleta.id + "/data.json", JSON.stringify(dataCompleta), function (err, result) {
             if (err) {
                 console.log(err);
                 res.writeHead(500);
@@ -125,18 +128,25 @@ router.get('/', function (req, res) {
 
     try {
 
-        let general = fs.readFileSync("./data/"+tablero+"/files/" + id + "/data.json", 'utf8');
+        let general = fs.readFileSync("./data/" + tablero + "/files/" + id + "/data.json", 'utf8');
         var tarea = JSON.parse(general);
 
     } catch (err) {
         root = "<h1>No se pudo cargar registro</h1>";
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
+        res.end(root.toString());
+        return;
     }
+
+    if(tarea.recordatorio.toString().slice(0,2) === "No") root.querySelector("#ultimoRecordatorio").set_content(tarea.recordatorio.toString());
+    else root.querySelector("#ultimoRecordatorio").set_content("Recordatorio cargado para el " + tarea.recordatorio.toString());
 
     root.querySelector("#tablero").set_content(tarea.tablero.toString());
     root.querySelector("#id").set_content(tarea.id.toString());
     root.querySelector("#titulo").set_content(tarea.titulo.toString());
-    root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
     root.querySelector("#estado").set_content(tarea.estado.toString());
+    root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
     if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
     if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
 
@@ -188,7 +198,7 @@ router.patch('/', function (req, res) {
 
 
     try {
-        let general = fs.readFileSync("./data/"+tablero+"/files/" + id + "/data.json", 'utf8');
+        let general = fs.readFileSync("./data/" + tablero + "/files/" + id + "/data.json", 'utf8');
         var tarea = JSON.parse(general);
     } catch (err) {
 
@@ -215,6 +225,12 @@ router.patch('/', function (req, res) {
             tarea.descripcion = eliminarDiacriticosEs(req.body.valor);
             break;
 
+        //indico para cuando cargue un recordatorio
+        case 'recordatorio':
+            console.log("Actualizo fecha del ultimo recordatorio");
+            tarea.recordatorio = req.body.valor;
+            break;
+
         //actualizo estado
         case 'estado':
 
@@ -227,7 +243,7 @@ router.patch('/', function (req, res) {
 
             try {
 
-                let general = fs.readFileSync("./data/"+tablero+"/Pendientes.json", 'utf8');
+                let general = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8');
                 var pendientes = JSON.parse(general);
 
             } catch (err) {
@@ -241,7 +257,7 @@ router.patch('/', function (req, res) {
             pendientes.Tareas[tareaIndice].prioritario = (req.body.valor[2] === 'true');
 
             //guardo el archivo general
-            fs.writeFile("./data/"+tablero+"/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
+            fs.writeFile("./data/" + tablero + "/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
 
                 if (err) {
                     console.log("No se pudo guardar el archivo general");
@@ -263,7 +279,7 @@ router.patch('/', function (req, res) {
     }
 
     //actualizo el archivo general
-    fs.writeFile("./data/"+tablero+"/files/" + id + "/data.json", JSON.stringify(tarea), function (err, result) {
+    fs.writeFile("./data/" + tablero + "/files/" + id + "/data.json", JSON.stringify(tarea), function (err, result) {
 
         if (err) {
             console.log(err);
@@ -286,15 +302,15 @@ router.put('/finalizada', function (req, res) {
     console.log("Pidiendo tarea " + id + " del tablero " + tablero + " marcar finalizada")
 
     try {
-        let data = fs.readFileSync("./data/"+tablero+"/files/" + id + "/data.json", 'utf8')
+        let data = fs.readFileSync("./data/" + tablero + "/files/" + id + "/data.json", 'utf8')
         var tarea = JSON.parse(data);
         console.log("Se cargo data-tarea")
 
-        let general = fs.readFileSync("./data/"+tablero+"/Pendientes.json", 'utf8')
+        let general = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8')
         var ArchivoPendientes = JSON.parse(general);
         console.log("Se cargo pendientes")
 
-        let finalizados = fs.readFileSync("./data/"+tablero+"/Finalizados.json", 'utf8')
+        let finalizados = fs.readFileSync("./data/" + tablero + "/Finalizados.json", 'utf8')
         var ArchivoFinalizados = JSON.parse(finalizados);
         console.log("Se cargo finalizados")
 
@@ -321,7 +337,7 @@ router.put('/finalizada', function (req, res) {
 
     //actualizo data
     try {
-        fs.writeFileSync("./data/"+tablero+"/files/" + id + "/data.json", JSON.stringify(tarea));
+        fs.writeFileSync("./data/" + tablero + "/files/" + id + "/data.json", JSON.stringify(tarea));
 
     } catch (err) {
         console.log(err);
@@ -332,7 +348,7 @@ router.put('/finalizada', function (req, res) {
 
     //actualizo finalizados
     try {
-        fs.writeFileSync("./data/"+tablero+"/Finalizados.json", JSON.stringify(ArchivoFinalizados));
+        fs.writeFileSync("./data/" + tablero + "/Finalizados.json", JSON.stringify(ArchivoFinalizados));
 
     } catch (err) {
         console.log(err);
@@ -343,7 +359,7 @@ router.put('/finalizada', function (req, res) {
 
     //actualizo el archivo pendientes
     try {
-        fs.writeFileSync("./data/"+tablero+"/Pendientes.json", JSON.stringify(ArchivoPendientes));
+        fs.writeFileSync("./data/" + tablero + "/Pendientes.json", JSON.stringify(ArchivoPendientes));
 
     } catch (err) {
         console.log(err);
