@@ -14,7 +14,7 @@ app.use(fileUpload());
 global.TABLEROSELECCIONADO = "PERSONAL";
 global.DESPLEGABLETABLERO = crearDesplegable();
 
-//pagina inicio
+//pagina inicio.
 app.get('/', function (req, res) {
 
     console.log("Pagina de Inicio");
