@@ -77,9 +77,13 @@ function primerTablero() {
         console.log("No se pudo cargar tableros")
         return
     }
-    if (tableros.length = 0) return "";
+
+    console.log(Object.keys(tableros).length)
+
+    if (Object.keys(tableros).length === 0) return "";
     else {
-        var tt = tableros[0] + ""
+        var tt = Object.keys(tableros)[0];
+        console.log(tt)
         return tt.slice(0, -2)
     }
 }
