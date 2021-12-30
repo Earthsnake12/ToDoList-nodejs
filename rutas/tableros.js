@@ -135,13 +135,14 @@ router.post('/', function (req, res) {
         }
 
         DESPLEGABLETABLERO = crearDesplegable();
+        TABLEROSELECCIONADO = NuevoTableroNombre;
         res.writeHead(200);
         res.end("Tarea cargada");
         console.log("Nueva tablero: " + NuevoTableroNombre);
     });
 });
 
-//Crea una nuevo tablero 
+//cambia la seleccion del tablero 
 router.post('/seleccion', function (req, res) {
 
     let tablero = req.query.tablero; //pasar el parametro como ?tablero=   
