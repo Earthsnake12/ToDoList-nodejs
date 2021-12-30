@@ -35,7 +35,7 @@ app.use("/upload", require("./rutas/upload.js"))
 //manejo del listado diario
 app.use("/listadoDiario", require("./rutas/listadoDiario.js"))
 
-//manejo de los tableros
+//manejo de los tableros.
 app.use("/tableros", require("./rutas/tableros.js"))
 
 app.listen(8000)
