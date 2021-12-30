@@ -77,7 +77,7 @@ router.post('/', function (req, res) {
         tareas.fecha.unshift(fecha);
         tareas.descripcion.unshift([]);
         tareas.ids.unshift([]);
-        //falta indicar tablero
+        tareas.tablero.unshift([]);
         tareas.estado.unshift([]);
     } else {
         console.log("El registro para esa fecha ya existe");
