@@ -78,12 +78,9 @@ function primerTablero() {
         return
     }
 
-    console.log(Object.keys(tableros).length)
-
     if (Object.keys(tableros).length === 0) return "";
     else {
         var tt = Object.keys(tableros)[0];
-        console.log(tt)
         return tt.slice(0, -2)
     }
 }
