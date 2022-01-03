@@ -33,7 +33,7 @@ router.get('/', function (req, res) {
         for (let tablero in tableros) {
             tabla += "<tr>";
             tabla += "<td>" + tablero.toString().slice(0, -2) + "</td>";
-            tabla += "<td><a href='/listatarea?tablero=" + tablero.toString().slice(0, -2) + "'>Ver</a></td>";
+            tabla += "<td><button type='Button' onClick='verTablero(\"" + tablero.toString().slice(0, -2) + "\")'>Ver Tablero</button></td>";
             tabla += "</tr>";
 
         }

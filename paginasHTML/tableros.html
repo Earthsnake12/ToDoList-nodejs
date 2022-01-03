@@ -73,6 +73,25 @@
             });
         };
 
+        function verTablero(tablero) {
+            $.ajax({
+                type: "post",
+                url: "./tableros/seleccion?tablero=" + tablero,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        window.location.href = "./listatarea";
+                    }
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+
+        }
+
     </script>
 </head>
 
@@ -86,7 +105,7 @@
     <h1></h1>
     <div>Tablero Seleccionado: <span id="TableroSeleccionado">No se selecciono tablero</span></div>
     <p></p>
-    
+
 
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>
