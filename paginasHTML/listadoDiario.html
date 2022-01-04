@@ -191,6 +191,25 @@
             alert(msjTarea + ". " + msjFecha)
             $("#fechaMigrar").val("");
         };
+
+        //elimina los registros que posean mas de 15 dias
+        function limpiarRegistros() {
+
+            $.ajax({
+                type: "DELETE",
+                url: "listadoDiario",
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) alert("Se eliminaron los registros con mas de 15 dias de antiguedad");
+                
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        };
+
     </script>
 </head>
 
@@ -224,6 +243,10 @@
 
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaTitulo')">Cargar nueva
         tarea</button>
+
+    <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <button type='Button' onClick="limpiarRegistros()">Limpiar registros viejos</button>
+    </div>
 
     <div id="divFormulario" style="display: none">
         <h2>Nueva tarea</h2>

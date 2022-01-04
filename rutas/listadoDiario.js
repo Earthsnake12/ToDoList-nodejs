@@ -106,6 +106,56 @@ router.post('/', function (req, res) {
     res.end();
 });
 
+//revisa los pendientes y elimina ya pasaron hace mas de 15 dias
+router.delete('/', function (req, res) {
+
+    console.log("Eliminando tareas viejas");
+
+    try {
+        let data = fs.readFileSync("./data/Diario.json", 'utf8');
+        var tareas = JSON.parse(data)
+
+    } catch (err) {
+        res.writeHead(404);
+        res.write('No se pudo cargar el listado diario');
+        res.end();
+        return;
+    }
+
+    const hoy = new Date();
+
+    for (let i = 0; i < tareas.fecha.length; i++) {
+
+        let fecha = tareas.fecha[i].split("-")
+        fecha = new Date(fecha[2], fecha[1] - 1, fecha[0]);
+        let difference = (hoy - fecha) / (1000 * 3600 * 24);
+
+        if (difference > 15) {
+
+            tareas.fecha.splice(i, 1);
+            tareas.descripcion.splice(i, 1);
+            tareas.ids.splice(i, 1);
+            tareas.tablero.splice(i, 1);
+            tareas.estado.splice(i, 1);
+
+            i--;
+        }
+    }
+    try {
+        fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
+
+    } catch (err) {
+        console.log(err);
+        res.writeHead(503);
+        res.end("No se pudo actualizar listado diario");
+        return;
+    }
+
+    console.log("Se eliminaron los registros con mas de 15 dias de antiguedad")
+    res.writeHead(200);
+    res.end();
+});
+
 //agrega nuevas tareas (en array) a la fecha pasada
 router.post('/tarea', function (req, res) {
 
@@ -286,7 +336,7 @@ function generarTabla(tareas, fecha) {
             else tabla += "<td>.</td>";
 
             if (ids[i] === "-") tabla += "<td>-</td>";
-            else tabla += "<td><a href='/tarea?id=" + ids[i] +"&tablero="+ tablero[i] +"'>" + ids[i] + "</a></td>";
+            else tabla += "<td><a href='/tarea?id=" + ids[i] + "&tablero=" + tablero[i] + "'>" + ids[i] + "</a></td>";
 
             tabla += "<td>" + descripcion[i] + "</td>";
             tabla += "</tr>";
