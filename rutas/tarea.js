@@ -138,7 +138,7 @@ router.get('/', function (req, res) {
         return;
     }
 
-    if(tarea.recordatorio.toString().slice(0,2) === "No") root.querySelector("#ultimoRecordatorio").set_content(tarea.recordatorio.toString());
+    if (tarea.recordatorio.toString().slice(0, 2) === "No") root.querySelector("#ultimoRecordatorio").set_content(tarea.recordatorio.toString());
     else root.querySelector("#ultimoRecordatorio").set_content("Recordatorio cargado para el " + tarea.recordatorio.toString());
 
     root.querySelector("#tablero").set_content(tarea.tablero.toString());
@@ -333,6 +333,9 @@ router.put('/finalizada', function (req, res) {
     }
     //modifico data-tarea
     tarea.estado = "Finalizado";
+    const date = new Date();
+    tarea.fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+    tarea.avance.push("Se dio por finalizada");
 
     //actualizo data
     try {
