@@ -33,5 +33,19 @@ fs.mkdir("./data", (err) => {
             return;
         }
     });
+
+    let notas = {
+        "descripcion": [],
+        "estado": [],
+        "recordatorio": []
+    };
+
+    fs.writeFile("./data/Notas.json", JSON.stringify(notas), function (err, result) {
+
+        if (err) {
+            console.log("No se pudo Crear notas.json");
+            return;
+        }
+    });
     console.log("Carpetas y archivos creados");
 });
