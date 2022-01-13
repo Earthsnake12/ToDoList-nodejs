@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <title>ListadoDiario</title>
+    <link rel="stylesheet" type="text/css" href="/static/estilo.css" />
+    <script src="/static/jquery-3.6.0.min.js"></script>
+    <script src="/static/tableSorter.js"></script>
+    <script>
+
+        $(function () {
+            $("#lista").tablesorter();
+            $('.error').hide();
+        });
+
+        function mostrarOcultarCampo(id) {
+            let x = document.getElementById(id);
+            if (x.style.display === "none") x.style.display = "block";
+            else x.style.display = "none";
+        }
+
+        function focusCampo(id) {
+            document.getElementById(id).focus();
+        }
+
+        //carga una nueva nota
+        function cargaNuevaNota() {
+            $('.error').hide();
+
+            var descripcion = $("#nuevaNotaDescripcion").val();
+            if (descripcion == "") {
+                $("#nuevaNotaDescripcionError").show();
+                $("#nuevaNotaDescripcion").focus();
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "notas",
+                data: {
+                    "descripcion": descripcion
+                },
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        };
+
+        //solicta el marcado de una nota como terminada
+        function marcarNotaTerminada(indice) {
+
+            $.ajax({
+                type: "PATCH",
+                url: "notas?indice=" + indice,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+
+                    if (head.status === 200) {
+                        location.reload();
+                    }
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        }
+
+    </script>
+</head>
+
+<body>
+    <nav>
+        <a href="/listadoDiario?fecha=hoy">Hoy</a>
+        <a href="/listatarea">Listado de tareas</a>
+        <a href="/listatarea/finalizadas">Finalizadas</a>
+        <a href="/tableros">Tableros</a>
+    </nav>
+    <h1></h1>
+    
+    <div id="lista">
+        <h1>No se pudo cargar la Tabla</h1>
+    </div>
+
+
+    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaNotaDescripcion')">Crear nueva Nota</button>
+
+    <div id="divFormulario" style="display: none">
+        <h2>Nueva nota</h2>
+
+        <p>Descripcion: <textarea id="nuevaNotaDescripcion" style="width: 70%; height: 50px;"></textarea>
+            <span class="error" id="nuevaNotaDescripcionError">Campo requerido</span>
+        </p>
+
+        <button type='Button' onClick="cargaNuevaNota()">Subir</button>
+        <p class="error" id="botonCargaNuevaNotaMsj">Tarea enviada</p>
+    </div>
+
+</body>
+
+</html>

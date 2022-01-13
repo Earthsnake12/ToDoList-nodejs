@@ -38,6 +38,9 @@ app.use("/listadoDiario", require("./rutas/listadoDiario.js"))
 //manejo de los tableros.
 app.use("/tableros", require("./rutas/tableros.js"))
 
+//manejo de las notas.
+app.use("/notas", require("./rutas/listaNotas.js"))
+
 app.listen(8000)
 
 console.log('Servidor en la url http://127.0.0.1:8000/');
