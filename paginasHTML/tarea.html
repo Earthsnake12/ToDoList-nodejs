@@ -177,7 +177,7 @@
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
 
-                    if (head.status === 200) alert("Movido a Finalizados");
+                    if (head.status === 200) location.reload();
                 },
                 error: function (xhr) {
                     alert(xhr.responseText);

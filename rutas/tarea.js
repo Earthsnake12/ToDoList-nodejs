@@ -140,7 +140,7 @@ router.get('/', function (req, res) {
 
     if (tarea.recordatorio.toString().slice(0, 2) === "No") root.querySelector("#ultimoRecordatorio").set_content(tarea.recordatorio.toString());
     else root.querySelector("#ultimoRecordatorio").set_content("Recordatorio cargado para el " + tarea.recordatorio.toString());
-if(tarea.estado.toString() === "Finalizado") root.querySelector("#botonTareaTerminada").replaceWith("");
+    if (tarea.estado.toString() === "Finalizado") root.querySelector("#botonTareaTerminada").replaceWith("");
 
     root.querySelector("#tablero").set_content(tarea.tablero.toString());
     root.querySelector("#id").set_content(tarea.id.toString());
