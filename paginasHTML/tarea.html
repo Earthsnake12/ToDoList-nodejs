@@ -219,7 +219,7 @@
             //Agrega <br> al precionar enter al modifcar la descripcion
             $("#inputactualizarDescripcion").on('keyup', function (e) {
                 var keycode = e.keyCode || e.which;
-                if (keycode == 13) {
+                if (keycode == 13 && e.shiftKey) {
                     $('#inputactualizarDescripcion').val($('#inputactualizarDescripcion').val()+'<br>'); 
                 }
             });
