@@ -78,7 +78,7 @@
             let tablero = $("#tablero").html();
             $.ajax({
                 type: "PATCH",
-                url: "/tarea?id=" + id + "&tablero="+tablero,
+                url: "/tarea?id=" + id + "&tablero=" + tablero,
                 data: {
                     "objetivo": objetivo,
                     "valor": valor
@@ -139,7 +139,7 @@
             //Agrego la nueva tarea a la fecha
             let msjTarea;
             //agrego el titulo al recordatorio
-            descripcion += ". " + $("#titulo").html()+". " + $("#tablero").html()
+            descripcion += ". " + $("#titulo").html() + ". " + $("#tablero").html()
             $.ajax({
                 async: false,
                 type: "POST",
@@ -172,7 +172,7 @@
             let tablero = $("#tablero").html();
             $.ajax({
                 type: "PUT",
-                url: "tarea/finalizada?id=" + id + "&tablero="+tablero,
+                url: "tarea/finalizada?id=" + id + "&tablero=" + tablero,
                 data: {},
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
@@ -184,9 +184,10 @@
                 },
             });
         }
-        //maneja el envio del form para la subida de archivos
+
         $(function () {
 
+            //maneja el envio del form para la subida de archivos
             $("#formNuevoArchivo").on("submit", function (e) {
                 e.preventDefault();
                 let f = $(this);
@@ -196,7 +197,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/upload?id=" + id + "&tablero="+tablero,
+                    url: "/upload?id=" + id + "&tablero=" + tablero,
                     data: formData,
                     dataType: 'text',
                     cache: false,
@@ -214,6 +215,14 @@
                     }
                 })
             })
+
+            //Agrega <br> al precionar enter al modifcar la descripcion
+            $("#inputactualizarDescripcion").on('keyup', function (e) {
+                var keycode = e.keyCode || e.which;
+                if (keycode == 13) {
+                    $('#inputactualizarDescripcion').val($('#inputactualizarDescripcion').val()+'<br>'); 
+                }
+            });
         })
 
     </script>
@@ -230,79 +239,80 @@
     <h3></h3>
     <span id="tablero">Sin tablero</span><span>&nbsp;-------</span>
     <span id="id">00</span><span>&nbsp; &nbsp; &nbsp;</span><button id="botonTareaTerminada" type='Button'
-    onClick='marcarTareaTerminada()'>Terminada!</button></div>
+        onClick='marcarTareaTerminada()'>Terminada!</button></div>
     <h2 id="titulo">Titulo</h2>
 
     <div>Estado: <span id="estado">Estado</span>
-    <div id="imp-pri">
-        <span>Importante:</span> <input type="checkbox" id="importante" onclick="return false;">
-        <span>&nbsp; &nbsp; &nbsp;</span>
-        <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick="return false;">
-    </div>
-
-    <div id="actualizarEstado" style="display: none">Nuevo Estado:
-        <input type="text" id="inputactualizarEstado" style="width: 70%;">
-        <span class="error" id="actualizarEstadoError" style="display: none">Campo requerido</span>
-        <p>
-            <span>Importante: <input type="checkbox" id="inputactualizarImportante"></span>
+        <div id="imp-pri">
+            <span>Importante:</span> <input type="checkbox" id="importante" onclick="return false;">
             <span>&nbsp; &nbsp; &nbsp;</span>
-            <span>Prioritario: <input type="checkbox" id="inputactualizarPrioritario"></span>
-            <button type='Button' onClick="actualizarEstado()">Actualizar</button>
-        </p>
-    </div>
-    <button type='Button' onclick="asignarValorCheckBox(), mostrarOcultarCampo('imp-pri'),
+            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick="return false;">
+        </div>
+
+        <div id="actualizarEstado" style="display: none">Nuevo Estado:
+            <input type="text" id="inputactualizarEstado" style="width: 70%;">
+            <span class="error" id="actualizarEstadoError" style="display: none">Campo requerido</span>
+            <p>
+                <span>Importante: <input type="checkbox" id="inputactualizarImportante"></span>
+                <span>&nbsp; &nbsp; &nbsp;</span>
+                <span>Prioritario: <input type="checkbox" id="inputactualizarPrioritario"></span>
+                <button type='Button' onClick="actualizarEstado()">Actualizar</button>
+            </p>
+        </div>
+        <button type='Button' onclick="asignarValorCheckBox(), mostrarOcultarCampo('imp-pri'),
             mostrarOcultarCampo('actualizarEstado'), focusCampo('inputactualizarEstado')">M</button>
 
-    <h3></h3>
+        <h3></h3>
 
-    <div>Descripcion: </div>
-    <div id="descripcion">descripcion</div>
-    <button type='Button'
-        onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion'), focusCampo('inputactualizarDescripcion')">M</button>
+        <div>Descripcion: </div>
+        <div id="descripcion">descripcion</div>
+        <button type='Button'
+            onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion'), focusCampo('inputactualizarDescripcion')">M</button>
 
-    <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
-        <p><textarea id="inputactualizarDescripcion" style="width: 100%; height: 100px;">AA</textarea></p>
-        <button type='Button' onClick="actualizarDescripcion()">Actualizar</button>
-        <span class="error" id="actualizarDescripcionError" style="display: none">Campo requerido</span>
-    </div>
+        <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
+            <p><textarea id="inputactualizarDescripcion" style="width: 100%; height: 100px;">AA</textarea></p>
+            <button type='Button' onClick="actualizarDescripcion()">Actualizar</button>
+            <span class="error" id="actualizarDescripcionError" style="display: none">Campo requerido</span>
+        </div>
 
-    <h3></h3>
+        <h3></h3>
 
-    <div id="avances">Avances: </div>
-    <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance'), focusCampo('inputNuevoAvance')">Agregar nuevo
-        avance</button>
-    <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance" style="width: 70%;">
-        <button type='Button' onClick="agregarAvance()">Agregar avance</button>
-        <span class="error" id="nuevaTareaEstadoError" style="display: none">Campo requerido</span>
-    </p>
-    
+        <div id="avances">Avances: </div>
+        <button type='Button' onClick="mostrarOcultarCampo('nuevoAvance'), focusCampo('inputNuevoAvance')">Agregar nuevo
+            avance</button>
+        <p id="nuevoAvance" style="display: none">Nuevo avance: <input type="text" id="inputNuevoAvance"
+                style="width: 70%;">
+            <button type='Button' onClick="agregarAvance()">Agregar avance</button>
+            <span class="error" id="nuevaTareaEstadoError" style="display: none">Campo requerido</span>
+        </p>
 
-    <h3></h3>
-    <!-- Recordatorio -->
-    <button type='Button' onClick="mostrarOcultarCampo('recordatorio'), focusCampo('textoRecordatorio')">Agregar
-        Recordatorio</button> <span id="ultimoRecordatorio">No se cargo ningun recordatorio aun</span>
-    <div id="recordatorio" style="display: none">
-        <p><input type="text" id="textoRecordatorio" style="width: 70%;"><span class="error" id="textoRecordatorioError"
-                style="display: none">Campo requerido</span></p>
-        <p><input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
-                requerido</span></p>
-        <button type='Button' onClick="subirRecordatorio()">Enviar datos</button>
-    </div>
 
-    <h3></h3>
+        <h3></h3>
+        <!-- Recordatorio -->
+        <button type='Button' onClick="mostrarOcultarCampo('recordatorio'), focusCampo('textoRecordatorio')">Agregar
+            Recordatorio</button> <span id="ultimoRecordatorio">No se cargo ningun recordatorio aun</span>
+        <div id="recordatorio" style="display: none">
+            <p><input type="text" id="textoRecordatorio" style="width: 70%;"><span class="error"
+                    id="textoRecordatorioError" style="display: none">Campo requerido</span></p>
+            <p><input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
+                    requerido</span></p>
+            <button type='Button' onClick="subirRecordatorio()">Enviar datos</button>
+        </div>
 
-    <div id="files">Files: </div>
+        <h3></h3>
 
-    <h3></h3>
+        <div id="files">Files: </div>
 
-    <p>Agregar nuevo archivo</p>
-    <form id="formNuevoArchivo" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" id="archivoParaSubir" style="width: 400px;
+        <h3></h3>
+
+        <p>Agregar nuevo archivo</p>
+        <form id="formNuevoArchivo" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" id="archivoParaSubir" style="width: 400px;
 				height: 100px;
 				border: double;">
-        <p></p>
-        <input type="submit" value="Subir" id="subirArchivo">
-    </form>
+            <p></p>
+            <input type="submit" value="Subir" id="subirArchivo">
+        </form>
 </body>
 
 </html>
