@@ -220,7 +220,11 @@
             $("#inputactualizarDescripcion").on('keyup', function (e) {
                 var keycode = e.keyCode || e.which;
                 if (keycode == 13 && e.shiftKey) {
-                    $('#inputactualizarDescripcion').val($('#inputactualizarDescripcion').val()+'<br>'); 
+                    var textAreaTxt = $('#inputactualizarDescripcion').val();
+                    var caretPos = document.getElementById('inputactualizarDescripcion').selectionStart;
+                    $('#inputactualizarDescripcion').val(textAreaTxt.substring(0, caretPos) + '<br>' + textAreaTxt.substring(caretPos) ); 
+                    document.getElementById("inputactualizarDescripcion").selectionStart = caretPos + 4 // el 4 final es el largo del<br>
+                    document.getElementById("inputactualizarDescripcion").selectionEnd = caretPos + 4
                 }
             });
         })
