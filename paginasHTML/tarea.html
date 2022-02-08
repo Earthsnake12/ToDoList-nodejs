@@ -216,15 +216,30 @@
                 })
             })
 
-            //Agrega <br> al precionar enter al modifcar la descripcion
+            //Agrega <br> al precionar ctrl+enter al modifcar la descripcion
             $("#inputactualizarDescripcion").on('keyup', function (e) {
                 var keycode = e.keyCode || e.which;
-                if (keycode == 13 && e.shiftKey) {
+                if (keycode == 13 && e.ctrlKey) {
+                    
                     var textAreaTxt = $('#inputactualizarDescripcion').val();
                     var caretPos = document.getElementById('inputactualizarDescripcion').selectionStart;
                     $('#inputactualizarDescripcion').val(textAreaTxt.substring(0, caretPos) + '<br>' + textAreaTxt.substring(caretPos) ); 
                     document.getElementById("inputactualizarDescripcion").selectionStart = caretPos + 4 // el 4 final es el largo del<br>
                     document.getElementById("inputactualizarDescripcion").selectionEnd = caretPos + 4
+                }
+            });
+
+            //Agrega <a> al precionar ctrl+1 para agregar link
+            $("#inputactualizarDescripcion").on('keyup', function (e) {
+                var keycode = e.keyCode || e.which;
+                if (keycode == 49 && e.ctrlKey) {
+                    
+                    var textAreaTxt = $('#inputactualizarDescripcion').val();
+                    var caretPos = document.getElementById('inputactualizarDescripcion').selectionStart;
+                    $('#inputactualizarDescripcion').val(textAreaTxt.substring(0, caretPos) + 
+                    '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid="> </a>' + textAreaTxt.substring(caretPos) ); 
+                    document.getElementById("inputactualizarDescripcion").selectionStart = caretPos + 126 // el 126 final es el largo del <a ...>
+                    document.getElementById("inputactualizarDescripcion").selectionEnd = caretPos + 126
                 }
             });
         })
