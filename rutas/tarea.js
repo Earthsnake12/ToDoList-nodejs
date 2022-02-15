@@ -297,7 +297,7 @@ router.patch('/', function (req, res) {
 //Mueve a finalizados
 router.put('/finalizada', function (req, res) {
 
-    const tablero = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
+    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
     console.log("Pidiendo tarea " + id + " del tablero " + tablero + " marcar finalizada")
 

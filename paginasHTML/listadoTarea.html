@@ -19,25 +19,7 @@
             document.getElementById(id).focus();
         }
         //mover tarea a finalizados
-        function marcarTareaTerminada(tareaId) {
-            $.ajax({
-                type: "PUT",
-                url: "tarea/finalizada?id=" + tareaId,
-                data: {},
-                dataType: 'text',
-                success: function (msj, textStatus, head) {
-
-                    if (head.status === 200) {
-                        location.reload();
-                    }
-
-                },
-                error: function (xhr) {
-                    alert(xhr.responseText);
-                },
-            });
-        }
-
+        
         $(function () {
 
             $("#lista").tablesorter();

@@ -28,7 +28,6 @@ router.get('/', function (req, res) {
     tabla += '<th style="width: 50px;">LINK</th>'
     tabla += '<th>TITULO</th>'
     tabla += '<th>ESTADO</th>'
-    tabla += '<th style="width: 0px;">*</th>';
     tabla += '<th style="width: 75px;">IMPORT</th>'
     tabla += '<th style="width: 75px;">PRIOR</th>'
     tabla += '<th style="width: 75px;">RANK</th>'
@@ -46,8 +45,6 @@ router.get('/', function (req, res) {
             tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero + "'>Ver</a></td>";
             tabla += "<td>" + tarea.titulo + "</td>";
             tabla += "<td>" + tarea.estado + "</td>";
-
-            tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + tarea.id + ")'>Ok!</button></td>";
 
             if (tarea.importante) {
                 tabla += "<td>si</td>";
