@@ -218,29 +218,26 @@
 
             //Agrega <br> al precionar ctrl+enter al modifcar la descripcion
             $("#inputactualizarDescripcion").on('keyup', function (e) {
-                var keycode = e.keyCode || e.which;
-                if (keycode == 13 && e.ctrlKey) {
+                let keycode = e.keyCode || e.which;
+                let textoAgregar;
 
-                    var textAreaTxt = $('#inputactualizarDescripcion').val();
-                    var caretPos = document.getElementById('inputactualizarDescripcion').selectionStart;
-                    $('#inputactualizarDescripcion').val(textAreaTxt.substring(0, caretPos) + '<br>' + textAreaTxt.substring(caretPos));
-                    document.getElementById("inputactualizarDescripcion").selectionStart = caretPos + 4 // el 4 final es el largo del<br>
-                    document.getElementById("inputactualizarDescripcion").selectionEnd = caretPos + 4
-                }
-            });
+                //al presionar ctrl+enter
+                if (keycode == 13 && e.ctrlKey) textoAgregar = '<br>';
 
-            //Agrega <a> al precionar ctrl+1 para agregar link
-            $("#inputactualizarDescripcion").on('keyup', function (e) {
-                var keycode = e.keyCode || e.which;
-                if (keycode == 49 && e.ctrlKey) {
+                //al presionar ctrl+1 
+                else if (keycode == 49 && e.ctrlKey) textoAgregar = '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid="> </a>';
 
-                    var textAreaTxt = $('#inputactualizarDescripcion').val();
-                    var caretPos = document.getElementById('inputactualizarDescripcion').selectionStart;
-                    $('#inputactualizarDescripcion').val(textAreaTxt.substring(0, caretPos) +
-                        '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid="> </a>' + textAreaTxt.substring(caretPos));
-                    document.getElementById("inputactualizarDescripcion").selectionStart = caretPos + 126 // el 126 final es el largo del <a ...>
-                    document.getElementById("inputactualizarDescripcion").selectionEnd = caretPos + 126
-                }
+                //al presionar ctrl+2
+                else if (keycode == 50 && e.ctrlKey) textoAgregar = '<b> </b>';
+
+                else return; //si no presione ninguna convinacion salgo sin hacer nada
+
+                let textAreaTxt = $('#inputactualizarDescripcion').val();
+                let caretPos = document.getElementById('inputactualizarDescripcion').selectionStart;
+                $('#inputactualizarDescripcion').val(textAreaTxt.substring(0, caretPos) + textoAgregar + textAreaTxt.substring(caretPos));
+                document.getElementById("inputactualizarDescripcion").selectionStart = caretPos + textoAgregar.length // el ir al final de lo pegado
+                document.getElementById("inputactualizarDescripcion").selectionEnd = caretPos + textoAgregar.length
+
             });
         })
 
@@ -284,14 +281,14 @@
         <h3></h3>
 
         <div>Descripcion: </div>
-        <div id="descripcion">descripcion</div>
+        <div id="descripcion" style="margin-bottom: 10px;">descripcion</div>
         <button type='Button'
             onclick="asignarValor('descripcion', 'inputactualizarDescripcion'), mostrarOcultarCampo('actualizarDescripcion'), focusCampo('inputactualizarDescripcion')">M</button>
 
         <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
             <p><textarea id="inputactualizarDescripcion" style="width: 98%; height: 200px;">AA</textarea></p>
             <div style="display: flex; justify-content: flex-end; align-items: center;">
-                <p style="font-size: 11px;">Ctrl+Enter = Inserta br // Ctrl+1 = Inserta "a" para link de ID </p>
+                <p style="font-size: 11px;">Ctrl+Enter = Inserta br // Ctrl+1 = Inserta "a" para link de ID //Ctrl+2 = Negrita</p>
             </div>
             <button type='Button' onClick="actualizarDescripcion()">Actualizar</button>
             <span class="error" id="actualizarDescripcionError" style="display: none">Campo requerido</span>
