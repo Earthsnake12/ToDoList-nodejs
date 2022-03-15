@@ -66,9 +66,23 @@
                 return false;
             }
 
-            //logica para enviar el formulario a /listadoDiario para procesarlo y cargarlo
-            let fecha = $("#fecha").html();
+            let fecha = $("#fecha").html(); //tomo la fecha del listado
 
+            //realizo el pedido de fecha nueva
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "listadoDiario?fecha=" + fecha,
+                dataType: 'text',
+                success: function (msj, textStatus, head) {
+                    if (head.status === 200) msjFecha = "Fecha generada";
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+
+            //Agrego la nueva tarea a la fecha
             $.ajax({
                 type: "POST",
                 url: "listadoDiario/tarea?fecha=" + fecha,
@@ -87,6 +101,7 @@
 
                 },
                 error: function (xhr) {
+
                     alert(xhr.responseText);
                 },
             });
@@ -202,7 +217,7 @@
                 success: function (msj, textStatus, head) {
 
                     if (head.status === 200) alert("Se eliminaron los registros con mas de 15 dias de antiguedad");
-                
+
                 },
                 error: function (xhr) {
                     alert(xhr.responseText);
@@ -242,7 +257,8 @@
         <button type='Button' onClick="migrarTareasNoCompletadas()">Migrar</button>
     </div>
 
-    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaDescripcion')">Cargar nueva
+    <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaDescripcion')">Cargar
+        nueva
         tarea</button>
 
     <div style="display: flex; justify-content: flex-end; align-items: center;">
