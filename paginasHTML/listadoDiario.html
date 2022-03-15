@@ -12,6 +12,24 @@
         $(function () {
             $("#lista").tablesorter();
             $('.error').hide();
+
+            //cambiar de registro al seleccionar fecha
+            $('#nuevaFecha').change(function () {
+                
+                let fecha = $("#nuevaFecha").val();
+                if (fecha == "") {
+                    $("#nuevaFechaError").show();
+                    $("#nuevaFecha").focus();
+                    return false;
+                }
+
+                //tomar la fecha y pasarla a d/m/yyyy
+                fecha = new Date(fecha);
+                fecha.setDate(fecha.getDate() + 1)
+                fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
+
+                window.location.href = "listadoDiario?fecha=" + fecha;
+            });
         });
 
         function mostrarOcultarCampo(id) {
@@ -25,7 +43,7 @@
         }
 
         //Pide nuevo registro para la fecha pasada
-        function pedirFecha() {
+       /* function pedirFecha() {
 
             let fecha = $("#nuevaFecha").val();
             if (fecha == "") {
@@ -53,7 +71,7 @@
                     alert(xhr.responseText);
                 },
             });
-        };
+        };*/
 
         //carga una nueva tarea en la fecha actual
         function cargaNuevaTarea() {
@@ -241,7 +259,7 @@
         <div id="linksFechas"></div>
         <input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
             requerido</span>
-        <button type='Button' onClick="pedirFecha()">Pedir nuevo registro</button>
+        <!--button type='Button' onClick="pedirFecha()">Pedir nuevo registro</button-->
     </div>
     <h1></h1>
     <p id="fecha">00</p>
