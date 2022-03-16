@@ -15,7 +15,7 @@
 
             //cambiar de registro al seleccionar fecha
             $('#nuevaFecha').change(function () {
-                
+
                 let fecha = $("#nuevaFecha").val();
                 if (fecha == "") {
                     $("#nuevaFechaError").show();
@@ -43,35 +43,35 @@
         }
 
         //Pide nuevo registro para la fecha pasada
-       /* function pedirFecha() {
-
-            let fecha = $("#nuevaFecha").val();
-            if (fecha == "") {
-                $("#nuevaFechaError").show();
-                $("#nuevaFecha").focus();
-                return false;
-            }
-
-            //tomar la fecha y pasarla a d/m/yyyy
-            fecha = new Date(fecha);
-            fecha.setDate(fecha.getDate() + 1)
-            fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
-
-            $.ajax({
-                type: "POST",
-                url: "listadoDiario?fecha=" + fecha,
-                dataType: 'text',
-                success: function (msj, textStatus, head) {
-
-                    if (head.status === 200) {
-                        location.reload();
-                    }
-                },
-                error: function (xhr) {
-                    alert(xhr.responseText);
-                },
-            });
-        };*/
+        /* function pedirFecha() {
+ 
+             let fecha = $("#nuevaFecha").val();
+             if (fecha == "") {
+                 $("#nuevaFechaError").show();
+                 $("#nuevaFecha").focus();
+                 return false;
+             }
+ 
+             //tomar la fecha y pasarla a d/m/yyyy
+             fecha = new Date(fecha);
+             fecha.setDate(fecha.getDate() + 1)
+             fecha = fecha.getDate() + "-" + (1 + fecha.getMonth()) + "-" + fecha.getFullYear();
+ 
+             $.ajax({
+                 type: "POST",
+                 url: "listadoDiario?fecha=" + fecha,
+                 dataType: 'text',
+                 success: function (msj, textStatus, head) {
+ 
+                     if (head.status === 200) {
+                         location.reload();
+                     }
+                 },
+                 error: function (xhr) {
+                     alert(xhr.responseText);
+                 },
+             });
+         };*/
 
         //carga una nueva tarea en la fecha actual
         function cargaNuevaTarea() {
@@ -254,16 +254,11 @@
         <a href="/tableros">Tableros</a>
         <a href="/notas">Notas</a>
     </nav>
-    <div>
-        <p></p>
-        <div id="linksFechas"></div>
-        <input type="date" id="nuevaFecha"><span class="error" id="nuevaFechaError" style="display: none">Campo
-            requerido</span>
-        <!--button type='Button' onClick="pedirFecha()">Pedir nuevo registro</button-->
-    </div>
-    <h1></h1>
-    <p id="fecha">00</p>
 
+    <h1></h1>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span id="fecha">00</span> <span>Ir a la Fecha: <input type="date" id="nuevaFecha"></span>
+    </div>
 
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>

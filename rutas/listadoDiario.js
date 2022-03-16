@@ -30,23 +30,13 @@ router.get('/', function (req, res) {
         }
         var tabla = generarTabla(tareas, fecha);
 
-        var fechas = "";
-        for (let i = 0; i < tareas.fecha.length && i < 10; i++) {
-
-            fechas += '<a href="/listadoDiario?fecha=';
-            fechas += tareas.fecha[i] + '"style="margin: 0 5px;">'
-            fechas += tareas.fecha[i] + '</a>';
-        }
-
     } catch (err) {
         var tabla = "<h1>No se pudo cargar la tabla</h1>";
         var fechas = "<div></div>"
     }
 
     root.querySelector('#lista').replaceWith(tabla); //cargo la tabla en la pag
-    root.querySelector('#fecha').replaceWith("<p id='fecha'>" + fecha + "</p>"); //cargo la fecha de la tabla en la pag
-
-    root.querySelector('#linksFechas').replaceWith(fechas); //cargo los link con las fechas en la pag
+    root.querySelector('#fecha').replaceWith("<span id='fecha'>" + fecha + "</span>"); //cargo la fecha de la tabla en la pag
 
     res.setHeader("Content-Type", "text/html");
     res.writeHead(200);
