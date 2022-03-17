@@ -216,19 +216,30 @@
                 })
             })
 
+            //anulo el uso de las teclas F1, F2, etc
+            $(document).keydown(function (e) {
+                let teclas = [112, 113, 114, 115];//F1,F2,F3,F4
+                if (teclas.includes(e.keyCode)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
             //Agrega <br> al precionar ctrl+enter al modifcar la descripcion
             $("#inputactualizarDescripcion").on('keyup', function (e) {
                 let keycode = e.keyCode || e.which;
                 let textoAgregar;
 
+                //var array= [112,113,114,115];//F1,F2,F3,F4
+
                 //al presionar ctrl+enter
                 if (keycode == 13 && e.ctrlKey) textoAgregar = '<br>';
 
-                //al presionar ctrl+1 
-                else if (keycode == 49 && e.ctrlKey) textoAgregar = '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid="> </a>';
+                //al presionar F2
+                else if (keycode == 112) textoAgregar = '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid="> </a>';
 
-                //al presionar ctrl+2
-                else if (keycode == 50 && e.ctrlKey) textoAgregar = '<b> </b>';
+                //al presionar F3
+                else if (keycode == 113) textoAgregar = '<b> </b>';
 
                 else return; //si no presione ninguna convinacion salgo sin hacer nada
 
@@ -260,9 +271,9 @@
 
     <div>Estado: <span id="estado">Estado</span>
         <div id="imp-pri">
-            <span>Importante:</span> <input type="checkbox" id="importante" onclick="return false;">
+            <span>Importante:</span> <input type="checkbox" id="importante" onclick= "return false;">
             <span>&nbsp; &nbsp; &nbsp;</span>
-            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick="return false;">
+            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick= "return false;">
         </div>
 
         <div id="actualizarEstado" style="display: none">Nuevo Estado:
@@ -288,7 +299,8 @@
         <div id="actualizarDescripcion" style="display: none">Nueva Descripcion:
             <p><textarea id="inputactualizarDescripcion" style="width: 98%; height: 200px;">AA</textarea></p>
             <div style="display: flex; justify-content: flex-end; align-items: center;">
-                <p style="font-size: 11px;">Ctrl+Enter = Inserta br // Ctrl+1 = Inserta "a" para link de ID //Ctrl+2 = Negrita</p>
+                <p style="font-size: 11px;">Ctrl + Enter = Inserta br // F1 = Inserta "a" para link de ID //F2 =
+                    Negrita</p>
             </div>
             <button type='Button' onClick="actualizarDescripcion()">Actualizar</button>
             <span class="error" id="actualizarDescripcionError" style="display: none">Campo requerido</span>
