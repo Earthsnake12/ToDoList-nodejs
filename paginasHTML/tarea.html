@@ -272,9 +272,9 @@
 
     <div>Estado: <span id="estado">Estado</span>
         <div id="imp-pri">
-            <span>Importante:</span> <input type="checkbox" id="importante" onclick= "return false;">
+            <span>Importante:</span> <input type="checkbox" id="importante" onclick= "event.preventDefault();">
             <span>&nbsp; &nbsp; &nbsp;</span>
-            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick= "return false;">
+            <span>Prioritario:</span> <input type="checkbox" id="prioritario" onclick= "event.preventDefault();">
         </div>
 
         <div id="actualizarEstado" style="display: none">Nuevo Estado:
