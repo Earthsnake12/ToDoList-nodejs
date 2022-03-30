@@ -19,7 +19,7 @@
             document.getElementById(id).focus();
         }
         //mover tarea a finalizados
-        
+
         $(function () {
 
             $("#lista").tablesorter();
@@ -112,6 +112,43 @@
                     });
                 });
             });
+
+
+            //anulo el uso de las teclas F1, F2, etc
+            $(document).keydown(function (e) {
+                let teclas = [112, 113, 114, 115];//F1,F2,F3,F4
+                if (teclas.includes(e.keyCode)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            //Comando de letras para la descripcion
+            $("#nuevaTareaDescripcion").on('keyup', function (e) {
+                let keycode = e.keyCode || e.which;
+                let textoAgregar;
+
+                //al presionar ctrl+enter -> Salto de linea
+                if (keycode == 13 && e.ctrlKey) textoAgregar = '<br>';
+
+                //al presionar F1 -> Link ID seguimiento
+                else if (keycode == 112) textoAgregar = '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid= "> </a>';
+
+                //al presionar F2 -> Negrita
+                else if (keycode == 113) textoAgregar = '<b> </b>';
+
+                //al presionar F3 -> Subrayado
+                else if (keycode == 114) textoAgregar = '<u> </u>';
+
+                else return; //si no presione ninguna convinacion salgo sin hacer nada
+
+                let textAreaTxt = $('#nuevaTareaDescripcion').val();
+                let caretPos = document.getElementById('nuevaTareaDescripcion').selectionStart;
+                $('#nuevaTareaDescripcion').val(textAreaTxt.substring(0, caretPos) + textoAgregar + textAreaTxt.substring(caretPos));
+                document.getElementById("nuevaTareaDescripcion").selectionStart = caretPos + textoAgregar.length // el ir al final de lo pegado
+                document.getElementById("nuevaTareaDescripcion").selectionEnd = caretPos + textoAgregar.length
+
+            });
         });
     </script>
 </head>
@@ -128,7 +165,7 @@
     <h1></h1>
     <div>Tablero Seleccionado: <span id="TableroSeleccionado">No se selecciono tablero</span></div>
     <p></p>
-    
+
     <div id="lista">
         <h1>No se pudo cargar la Tabla</h1>
     </div>
@@ -146,6 +183,10 @@
 
             <p>Descripcion: <textarea id="nuevaTareaDescripcion" style="width: 70%; height: 50px;"></textarea>
                 <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
+            <span style="display: flex; justify-content: flex-end; align-items: center; width: 80%;">
+                <span style="font-size: 11px;">Ctrl + Enter = Inserta br // F1 = Inserta "a" para link de ID //F2 =
+                    Negrita // F3 = Subrayado</span>
+                </span>
             </p>
 
             <p>Estado: <input type="text" id="nuevaTareaEstado" style="width: 70%;">
