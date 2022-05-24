@@ -211,14 +211,6 @@ router.patch('/', function (req, res) {
 
     switch (req.body.objetivo) {
 
-        //agrego nuevo avance
-        case 'avance':
-            console.log("Agregar Avance");
-            let date = new Date();
-            tarea.fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
-            tarea.avance.push(eliminarDiacriticosEs(req.body.valor));
-            break;
-
         //actualizo descripcion
         case 'descripcion':
             console.log("Actualizar Descripcion");
@@ -230,6 +222,17 @@ router.patch('/', function (req, res) {
             console.log("Actualizo fecha del ultimo recordatorio");
             tarea.recordatorio = req.body.valor;
             break;
+
+        //agrego nuevo avance
+        case 'avance':
+            console.log("Agregar Avance");
+            let date = new Date();
+            tarea.fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+            tarea.avance.push(eliminarDiacriticosEs(req.body.valor));
+
+            req.body.valor = [req.body.valor, tarea.importante.toString(), tarea.prioritario.toString()];
+
+            //break; lo elimino para que actualice el estado tambien
 
         //actualizo estado
         case 'estado':
@@ -278,7 +281,7 @@ router.patch('/', function (req, res) {
             break;
     }
 
-    //actualizo el archivo general
+    //actualizo el archivo de dato
     fs.writeFile("./data/" + tablero + "/files/" + id + "/data.json", JSON.stringify(tarea), function (err, result) {
 
         if (err) {
