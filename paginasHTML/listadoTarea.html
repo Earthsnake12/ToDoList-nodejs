@@ -132,13 +132,16 @@
                 if (keycode == 13 && e.ctrlKey) textoAgregar = '<br>';
 
                 //al presionar F1 -> Link ID seguimiento
-                else if (keycode == 112) textoAgregar = '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid= "> </a>';
+                else if (keycode == 112) textoAgregar = '<a target="_blank" href="https://sofse-pcat-ap.trenesargentinos.gob.ar/materiales/solicitudalta/detail/detail_table.htm?sid=a"> </a>';
 
                 //al presionar F2 -> Negrita
                 else if (keycode == 113) textoAgregar = '<b> </b>';
 
                 //al presionar F3 -> Subrayado
                 else if (keycode == 114) textoAgregar = '<u> </u>';
+
+                //al presionar F3 -> Cursiva
+                else if (keycode == 115) textoAgregar = '<i> </i>';
 
                 else return; //si no presione ninguna convinacion salgo sin hacer nada
 
@@ -185,7 +188,7 @@
                 <span class="error" id="nuevaTareaDescripcionError">Campo requerido</span>
             <span style="display: flex; justify-content: flex-end; align-items: center; width: 80%;">
                 <span style="font-size: 11px;">Ctrl + Enter = Inserta br // F1 = Inserta "a" para link de ID //F2 =
-                    Negrita // F3 = Subrayado</span>
+                    Negrita // F3 = Subrayado // F4 = Cursiva</span>
                 </span>
             </p>
 
