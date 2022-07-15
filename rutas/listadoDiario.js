@@ -293,8 +293,8 @@ function generarTabla(tareas, fecha) {
 	tabla += "</thead><tbody>";
 
 	for (let j = 0; j < tareas.fecha.length; j++) {
-		ttt = tareas.fecha[j].split("-");
-		ttt = new Date(ttt[2], ttt[1] - 1, ttt[0]);
+		fechaSeparada = tareas.fecha[j].split("-");
+		ttt = new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]);
 
 		if (ttt <= fecha) {
 			let descripcion = tareas.descripcion[j];
@@ -307,7 +307,7 @@ function generarTabla(tareas, fecha) {
 				if((fecha - ttt) / (1000 * 3600 * 24) >= 15)tabla += "<tr style='color: red;'>";
 				else tabla += "<tr style='color: #3D3D3D;'>";
 
-				tabla += "<td style='color: inherit;'>" + tareas.fecha[j] + "</td>";
+				tabla += "<td style='color: inherit;'>" + fechaSeparada[2] +"-"+ fechaSeparada[1] +"-"+ fechaSeparada[0] + "</td>";
 				tabla += "<td style='color: inherit;'>" + estado[i] + "</td>";
 
 				if (estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + i +",\""+ tareas.fecha[j] +"\")'>Ok!</button></td>";
