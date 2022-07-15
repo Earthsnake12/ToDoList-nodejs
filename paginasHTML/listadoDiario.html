@@ -234,7 +234,7 @@
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
 
-                    if (head.status === 200) alert("Se eliminaron los registros con mas de 15 dias de antiguedad");
+                    if (head.status === 200) location.reload();
 
                 },
                 error: function (xhr) {
@@ -264,18 +264,12 @@
         <h1>No se pudo cargar la Tabla</h1>
     </div>
 
-    <div style="display: flex; justify-content: flex-end; align-items: center;">
-        <input type="date" id="fechaMigrar"><span class="error" id="fechaMigrarError" style="display: none">Campo
-            requerido</span>
-        <button type='Button' onClick="migrarTareasNoCompletadas()">Migrar</button>
-    </div>
-
     <button type='Button' onClick="mostrarOcultarCampo('divFormulario'), focusCampo('nuevaTareaDescripcion')">Cargar
         nueva
         tarea</button>
 
     <div style="display: flex; justify-content: flex-end; align-items: center;">
-        <button type='Button' onClick="limpiarRegistros()">Limpiar registros viejos</button>
+        <button type='Button' onClick="limpiarRegistros()">Limpiar registros terminados</button>
     </div>
 
     <div id="divFormulario" style="display: none">

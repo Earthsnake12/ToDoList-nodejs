@@ -90,7 +90,7 @@ router.post("/", function(req, res) {
 
 //revisa los pendientes y elimina ya pasaron hace mas de 15 dias
 router.delete("/", function(req, res) {
-	console.log("Eliminando tareas viejas");
+	console.log("Eliminando tareas terminadas");
 
 	try {
 		let data = fs.readFileSync("./data/Diario.json", "utf8");
@@ -102,23 +102,28 @@ router.delete("/", function(req, res) {
 		return;
 	}
 
-	const hoy = new Date();
+	for (let j = 0; j < tareas.fecha.length; j++) {
+	
+		for (let i = 0; i < tareas.descripcion[j].length; i++) {
+			if (tareas.estado[j][i] === "Terminada") {
+				tareas.descripcion[j].splice(i, 1);
+				tareas.ids[j].splice(i, 1);
+				tareas.tablero[j].splice(i, 1);
+				tareas.estado[j].splice(i, 1);
 
-	for (let i = 0; i < tareas.fecha.length; i++) {
-		let fecha = tareas.fecha[i].split("-");
-		fecha = new Date(fecha[2], fecha[1] - 1, fecha[0]);
-		let difference = (hoy - fecha) / (1000 * 3600 * 24);
-
-		if (difference > 15) {
-			tareas.fecha.splice(i, 1);
-			tareas.descripcion.splice(i, 1);
-			tareas.ids.splice(i, 1);
-			tareas.tablero.splice(i, 1);
-			tareas.estado.splice(i, 1);
-
-			i--;
+				i--;
+			}
+		}
+		if (tareas.descripcion[j].length === 0) {
+			tareas.fecha.splice(j, 1);
+			tareas.descripcion.splice(j, 1);
+			tareas.ids.splice(j, 1);
+			tareas.tablero.splice(j, 1);
+			tareas.estado.splice(j, 1);
+			j--;
 		}
 	}
+
 	try {
 		fs.writeFileSync("./data/Diario.json", JSON.stringify(tareas));
 	} catch (err) {
@@ -128,7 +133,7 @@ router.delete("/", function(req, res) {
 		return;
 	}
 
-	console.log("Se eliminaron los registros con mas de 15 dias de antiguedad");
+	console.log("Se eliminaron los registros terminados");
 	res.writeHead(200);
 	res.end();
 });
@@ -303,14 +308,13 @@ function generarTabla(tareas, fecha) {
 			let estado = tareas.estado[j];
 
 			for (let i = 0; i < descripcion.length; i++) {
-
-				if((fecha - ttt) / (1000 * 3600 * 24) >= 15)tabla += "<tr style='color: red;'>";
+				if ((fecha - ttt) / (1000 * 3600 * 24) >= 15) tabla += "<tr style='color: red;'>";
 				else tabla += "<tr style='color: #3D3D3D;'>";
 
-				tabla += "<td style='color: inherit;'>" + fechaSeparada[2] +"-"+ fechaSeparada[1] +"-"+ fechaSeparada[0] + "</td>";
+				tabla += "<td style='color: inherit;'>" + fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0] + "</td>";
 				tabla += "<td style='color: inherit;'>" + estado[i] + "</td>";
 
-				if (estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + i +",\""+ tareas.fecha[j] +"\")'>Ok!</button></td>";
+				if (estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + i + ',"' + tareas.fecha[j] + "\")'>Ok!</button></td>";
 				else tabla += "<td>.</td>";
 
 				if (ids[i] === "-") tabla += "<td>-</td>";
