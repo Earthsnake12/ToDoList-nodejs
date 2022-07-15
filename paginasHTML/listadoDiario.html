@@ -10,7 +10,7 @@
     <script>
 
         $(function () {
-            $("#lista").tablesorter();
+            $("#lista").tablesorter({ sortList: [[0,0]] }); //ordena la primer columna (0) de forma ascendente (0) si fuera desendente seria (1)
             $('.error').hide();
 
             //cambiar de registro al seleccionar fecha
@@ -126,8 +126,8 @@
         };
 
         //solicta el marcado de una tarea como terminada
-        function marcarTareaTerminada(tareaId) {
-            let fecha = $("#fecha").html();
+        function marcarTareaTerminada(tareaId, fecha) {
+            //let fecha = $("#fecha").html();
             $.ajax({
                 type: "PATCH",
                 url: "listadoDiario/tarea?fecha=" + fecha,
