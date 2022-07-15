@@ -303,9 +303,12 @@ function generarTabla(tareas, fecha) {
 			let estado = tareas.estado[j];
 
 			for (let i = 0; i < descripcion.length; i++) {
-				tabla += "<tr>";
-				tabla += "<td>" + tareas.fecha[j] + "</td>";
-				tabla += "<td>" + estado[i] + "</td>";
+
+				if((fecha - ttt) / (1000 * 3600 * 24) >= 15)tabla += "<tr style='color: red;'>";
+				else tabla += "<tr style='color: #3D3D3D;'>";
+
+				tabla += "<td style='color: inherit;'>" + tareas.fecha[j] + "</td>";
+				tabla += "<td style='color: inherit;'>" + estado[i] + "</td>";
 
 				if (estado[i] === "Pendiente") tabla += "<td><button type='Button' onClick='marcarTareaTerminada(" + i +",\""+ tareas.fecha[j] +"\")'>Ok!</button></td>";
 				else tabla += "<td>.</td>";
@@ -313,7 +316,7 @@ function generarTabla(tareas, fecha) {
 				if (ids[i] === "-") tabla += "<td>-</td>";
 				else tabla += "<td><a href='/tarea?id=" + ids[i] + "&tablero=" + tablero[i] + "'>" + ids[i] + "</a></td>";
 
-				tabla += "<td>" + descripcion[i] + "</td>";
+				tabla += "<td style='color: inherit;'>" + descripcion[i] + "</td>";
 				tabla += "</tr>";
 			}
 		}
