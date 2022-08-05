@@ -308,8 +308,9 @@ function generarTabla(tareas, fecha) {
 			let estado = tareas.estado[j];
 
 			for (let i = 0; i < descripcion.length; i++) {
-				if ((fecha - ttt) / (1000 * 3600 * 24) >= 7) tabla += "<tr style='color: darkorange;'>";
-				else if ((fecha - ttt) / (1000 * 3600 * 24) >= 15) tabla += "<tr style='color: red;'>";
+				
+				if ((fecha - ttt) / (1000 * 3600 * 24) >= 15) tabla += "<tr style='color: red;'>";
+				else if ((fecha - ttt) / (1000 * 3600 * 24) >= 7) tabla += "<tr style='color: darkorange;'>";
 				else tabla += "<tr style='color: #3D3D3D;'>";
 
 				tabla += "<td style='color: inherit;'>" + fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0] + "</td>";
