@@ -184,6 +184,7 @@ module.exports = router;
 
 //elimina puntuacion
 function eliminarDiacriticosEs(texto) {
+    texto = texto.replace("ñ","ni")
     return texto
         .normalize('NFD')
         .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
