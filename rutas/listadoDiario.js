@@ -309,7 +309,8 @@ function generarTabla(tareas, fecha) {
 
 			for (let i = 0; i < descripcion.length; i++) {
 				
-				if ((fecha - ttt) / (1000 * 3600 * 24) >= 15) tabla += "<tr style='color: red;'>";
+				if (estado[i] === "Terminada") tabla += "<tr style='color: green;'>";
+				else if ((fecha - ttt) / (1000 * 3600 * 24) >= 21) tabla += "<tr style='color: red;'>";
 				else if ((fecha - ttt) / (1000 * 3600 * 24) >= 7) tabla += "<tr style='color: darkorange;'>";
 				else tabla += "<tr style='color: #3D3D3D;'>";
 
