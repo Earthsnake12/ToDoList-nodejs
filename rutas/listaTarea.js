@@ -47,7 +47,8 @@ router.get('/', function (req, res) {
             
             if ((diasPasados) / (1000 * 3600 * 24) >= 62) tabla += "<tr style='color: red;'>";
             else if ((diasPasados) / (1000 * 3600 * 24) >= 31) tabla += "<tr style='color: darkorange;'>";
-            else tabla += "<tr style='color: #3D3D3D;'>";
+            else if ((diasPasados) / (1000 * 3600 * 24) >= 5) tabla += "<tr style='color: #3D3D3D;'>";
+            else tabla += "<tr style='color: green;'>";
 
             tabla += "<td style='color: inherit;'>" + tarea.id + "</td>";
             tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero + "'>Ver</a></td>";
