@@ -145,7 +145,7 @@ router.get('/', function (req, res) {
     root.querySelector("#tablero").set_content(tarea.tablero.toString());
     root.querySelector("#id").set_content(tarea.id.toString());
     root.querySelector("#titulo").set_content(tarea.titulo.toString());
-    root.querySelector("#estado").set_content(tarea.estado.toString());
+    root.querySelector("#estado").set_content(tarea.estado.toString().split("#")[0]);
     root.querySelector("#descripcion").set_content(tarea.descripcion.toString());
     if (tarea.importante) root.querySelector("#importante").setAttribute("checked", "");
     if (tarea.prioritario) root.querySelector("#prioritario").setAttribute("checked", "");
@@ -227,11 +227,13 @@ router.patch('/', function (req, res) {
         case 'avance':
             console.log("Agregar Avance");
             let date = new Date();
-            tarea.fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
+            let fechaDeAvance = date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear();
+            tarea.fecha.push(fechaDeAvance);
             tarea.avance.push(eliminarDiacriticosEs(req.body.valor));
 
             req.body.valor = [req.body.valor, tarea.importante.toString(), tarea.prioritario.toString()];
 
+            req.body.valor[0] = req.body.valor[0] + " # " + fechaDeAvance;
             //break; lo elimino para que actualice el estado tambien
 
         //actualizo estado

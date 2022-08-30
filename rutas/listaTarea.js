@@ -28,9 +28,10 @@ router.get('/', function (req, res) {
     tabla += '<th style="width: 50px;">LINK</th>'
     tabla += '<th>TITULO</th>'
     tabla += '<th>ESTADO</th>'
-    tabla += '<th style="width: 75px;">IMPORT</th>'
-    tabla += '<th style="width: 75px;">PRIOR</th>'
-    tabla += '<th style="width: 75px;">RANK</th>'
+    tabla += '<th style="width: 75px;font-size: 10px;">ULTIMO AVANCE</th>'
+    tabla += '<th style="width: 5px;font-size: 10px;">IMPORT</th>'
+    tabla += '<th style="width: 5px;font-size: 10px;">PRIOR</th>'
+    tabla += '<th style="width: 5px;font-size: 10px;">RANK</th>'
     tabla += '</tr></thead><tbody>'
 
     try {
@@ -40,23 +41,31 @@ router.get('/', function (req, res) {
         tareas.forEach(tarea => {
 
             let ranking = 0;
-            tabla += "<tr>";
-            tabla += "<td>" + tarea.id + "</td>";
+            let estadoSeparado = tarea.estado.split("#");
+            let fechaSeparada = estadoSeparado[1].split("-");
+            let diasPasados = new Date()- new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]);
+            
+            if ((diasPasados) / (1000 * 3600 * 24) >= 62) tabla += "<tr style='color: red;'>";
+            else if ((diasPasados) / (1000 * 3600 * 24) >= 31) tabla += "<tr style='color: darkorange;'>";
+            else tabla += "<tr style='color: #3D3D3D;'>";
+
+            tabla += "<td style='color: inherit;'>" + tarea.id + "</td>";
             tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero + "'>Ver</a></td>";
-            tabla += "<td>" + tarea.titulo + "</td>";
-            tabla += "<td>" + tarea.estado + "</td>";
+            tabla += "<td style='color: inherit;'>" + tarea.titulo + "</td>";
+            tabla += "<td style='color: inherit;'>" + estadoSeparado[0] + "</td>";
+            tabla += "<td style='color: inherit;'>" + estadoSeparado[1] + "</td>";
 
             if (tarea.importante) {
-                tabla += "<td>si</td>";
+                tabla += "<td style='color: inherit;'>si</td>";
                 ranking += 2
-            } else tabla += "<td>l</td>";
+            } else tabla += "<td style='color: inherit;'>l</td>";
 
             if (tarea.prioritario) {
-                tabla += "<td>si</td>";
+                tabla += "<td style='color: inherit;'>si</td>";
                 ranking += 1
-            } else tabla += "<td>l</td>";
+            } else tabla += "<td style='color: inherit;'>l</td>";
 
-            tabla += "<td>" + ranking + "</td>";
+            tabla += "<td style='color: inherit;'>" + ranking + "</td>";
             tabla += "</tr>";
 
         });
