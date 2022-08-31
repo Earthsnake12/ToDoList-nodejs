@@ -226,7 +226,7 @@
 
             //anulo el uso de las teclas F1, F2, etc
             $(document).keydown(function (e) {
-                let teclas = [112, 113, 114, 115];//F1,F2,F3,F4
+                let teclas = [112, 113, 114, 115, 116];//F1,F2,F3,F4,F5
                 if (teclas.includes(e.keyCode)) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -250,8 +250,11 @@
                 //al presionar F3 -> Subrayado
                 else if (keycode == 114) textoAgregar = '<u> </u>';
 
-                //al presionar F3 -> Cursiva
+                //al presionar F4 -> Cursiva
                 else if (keycode == 115) textoAgregar = '<i> </i>';
+
+                //al presionar F5 -> Tabla
+                else if (keycode == 116) textoAgregar = '<table><tbody>\n \n<tr><td> </td><td> </td><td> </td></tr>\n \n<tr><td> </td><td> </td><td> </td></tr>\n \n<tr><td> </td><td> </td><td> </td></tr>\n \n</tbody></table>';
 
                 else return; //si no presione ninguna convinacion salgo sin hacer nada
 
@@ -312,7 +315,7 @@
             <p><textarea id="inputactualizarDescripcion" style="width: 98%; height: 200px;">AA</textarea></p>
             <div style="display: flex; justify-content: flex-end; align-items: center;">
                 <p style="font-size: 11px;">Ctrl + Enter = Inserta br // F1 = Inserta "a" para link de ID //F2 =
-                    Negrita // F3 = Subrayado // F4 = Cursiva</p>
+                    Negrita // F3 = Subrayado // F4 = Cursiva // F5 = Tabla</p>
             </div>
             <button type='Button' onClick="actualizarDescripcion()">Actualizar</button>
             <span class="error" id="actualizarDescripcionError" style="display: none">Campo requerido</span>
