@@ -28,7 +28,7 @@ router.get('/', function (req, res) {
     tabla += '<th style="width: 50px;">LINK</th>'
     tabla += '<th>TITULO</th>'
     tabla += '<th>ESTADO</th>'
-    tabla += '<th style="width: 75px;font-size: 10px;">ULTIMO AVANCE</th>'
+    tabla += '<th style="width: 80px;font-size: 10px;">ULTIMO AVANCE</th>'
     tabla += '<th style="width: 5px;font-size: 10px;">IMPORT</th>'
     tabla += '<th style="width: 5px;font-size: 10px;">PRIOR</th>'
     tabla += '<th style="width: 5px;font-size: 10px;">RANK</th>'

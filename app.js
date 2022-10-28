@@ -41,6 +41,9 @@ app.use("/tableros", require("./rutas/tableros.js"))
 //manejo de las notas.
 app.use("/notas", require("./rutas/listaNotas.js"))
 
+//manejo del kamban.
+app.use("/kamban", require("./rutas/kamban.js"))
+
 app.listen(8000)
 
 console.log('Servidor en la url http://127.0.0.1:8000/');
