@@ -10,7 +10,7 @@ Instalacion
 Luego de descargar el repositorio y ejecutar:
 ```
 npm install
-npm postinstall
+npm run postinstall
 ```
 _El ultimo comando genera la estructura de carpetas para que funcione_
 
