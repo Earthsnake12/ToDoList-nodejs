@@ -8,6 +8,7 @@ fs.mkdir("./data", (err) => {
         return;
     }
 
+    //--------------------------------------------------------------------------
     let diario = {
         "fecha": [],
         "descripcion": [],
@@ -24,7 +25,11 @@ fs.mkdir("./data", (err) => {
         }
     });
 
-    let general = {};
+    //--------------------------------------------------------------------------
+    let general = {
+        "ultimoID": 0,
+        "Tableros": []
+      };
 
     fs.writeFile("./data/General.json", JSON.stringify(general), function (err, result) {
 
@@ -34,6 +39,7 @@ fs.mkdir("./data", (err) => {
         }
     });
 
+    //--------------------------------------------------------------------------
     let notas = {
         "descripcion": [],
         "estado": [],
@@ -47,5 +53,17 @@ fs.mkdir("./data", (err) => {
             return;
         }
     });
+
+    //--------------------------------------------------------------------------
+
+    fs.mkdir("./data/file", (err) => {
+
+        if (err) {
+            console.log("No se pudo crear la carpeta para file");
+            return;
+        }
+    })
+
+    //--------------------------------------------------------------------------
     console.log("Carpetas y archivos creados");
 });
