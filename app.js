@@ -51,7 +51,7 @@ function crearDesplegable() {
 
     try {
         let data = fs.readFileSync("./data/General.json", 'utf8')
-        var tableros = JSON.parse(data);
+        var general = JSON.parse(data);
 
     } catch (err) {
         return "<p>No se pudo cargar desplegable</p>";
@@ -59,11 +59,12 @@ function crearDesplegable() {
 
     let desplegable = "<select id='TableroSeleccionado'>"
 
-    for (let tablero in tableros) {
-
-        desplegable += "<option value='" + tablero.toString().slice(0, -2) + "'"
-        if (tablero.toString().slice(0, -2) === TABLEROSELECCIONADO) desplegable += " selected";
-        desplegable += ">" + tablero.toString().slice(0, -2) + "</option>"
+    for (let i = 0; i < general.Tableros.length; i++) {
+        let tablero = general.Tableros[i]
+  
+        desplegable += "<option value='" + tablero.Nombre + "'"
+        if (tablero.Nombre === TABLEROSELECCIONADO) desplegable += " selected";
+        desplegable += ">" + tablero.Nombre + "</option>"
 
     }
     desplegable += "</select>"

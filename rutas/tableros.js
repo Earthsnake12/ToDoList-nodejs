@@ -27,13 +27,16 @@ router.get('/', function (req, res) {
     tabla += '</tr></thead><tbody>'
 
     try {
-        let tableros = fs.readFileSync("./data/General.json", 'utf8')
-        tableros = JSON.parse(tableros);
+        let general = fs.readFileSync("./data/General.json", 'utf8')
+        general = JSON.parse(general);
 
-        for (let tablero in tableros) {
+
+        for (let i = 0; i < general.Tableros.length; i++) {
+            let tablero = general.Tableros[i]
+
             tabla += "<tr>";
-            tabla += "<td>" + tablero.toString().slice(0, -2) + "</td>";
-            tabla += "<td><button type='Button' onClick='verTablero(\"" + tablero.toString().slice(0, -2) + "\")'>Ver Tablero</button></td>";
+            tabla += "<td>" + tablero.Nombre + "</td>";
+            tabla += "<td><button type='Button' onClick='verTablero(\"" + tablero.Nombre + "\")'>Ver Tablero</button></td>";
             tabla += "</tr>";
 
         }
@@ -73,57 +76,25 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if (generalData[NuevoTableroNombre + "ID"] !== undefined) {
-        console.log("Tablero ya existente");
+    for (let i = 0; i < generalData.Tableros.length; i++) {
+        let tablero = generalData.Tableros[i]
 
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(503);
-        res.end("Tablero ya existente");
-        return;
-    }
+        if (tablero.Nombre === NuevoTableroNombre) {
 
+            console.log("Tablero ya existente");
 
-    generalData[NuevoTableroNombre + "ID"] = 0;
-
-
-    //creo la carpeta para guardar los archivos
-    fs.mkdir("./data/" + NuevoTableroNombre, (err) => {
-        if (err) {
-            console.log(err);
-            res.writeHead(500);
-            res.end("No se pudo crear la carpeta para los archivos");
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(503);
+            res.end("Tablero ya existente");
             return;
         }
-        fs.mkdir("./data/" + NuevoTableroNombre + "/files", (err) => {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end("No se pudo crear la carpeta para los archivos");
-                return;
-            }
-        });
+    }
 
-        let plantilla = { "Tareas": [] };
-
-        fs.writeFile("./data/" + NuevoTableroNombre + "/Finalizados.json", JSON.stringify(plantilla), function (err, result) {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end("No se pudo Crear finalizados.json");
-                return;
-            }
-        });
-
-        fs.writeFile("./data/" + NuevoTableroNombre + "/Pendientes.json", JSON.stringify(plantilla), function (err, result) {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end("No se pudo Crear pendientes.json");
-                return;
-            }
-        });
-        console.log("Carpetas creada y archivos creados");
-    });
+    generalData.Tableros.push({
+        "Nombre": NuevoTableroNombre,
+        "Pendientes": [],
+        "Finalizados": []
+    })
 
     //guardo el general actualizado
     fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
@@ -134,7 +105,7 @@ router.post('/', function (req, res) {
             return;
         }
 
-        DESPLEGABLETABLERO = crearDesplegable();
+        DESPLEGABLETABLERO = crearDesplegable(generalData.Tableros);
         TABLEROSELECCIONADO = NuevoTableroNombre;
         res.writeHead(200);
         res.end("Tarea cargada");
@@ -145,9 +116,9 @@ router.post('/', function (req, res) {
 //cambia la seleccion del tablero 
 router.post('/seleccion', function (req, res) {
 
-    let tablero = req.query.tablero; //pasar el parametro como ?tablero=   
-    tablero = tablero.toUpperCase();
-    console.log("Cambiando al tablero: " + tablero)
+    let TableroSeleccionado = req.query.tablero; //pasar el parametro como ?tablero=   
+    TableroSeleccionado = TableroSeleccionado.toUpperCase();
+    console.log("Cambiando al tablero: " + TableroSeleccionado)
 
     try {
         //cargo JSON general
@@ -162,21 +133,25 @@ router.post('/seleccion', function (req, res) {
         return;
     }
 
-    if (generalData[tablero + "ID"] === undefined) {
-        console.log("Tablero no existente");
+    for (let i = 0; i < generalData.Tableros.length; i++) {
+        let tablero = generalData.Tableros[i]
 
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(503);
-        res.end("Tablero ya existente");
-        return;
+        if (tablero.Nombre === TableroSeleccionado) {
+
+            TABLEROSELECCIONADO = TableroSeleccionado;
+            DESPLEGABLETABLERO = crearDesplegable(generalData.Tableros);
+
+            res.writeHead(200);
+            res.end("Tablero cambiado");
+            console.log("Cambio Listo")
+            return
+        }
     }
 
-    TABLEROSELECCIONADO = tablero;
-    DESPLEGABLETABLERO = crearDesplegable();
-
-    res.writeHead(200);
-    res.end("Tablero cambiado");
-    console.log("Cambio Listo");
+    console.log("Tablero no existe");
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(503);
+    res.end("Tablero no existe");
 
 });
 
@@ -184,33 +159,26 @@ module.exports = router;
 
 //elimina puntuacion
 function eliminarDiacriticosEs(texto) {
-    texto = texto.replace("ñ","ni")
+    texto = texto.replace("ñ", "ni")
     return texto
         .normalize('NFD')
         .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
         .normalize();
 }
 
-function crearDesplegable() {
-
-    try {
-        let data = fs.readFileSync("./data/General.json", 'utf8')
-        var tableros = JSON.parse(data);
-
-    } catch (err) {
-        return "<p>No se pudo cargar desplegable</p>";
-    }
+function crearDesplegable(Tableros) {
 
     let desplegable = "<select id='TableroSeleccionado'>"
 
-    for (let tablero in tableros) {
-        
-        desplegable += "<option value='"+ tablero.toString().slice(0, -2)+ "'"
-        if(tablero.toString().slice(0, -2) === TABLEROSELECCIONADO )desplegable += " selected";
-        desplegable += ">" +tablero.toString().slice(0, -2)+"</option>"
-        
+    for (let i = 0; i < Tableros.length; i++) {
+        let tablero = Tableros[i]
+
+        desplegable += "<option value='" + tablero.Nombre + "'"
+        if (tablero.Nombre === TABLEROSELECCIONADO) desplegable += " selected";
+        desplegable += ">" + tablero.Nombre + "</option>"
+
     }
     desplegable += "</select>"
-    
+
     return desplegable;
 }

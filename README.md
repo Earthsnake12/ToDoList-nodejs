@@ -4,17 +4,6 @@ Aplicacion para seguimiento de tareas, realizado con Node.js / Express.
 
 Incluye la creacion de tableros para direrenciar temas, recordatorios, cargar en las tareas archivos, recordatorio e historial. 
 
-Instalacion
----------------------------------
-
-Luego de descargar el repositorio y ejecutar:
-```
-npm install
-npm run postinstall
-```
-_El ultimo comando genera la estructura de carpetas para que funcione_
-
-
 Funciones
 ---------------------------------
 En la parte superior se encuentra la barra general:
