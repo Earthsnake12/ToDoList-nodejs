@@ -160,7 +160,7 @@ router.get('/', function (req, res) {
             nuevoFile = ' <p></p><a href="';
             nuevoFile += tarea.files[i].slice(7);//para eliminar el ./data/files/;
             nuevoFile += '.pdf" target="_blank">';
-            nuevoFile += tarea.files[i].slice(25) + '</a>';
+            nuevoFile += tarea.files[i].slice(16) + '</a>';
 
             nuevoFile += ' <spam>.-----------.</spam><a href="';
             nuevoFile += tarea.files[i].slice(7);//para eliminar el ./data/files/;
@@ -171,7 +171,7 @@ router.get('/', function (req, res) {
             nuevoFile = ' <p></p><a href="';
             nuevoFile += tarea.files[i].slice(7);//para eliminar el ./data/files/;
             nuevoFile += '" target="_blank">';
-            nuevoFile += tarea.files[i].slice(25) + '</a>';
+            nuevoFile += tarea.files[i].slice(16) + '</a>';
         }
         nuevoFile = HTMLparser.parse(nuevoFile);
         root.querySelector("#files").appendChild(nuevoFile);
@@ -185,12 +185,10 @@ router.get('/', function (req, res) {
 //Agrega avance con fecha de hoy o actualiza estado o descripcion o agrega ruta del archivo pasado del id pasado
 router.patch('/', function (req, res) {
 
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
 
-
     try {
-        let general = fs.readFileSync("./data/" + tablero + "/files/" + id + "/data.json", 'utf8');
+        let general = fs.readFileSync("./data/files/" + id + "/data.json", 'utf8');
         var tarea = JSON.parse(general);
     } catch (err) {
 
@@ -237,30 +235,6 @@ router.patch('/', function (req, res) {
             tarea.importante = (req.body.valor[1] === 'true');
             tarea.prioritario = (req.body.valor[2] === 'true');
 
-
-            try {
-
-                let general = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8');
-                var pendientes = JSON.parse(general);
-
-            } catch (err) {
-                console.log("No se pudo cargar archivo general");
-                break;
-            }
-            //actualizo el general
-            const tareaIndice = pendientes.Tareas.map(pendiente => pendiente.id).indexOf(id);
-            pendientes.Tareas[tareaIndice].estado = eliminarDiacriticosEs(req.body.valor[0]);
-            pendientes.Tareas[tareaIndice].importante = (req.body.valor[1] === 'true');
-            pendientes.Tareas[tareaIndice].prioritario = (req.body.valor[2] === 'true');
-
-            //guardo el archivo general
-            fs.writeFile("./data/" + tablero + "/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
-
-                if (err) {
-                    console.log("No se pudo guardar el archivo general");
-                }
-            });
-
             break;
 
         //actualizo files
@@ -276,7 +250,7 @@ router.patch('/', function (req, res) {
     }
 
     //actualizo el archivo de dato
-    fs.writeFile("./data/" + tablero + "/files/" + id + "/data.json", JSON.stringify(tarea), function (err, result) {
+    fs.writeFile("./data/files/" + id + "/data.json", JSON.stringify(tarea), function (err, result) {
 
         if (err) {
             console.log(err);

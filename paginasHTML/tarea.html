@@ -83,10 +83,9 @@
 
         function tirarAjax(objetivo, valor) {
             let id = $("#id").html();
-            let tablero = $("#tablero").html();
             $.ajax({
                 type: "PATCH",
-                url: "/tarea?id=" + id + "&tablero=" + tablero,
+                url: "/tarea?id=" + id,
                 data: {
                     "objetivo": objetivo,
                     "valor": valor
@@ -177,10 +176,10 @@
 
         function marcarTareaTerminada() {
             let id = $("#id").html();
-            let tablero = $("#tablero").html();
+
             $.ajax({
                 type: "PUT",
-                url: "tarea/finalizada?id=" + id + "&tablero=" + tablero,
+                url: "tarea/finalizada?id=" + id,
                 data: {},
                 dataType: 'text',
                 success: function (msj, textStatus, head) {
@@ -205,7 +204,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/upload?id=" + id + "&tablero=" + tablero,
+                    url: "/upload?id=" + id,
                     data: formData,
                     dataType: 'text',
                     cache: false,
