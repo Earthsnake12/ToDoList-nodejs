@@ -6,71 +6,53 @@ const HTMLparser = require('node-html-parser');
 
 //Crea una nueva tarea pendiente en el general 
 router.post('/', function (req, res) {
-    const tablero = TABLEROSELECCIONADO
+    const tableroSelec = TABLEROSELECCIONADO
     try {
         //cargo JSON general
         let data = fs.readFileSync("./data/General.json", 'utf8');
         var generalData = JSON.parse(data);
 
-        data = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8');
-        var pendientes = JSON.parse(data);
-
     } catch (err) {
 
         console.log(err);
         res.writeHead(500);
-        res.end("Archivo general o de pendientes no encontrado");
+        res.end("Archivo general no encontrado");
         return;
     }
 
-    let dataParcial = {};
+    let dataNueva = {};
 
-    dataParcial.id = ++generalData[tablero + "ID"]; //coloco id actualizado
+    dataNueva.id = ++generalData.ultimoID; //coloco id actualizado
 
     //elimino acentos en titulo y estado
-    dataParcial.titulo = eliminarDiacriticosEs(req.body.titulo);
-    dataParcial.estado = eliminarDiacriticosEs(req.body.estado);
+    dataNueva.titulo = eliminarDiacriticosEs(req.body.titulo);
+    dataNueva.estado = eliminarDiacriticosEs(req.body.estado);
 
     //paso la importancia y prioridad como un booleano
-    dataParcial.importante = (req.body.importante === "false") ? false : true;
-    dataParcial.prioritario = (req.body.prioritario === "false") ? false : true;
-
-    //lo guardo esta parte dentro del general
-    pendientes.Tareas.push(dataParcial);
-
-    //guardo JSON Pendientes actualizado
-    fs.writeFile("./data/" + tablero + "/Pendientes.json", JSON.stringify(pendientes), function (err, result) {
-        if (err) {
-            console.log(err);
-            res.writeHead(500);
-            res.end("No se pudo actualizar Pendientes");
-            return;
-        }
-    });
-
-    let dataCompleta = JSON.parse(JSON.stringify(dataParcial))
+    dataNueva.importante = (req.body.importante === "false") ? false : true;
+    dataNueva.prioritario = (req.body.prioritario === "false") ? false : true;
 
     //registro tablero
-    dataCompleta.tablero = tablero;
+    dataNueva.tablero = tableroSelec;
 
     //registro recordatorio
-    dataCompleta.recordatorio = "No se cargo ningun recordatorio aun";
+    dataNueva.recordatorio = "No se cargo ningun recordatorio aun";
 
     //elimino acentos en descripcion
-    dataCompleta.descripcion = eliminarDiacriticosEs(req.body.descripcion);
+    dataNueva.descripcion = eliminarDiacriticosEs(req.body.descripcion);
 
     // registro fecha
     let date = new Date();
-    dataCompleta.fecha = [date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear()];
+    dataNueva.fecha = [date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear()];
 
     // registro avance
-    dataCompleta.avance = ["Tarea registrada"];
+    dataNueva.avance = ["Tarea registrada"];
 
     // Agrego campo para registrar los archivos
-    dataCompleta.files = []
+    dataNueva.files = []
 
     //creo la carpeta para guardar los archivos
-    fs.mkdir("./data/" + tablero + "/files/" + dataParcial.id, (err) => {
+    fs.mkdir("./data/files/" + dataNueva.id, (err) => {
         if (err) {
             console.log(err);
             res.writeHead(500);
@@ -78,7 +60,9 @@ router.post('/', function (req, res) {
             return;
         }
         console.log("Carpeta creada");
-        fs.writeFile("./data/" + tablero + "/files/" + dataCompleta.id + "/data.json", JSON.stringify(dataCompleta), function (err, result) {
+
+        fs.writeFile("./data/files/" + dataNueva.id + "/data.json", JSON.stringify(dataNueva), function (err, result) {
+
             if (err) {
                 console.log(err);
                 res.writeHead(500);
@@ -90,6 +74,13 @@ router.post('/', function (req, res) {
     });
 
     //guardo el id actualizado
+
+    generalData.Tableros.forEach((element) => {
+        if (element.Nombre === tableroSelec) {
+            element.Pendientes.push(dataNueva.id)
+        }
+    });
+
     fs.writeFile("./data/General.json", JSON.stringify(generalData), function (err, result) {
         if (err) {
             console.log(err);
@@ -109,14 +100,14 @@ router.post('/', function (req, res) {
 //busca el id pasado y muestra el detalle de la tarea
 router.get('/', function (req, res) {
 
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
-    console.log("Ver tarea " + id + " del tablero " + tablero);
+    console.log("Ver tarea " + id);
 
     try {
 
         let data = fs.readFileSync("./paginasHTML/tarea.html");
         var root = HTMLparser.parse(data); //Parse la pagina
+
     } catch (err) {
 
         res.writeHead(404);
@@ -127,7 +118,7 @@ router.get('/', function (req, res) {
 
     try {
 
-        let general = fs.readFileSync("./data/" + tablero + "/files/" + id + "/data.json", 'utf8');
+        let general = fs.readFileSync("./data/files/" + id + "/data.json", 'utf8');
         var tarea = JSON.parse(general);
 
     } catch (err) {
@@ -140,6 +131,7 @@ router.get('/', function (req, res) {
 
     if (tarea.recordatorio.toString().slice(0, 2) === "No") root.querySelector("#ultimoRecordatorio").set_content(tarea.recordatorio.toString());
     else root.querySelector("#ultimoRecordatorio").set_content("Recordatorio cargado para el " + tarea.recordatorio.toString());
+    
     if (tarea.estado.toString() === "Finalizado") root.querySelector("#botonTareaTerminada").replaceWith("");
 
     root.querySelector("#tablero").set_content(tarea.tablero.toString());
@@ -234,7 +226,7 @@ router.patch('/', function (req, res) {
             req.body.valor = [req.body.valor, tarea.importante.toString(), tarea.prioritario.toString()];
 
             req.body.valor[0] = req.body.valor[0] + " # " + fechaDeAvance;
-            //break; lo elimino para que actualice el estado tambien
+        //break; lo elimino para que actualice el estado tambien
 
         //actualizo estado
         case 'estado':
@@ -386,7 +378,7 @@ module.exports = router;
 
 //elimina puntuacion
 function eliminarDiacriticosEs(texto) {
-    texto = texto.replace("ñ","ni")
+    texto = texto.replace("ñ", "ni")
     return texto
         .normalize('NFD')
         .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")

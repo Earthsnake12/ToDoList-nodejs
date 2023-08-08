@@ -6,9 +6,9 @@ const HTMLparser = require('node-html-parser');
 //revisa los pendientes y crea la tabla.
 router.get('/', function (req, res) {
 
-    const tablero = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
+    const tableroSelec = TABLEROSELECCIONADO
 
-    console.log("cargar listado de tareas del tablero " + tablero);
+    console.log("cargar listado de tareas del tablero " + tableroSelec);
     //Cargo Pagina base
     try {
         let data = fs.readFileSync("./paginasHTML/listadoTarea.html")
@@ -35,10 +35,15 @@ router.get('/', function (req, res) {
     tabla += '</tr></thead><tbody>'
 
     try {
-        let pendientes = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8')
-        let tareas = JSON.parse(pendientes).Tareas;
+        let general = fs.readFileSync("./data/General.json", 'utf8')
+        let tableros = JSON.parse(general).Tableros;
 
-        tareas.forEach(tarea => {
+        let pendientes = tableros.find((element) => element.Nombre === tableroSelec).Pendientes;
+
+        pendientes.forEach(id => {
+
+            let tarea = fs.readFileSync("./data/files/" + id + "/data.json" , 'utf8')
+            tarea = JSON.parse(tarea)
 
             let ranking = 0;
             let estadoSeparado = tarea.estado.split("#");
@@ -51,7 +56,7 @@ router.get('/', function (req, res) {
             else tabla += "<tr style='color: green;'>";
 
             tabla += "<td style='color: inherit;'>" + tarea.id + "</td>";
-            tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero + "'>Ver</a></td>";
+            tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tarea.tablero + "'>Ver</a></td>";
             tabla += "<td style='color: inherit;'>" + tarea.titulo + "</td>";
             tabla += "<td style='color: inherit;'>" + estadoSeparado[0] + "</td>";
             tabla += "<td style='color: inherit;'>" + estadoSeparado[1] + "</td>";
@@ -89,9 +94,9 @@ router.get('/', function (req, res) {
 //revisa los finalizados y crea la tabla.
 router.get('/finalizadas', function (req, res) {
 
-    const tablero = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
+    const tableroSelec = TABLEROSELECCIONADO; //pasar el parametro como ?tablero=
 
-    console.log("cargar listado de tareas termiandas del tablero " + tablero);
+    console.log("cargar listado de tareas termiandas del tablero " + tableroSelec);
 
     fs.readFile("./paginasHTML/listadoTarea.html", (err, data) => {
 
@@ -112,15 +117,16 @@ router.get('/finalizadas', function (req, res) {
         tabla += '<th>ESTADO</th>'
         tabla += '</tr></thead><tbody>'
 
-        fs.readFile("./data/" + tablero + "/Finalizados.json", 'utf8', (err, general) => {
-
-            if (err) {
-                tabla = "<h1>No se pudo cargar la tabla</h1>";
-
-            } else {
-                let tareas = JSON.parse(general).Tareas;
-
-                tareas.forEach(tarea => {
+        try {
+            let general = fs.readFileSync("./data/General.json", 'utf8')
+            let tableros = JSON.parse(general).Tableros;
+    
+            let finalizados = tableros.find((element) => element.Nombre === tableroSelec).Finalizados;
+    
+            finalizados.forEach(id => {
+    
+                let tarea = fs.readFileSync("./data/files/" + id + "/data.json" , 'utf8')
+                tarea = JSON.parse(tarea)
 
                     tabla += "<tr>";
                     tabla += "<td>" + tarea.id + "</td>";
@@ -131,6 +137,9 @@ router.get('/finalizadas', function (req, res) {
 
                 });
                 tabla += "</tbody></table>";
+            } catch (err) {
+                tabla = "<h1>No se pudo cargar la tabla</h1>";
+        
             }
 
             root.querySelector('#TableroSeleccionado').replaceWith(DESPLEGABLETABLERO);
@@ -141,6 +150,6 @@ router.get('/finalizadas', function (req, res) {
             res.end(root.toString());
         });
     });
-});
+
 
 module.exports = router;

@@ -76,16 +76,13 @@ function primerTablero() {
 
     try {
         let data = fs.readFileSync("./data/General.json", 'utf8')
-        var tableros = JSON.parse(data);
+        var tableros = JSON.parse(data).Tableros;
 
     } catch (err) {
         console.log("No se pudo cargar tableros")
         return
     }
 
-    if (Object.keys(tableros).length === 0) return "";
-    else {
-        var tt = Object.keys(tableros)[0];
-        return tt.slice(0, -2)
-    }
+    if (tableros.length === 0) return "";
+    else return tableros[0].Nombre;
 }

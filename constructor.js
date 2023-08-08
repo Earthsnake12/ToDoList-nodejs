@@ -56,7 +56,7 @@ fs.mkdir("./data", (err) => {
 
     //--------------------------------------------------------------------------
 
-    fs.mkdir("./data/file", (err) => {
+    fs.mkdir("./data/files", (err) => {
 
         if (err) {
             console.log("No se pudo crear la carpeta para file");
