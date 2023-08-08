@@ -56,7 +56,7 @@ router.get('/', function (req, res) {
             else tabla += "<tr style='color: green;'>";
 
             tabla += "<td style='color: inherit;'>" + tarea.id + "</td>";
-            tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tarea.tablero + "'>Ver</a></td>";
+            tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
             tabla += "<td style='color: inherit;'>" + tarea.titulo + "</td>";
             tabla += "<td style='color: inherit;'>" + estadoSeparado[0] + "</td>";
             tabla += "<td style='color: inherit;'>" + estadoSeparado[1] + "</td>";
@@ -130,7 +130,7 @@ router.get('/finalizadas', function (req, res) {
 
                     tabla += "<tr>";
                     tabla += "<td>" + tarea.id + "</td>";
-                    tabla += "<td><a href='/tarea?id=" + tarea.id + "&tablero=" + tablero + "'>Ver</a></td>";
+                    tabla += "<td><a href='/tarea?id=" + tarea.id + "'>Ver</a></td>";
                     tabla += "<td>" + tarea.titulo + "</td>";
                     tabla += "<td>" + tarea.estado + "</td>";
                     tabla += "</tr>";
@@ -138,8 +138,9 @@ router.get('/finalizadas', function (req, res) {
                 });
                 tabla += "</tbody></table>";
             } catch (err) {
+                
                 tabla = "<h1>No se pudo cargar la tabla</h1>";
-        
+                console.log(err)
             }
 
             root.querySelector('#TableroSeleccionado').replaceWith(DESPLEGABLETABLERO);

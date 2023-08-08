@@ -268,22 +268,17 @@ router.patch('/', function (req, res) {
 //Mueve a finalizados
 router.put('/finalizada', function (req, res) {
 
-    const tablero = req.query.tablero; //pasar el parametro como ?tablero=
     const id = parseInt(req.query.id, 10); //pasar el parametro como ?id=1
-    console.log("Pidiendo tarea " + id + " del tablero " + tablero + " marcar finalizada")
+    console.log("Pidiendo tarea " + id + " marcar finalizada")
 
     try {
-        let data = fs.readFileSync("./data/" + tablero + "/files/" + id + "/data.json", 'utf8')
+        let data = fs.readFileSync("./data/files/" + id + "/data.json", 'utf8')
         var tarea = JSON.parse(data);
         console.log("Se cargo data-tarea")
 
-        let general = fs.readFileSync("./data/" + tablero + "/Pendientes.json", 'utf8')
-        var ArchivoPendientes = JSON.parse(general);
-        console.log("Se cargo pendientes")
-
-        let finalizados = fs.readFileSync("./data/" + tablero + "/Finalizados.json", 'utf8')
-        var ArchivoFinalizados = JSON.parse(finalizados);
-        console.log("Se cargo finalizados")
+        let dataGeneral = fs.readFileSync("./data/General.json", 'utf8')
+        var general = JSON.parse(dataGeneral);
+        console.log("Se cargo General")
 
     } catch (err) {
         res.setHeader("Content-Type", "text/html");
@@ -292,26 +287,36 @@ router.put('/finalizada', function (req, res) {
         return;
     }
 
-    //obtengo el indice de la tarea en el general
-    const tareaIndice = ArchivoPendientes.Tareas.map(pendiente => pendiente.id).indexOf(id);
-
-    if (tareaIndice === -1) {
-        console.log("No se encuentra en Pendientes");
-    } else {
-        //Coloco como estado finalizado y muevo la tarea
-        ArchivoPendientes.Tareas[tareaIndice].estado = "Finalizado";
-        ArchivoFinalizados.Tareas.push(ArchivoPendientes.Tareas[tareaIndice]);
-        ArchivoPendientes.Tareas.splice(tareaIndice, 1);
-    }
     //modifico data-tarea
     tarea.estado = "Finalizado";
     const date = new Date();
     tarea.fecha.push(date.getDate() + "-" + (1 + date.getMonth()) + "-" + date.getFullYear());
     tarea.avance.push("Se dio por finalizada");
 
+    //obtengo el tablero de la data de la tarea
+    const tablero = tarea.tablero
+
+    //cambio la posicion de pendiente a finalizado
+    general.Tableros.forEach((element) => {
+        if (element.Nombre === tablero) {
+           
+            //elimino de pendiente pero primero necesito encontrar su ubicacion en el array
+            let indice = element.Pendientes.indexOf(id)
+
+            if (indice === -1) {
+                console.log("No se encuentra en Pendientes");
+            } else {
+                //Coloco como estado finalizado y muevo la tarea
+                
+                element.Finalizados.push(id)
+                element.Pendientes.splice(indice, 1);
+            }
+        }
+    });
+
     //actualizo data
     try {
-        fs.writeFileSync("./data/" + tablero + "/files/" + id + "/data.json", JSON.stringify(tarea));
+        fs.writeFileSync("./data/files/" + id + "/data.json", JSON.stringify(tarea));
 
     } catch (err) {
         console.log(err);
@@ -322,23 +327,12 @@ router.put('/finalizada', function (req, res) {
 
     //actualizo finalizados
     try {
-        fs.writeFileSync("./data/" + tablero + "/Finalizados.json", JSON.stringify(ArchivoFinalizados));
+        fs.writeFileSync("./data/General.json", JSON.stringify(general));
 
     } catch (err) {
         console.log(err);
         res.writeHead(503);
-        res.end("No se pudo actualizar Finalizados");
-        return;
-    }
-
-    //actualizo el archivo pendientes
-    try {
-        fs.writeFileSync("./data/" + tablero + "/Pendientes.json", JSON.stringify(ArchivoPendientes));
-
-    } catch (err) {
-        console.log(err);
-        res.writeHead(503);
-        res.end("No se pudo actualizar Archivo General, pero se actualizo finalizados");
+        res.end("No se pudo actualizar el general");
         return;
     }
 
